@@ -85,6 +85,12 @@ cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
 -XX:OnOutOfMemoryError=kill -9 %p
 -Dhive.config.resources=/etc/hadoop/conf/core-site.xml,/etc/hadoop/conf/hdfs-site.xml
 -Djava.library.path=/usr/lib/hadoop/lib/native/:/usr/lib/
+-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.ssl=false 
+-Dcom.sun.management.jmxremote.authenticate=false 
+-Dcom.sun.management.jmxremote.port=10999 
+-Dcom.sun.management.jmxremote.rmi.port=10999 
+-Djava.rmi.server.hostname=127.0.0.1 
 EOF
 
 if [[ "${ROLE}" == 'Master' ]]; then
