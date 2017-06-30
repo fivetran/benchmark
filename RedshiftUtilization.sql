@@ -20,5 +20,5 @@ active as (
         sum(case when running > 0 then 0 else elapsed end) as quiet
     from counts
 )
-select running::double precision / quiet::double precision as utilization
+select running::double precision / (running + quiet)::double precision as utilization
 from active;
