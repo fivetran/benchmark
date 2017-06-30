@@ -18,7 +18,8 @@ gcloud dataproc clusters \
       --project digital-arbor-400 \
       --initialization-actions gs://fivetran-benchmark/Presto.sh
 
-gcloud compute scp --recurse . tpcds-m:~/benchmark
+gcloud compute scp --recurse *.* tpcds-m:~
+gcloud compute scp --recurse */ tpcds-m:~
 
 gcloud compute ssh tpcds-m
 
