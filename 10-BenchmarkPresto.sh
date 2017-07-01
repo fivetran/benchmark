@@ -11,7 +11,7 @@ presto --catalog=hive --schema=tpcds_parquet -f Warmup.sql > /dev/null
 for f in query/*.sql; 
 do
   echo $f
-  time presto --catalog=hive --schema tpcds_parquet -f $f > /dev/null
+  presto --catalog=hive --schema tpcds_parquet -f $f > /dev/null
 done
 
 presto --catalog=hive --schema tpcds_parquet -f PrestoTiming.sql
