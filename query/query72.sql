@@ -1,28 +1,49 @@
-select  i_item_desc
-      ,w_warehouse_name
-      ,d1.d_week_seq
-      ,count(case when p_promo_sk is null then 1 else 0 end) no_promo
-      ,count(case when p_promo_sk is not null then 1 else 0 end) promo
-      ,count(*) total_cnt
-from catalog_sales
-join inventory on (catalog_sales.cs_item_sk = inventory.inv_item_sk)
-join warehouse on (warehouse.w_warehouse_sk=inventory.inv_warehouse_sk)
-join item on (item.i_item_sk = catalog_sales.cs_item_sk)
-join customer_demographics on (catalog_sales.cs_bill_cdemo_sk = customer_demographics.cd_demo_sk)
-join household_demographics on (catalog_sales.cs_bill_hdemo_sk = household_demographics.hd_demo_sk)
-join date_dim d1 on (catalog_sales.cs_sold_date_sk = d1.d_date_sk)
-join date_dim d2 on (inventory.inv_date_sk = d2.d_date_sk)
-join date_dim d3 on (catalog_sales.cs_ship_date_sk = d3.d_date_sk)
-left outer join promotion on (catalog_sales.cs_promo_sk=promotion.p_promo_sk)
-left outer join catalog_returns on (catalog_returns.cr_item_sk = catalog_sales.cs_item_sk and catalog_returns.cr_order_number = catalog_sales.cs_order_number)
-where d1.d_week_seq = d2.d_week_seq
-  and inv_quantity_on_hand < cs_quantity 
-  and cast(d3.d_date as date) > cast(d1.d_date as date) + interval '5' day
-  and hd_buy_potential = '1001-5000'
-  and d1.d_year = 2001
-  and hd_buy_potential = '1001-5000'
-  and cd_marital_status = 'M'
-  and d1.d_year = 2001
-group by i_item_desc,w_warehouse_name,d1.d_week_seq
-order by total_cnt desc, i_item_desc, w_warehouse_name, d_week_seq
-limit 100;
+-- start query 72 in stream 0 using template query72.tpl 
+SELECT i_item_desc, 
+               w_warehouse_name, 
+               d1.d_week_seq, 
+               Sum(CASE 
+                     WHEN p_promo_sk IS NULL THEN 1 
+                     ELSE 0 
+                   END) no_promo, 
+               Sum(CASE 
+                     WHEN p_promo_sk IS NOT NULL THEN 1 
+                     ELSE 0 
+                   END) promo, 
+               Count(*) total_cnt 
+FROM   catalog_sales 
+       JOIN inventory 
+         ON ( cs_item_sk = inv_item_sk ) 
+       JOIN warehouse 
+         ON ( w_warehouse_sk = inv_warehouse_sk ) 
+       JOIN item 
+         ON ( i_item_sk = cs_item_sk ) 
+       JOIN customer_demographics 
+         ON ( cs_bill_cdemo_sk = cd_demo_sk ) 
+       JOIN household_demographics 
+         ON ( cs_bill_hdemo_sk = hd_demo_sk ) 
+       JOIN date_dim d1 
+         ON ( cs_sold_date_sk = d1.d_date_sk ) 
+       JOIN date_dim d2 
+         ON ( inv_date_sk = d2.d_date_sk ) 
+       JOIN date_dim d3 
+         ON ( cs_ship_date_sk = d3.d_date_sk ) 
+       LEFT OUTER JOIN promotion 
+                    ON ( cs_promo_sk = p_promo_sk ) 
+       LEFT OUTER JOIN catalog_returns 
+                    ON ( cr_item_sk = cs_item_sk 
+                         AND cr_order_number = cs_order_number ) 
+WHERE  d1.d_week_seq = d2.d_week_seq 
+       AND inv_quantity_on_hand < cs_quantity 
+       AND d3.d_date > d1.d_date + INTERVAL '5' day 
+       AND hd_buy_potential = '501-1000' 
+       AND d1.d_year = 2002 
+       AND cd_marital_status = 'M' 
+GROUP  BY i_item_desc, 
+          w_warehouse_name, 
+          d1.d_week_seq 
+ORDER  BY total_cnt DESC, 
+          i_item_desc, 
+          w_warehouse_name, 
+          d_week_seq
+LIMIT 100; 

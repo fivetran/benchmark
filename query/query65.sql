@@ -1,37 +1,37 @@
-select 
-    s_store_name,
-    i_item_desc,
-    sc.revenue,
-    i_current_price,
-    i_wholesale_cost,
-    i_brand
-from
-    store,
-    item,
-    (select 
-        ss_store_sk, avg(revenue) as ave
-    from
-        (select 
-        ss_store_sk, ss_item_sk, sum(ss_sales_price) as revenue
-    from
-        store_sales, date_dim
-    where
-        ss_sold_date_sk = d_date_sk
-            and d_month_seq between 1212 and 1212 + 11
-    group by ss_store_sk , ss_item_sk) sa
-    group by ss_store_sk) sb,
-    (select 
-        ss_store_sk, ss_item_sk, sum(ss_sales_price) as revenue
-    from
-        store_sales, date_dim
-    where
-        ss_sold_date_sk = d_date_sk
-            and d_month_seq between 1212 and 1212 + 11
-    group by ss_store_sk , ss_item_sk) sc
-where
-    sb.ss_store_sk = sc.ss_store_sk
-        and sc.revenue <= 0.1 * sb.ave
-        and s_store_sk = sc.ss_store_sk
-        and i_item_sk = sc.ss_item_sk
-order by s_store_name , i_item_desc
-limit 100;
+-- start query 65 in stream 0 using template query65.tpl 
+SELECT s_store_name, 
+               i_item_desc, 
+               sc.revenue, 
+               i_current_price, 
+               i_wholesale_cost, 
+               i_brand 
+FROM   store, 
+       item, 
+       (SELECT ss_store_sk, 
+               Avg(revenue) AS ave 
+        FROM   (SELECT ss_store_sk, 
+                       ss_item_sk, 
+                       Sum(ss_sales_price) AS revenue 
+                FROM   store_sales, 
+                       date_dim 
+                WHERE  ss_sold_date_sk = d_date_sk 
+                       AND d_month_seq BETWEEN 1199 AND 1199 + 11 
+                GROUP  BY ss_store_sk, 
+                          ss_item_sk) sa 
+        GROUP  BY ss_store_sk) sb, 
+       (SELECT ss_store_sk, 
+               ss_item_sk, 
+               Sum(ss_sales_price) AS revenue 
+        FROM   store_sales, 
+               date_dim 
+        WHERE  ss_sold_date_sk = d_date_sk 
+               AND d_month_seq BETWEEN 1199 AND 1199 + 11 
+        GROUP  BY ss_store_sk, 
+                  ss_item_sk) sc 
+WHERE  sb.ss_store_sk = sc.ss_store_sk 
+       AND sc.revenue <= 0.1 * sb.ave 
+       AND s_store_sk = sc.ss_store_sk 
+       AND i_item_sk = sc.ss_item_sk 
+ORDER  BY s_store_name, 
+          i_item_desc
+LIMIT 100; 

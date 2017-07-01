@@ -1,26 +1,31 @@
-select  i_item_desc 
-       ,i_category 
-       ,i_class 
-       ,i_current_price
-       ,i_item_id
-       ,sum(cs_ext_sales_price) as itemrevenue 
-       ,sum(cs_ext_sales_price)*100/sum(sum(cs_ext_sales_price)) over
-           (partition by i_class) as revenueratio
- from catalog_sales
-     ,item 
-     ,date_dim
- where catalog_sales.cs_item_sk = item.i_item_sk 
-   and i_category in ('Jewelry', 'Sports', 'Books')
-   and catalog_sales.cs_sold_date_sk = date_dim.d_date_sk
- and d_date between '2001-01-12' and '2001-02-11'
- group by i_item_id
-         ,i_item_desc 
-         ,i_category
-         ,i_class
-         ,i_current_price
- order by i_category
-         ,i_class
-         ,i_item_id
-         ,i_item_desc
-         ,revenueratio
-limit 100;
+-- start query 20 in stream 0 using template query20.tpl 
+SELECT 
+         i_item_id , 
+         i_item_desc , 
+         i_category , 
+         i_class , 
+         i_current_price , 
+         Sum(cs_ext_sales_price)                                                              AS itemrevenue ,
+         Sum(cs_ext_sales_price)*100/Sum(Sum(cs_ext_sales_price)) OVER (partition BY i_class) AS revenueratio
+FROM     catalog_sales , 
+         item , 
+         date_dim 
+WHERE    cs_item_sk = i_item_sk 
+AND      i_category IN ('Children', 
+                        'Women', 
+                        'Electronics') 
+AND      cs_sold_date_sk = d_date_sk 
+AND      d_date BETWEEN Cast('2001-02-03' AS DATE) AND      ( 
+                  Cast('2001-02-03' AS DATE) + INTERVAL '30' day) 
+GROUP BY i_item_id , 
+         i_item_desc , 
+         i_category , 
+         i_class , 
+         i_current_price 
+ORDER BY i_category , 
+         i_class , 
+         i_item_id , 
+         i_item_desc , 
+         revenueratio 
+LIMIT 100; 
+

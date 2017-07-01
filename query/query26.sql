@@ -1,18 +1,24 @@
-select  i_item_id, 
-        avg(cs_quantity) agg1,
-        avg(cs_list_price) agg2,
-        avg(cs_coupon_amt) agg3,
-        avg(cs_sales_price) agg4 
- from catalog_sales, customer_demographics, date_dim, item, promotion
- where catalog_sales.cs_sold_date_sk = date_dim.d_date_sk and
-       catalog_sales.cs_item_sk = item.i_item_sk and
-       catalog_sales.cs_bill_cdemo_sk = customer_demographics.cd_demo_sk and
-       catalog_sales.cs_promo_sk = promotion.p_promo_sk and
-       cd_gender = 'F' and 
-       cd_marital_status = 'W' and
-       cd_education_status = 'Primary' and
-       (p_channel_email = 'N' or p_channel_event = 'N') and
-       d_year = 1998
- group by i_item_id
- order by i_item_id
- limit 100;
+-- start query 26 in stream 0 using template query26.tpl 
+SELECT i_item_id, 
+               Avg(cs_quantity)    agg1, 
+               Avg(cs_list_price)  agg2, 
+               Avg(cs_coupon_amt)  agg3, 
+               Avg(cs_sales_price) agg4 
+FROM   catalog_sales, 
+       customer_demographics, 
+       date_dim, 
+       item, 
+       promotion 
+WHERE  cs_sold_date_sk = d_date_sk 
+       AND cs_item_sk = i_item_sk 
+       AND cs_bill_cdemo_sk = cd_demo_sk 
+       AND cs_promo_sk = p_promo_sk 
+       AND cd_gender = 'F' 
+       AND cd_marital_status = 'W' 
+       AND cd_education_status = 'Secondary' 
+       AND ( p_channel_email = 'N' 
+              OR p_channel_event = 'N' ) 
+       AND d_year = 2000 
+GROUP  BY i_item_id 
+ORDER  BY i_item_id
+LIMIT 100; 

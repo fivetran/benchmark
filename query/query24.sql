@@ -1,48 +1,96 @@
-with ssales as
-(select c_last_name
-      ,c_first_name
-      ,s_store_name
-      ,ca_state
-      ,s_state
-      ,i_color
-      ,i_current_price
-      ,i_manager_id
-      ,i_units
-      ,i_size
-      ,sum(ss_sales_price) netpaid
-from store_sales
-    ,store_returns
-    ,store
-    ,item
-    ,customer
-    ,customer_address
-where ss_ticket_number = sr_ticket_number
-  and ss_item_sk = sr_item_sk
-  and ss_customer_sk = c_customer_sk
-  and ss_item_sk = i_item_sk
-  and ss_store_sk = s_store_sk
-  and c_birth_country = upper(ca_country)
-  and s_zip = ca_zip
-and s_market_id=7
-group by c_last_name
-        ,c_first_name
-        ,s_store_name
-        ,ca_state
-        ,s_state
-        ,i_color
-        ,i_current_price
-        ,i_manager_id
-        ,i_units
-        ,i_size)
-select c_last_name
-      ,c_first_name
-      ,s_store_name
-      ,sum(netpaid) paid
-from ssales
-where i_color = 'orchid'
-group by c_last_name
-        ,c_first_name
-        ,s_store_name
-having sum(netpaid) > (select 0.05*avg(netpaid)
-                                 from ssales)
-;
+-- start query 24 in stream 0 using template query24.tpl 
+WITH ssales 
+     AS (SELECT c_last_name, 
+                c_first_name, 
+                s_store_name, 
+                ca_state, 
+                s_state, 
+                i_color, 
+                i_current_price, 
+                i_manager_id, 
+                i_units, 
+                i_size, 
+                Sum(ss_net_profit) netpaid 
+         FROM   store_sales, 
+                store_returns, 
+                store, 
+                item, 
+                customer, 
+                customer_address 
+         WHERE  ss_ticket_number = sr_ticket_number 
+                AND ss_item_sk = sr_item_sk 
+                AND ss_customer_sk = c_customer_sk 
+                AND ss_item_sk = i_item_sk 
+                AND ss_store_sk = s_store_sk 
+                AND c_birth_country = Upper(ca_country) 
+                AND s_zip = ca_zip 
+                AND s_market_id = 6 
+         GROUP  BY c_last_name, 
+                   c_first_name, 
+                   s_store_name, 
+                   ca_state, 
+                   s_state, 
+                   i_color, 
+                   i_current_price, 
+                   i_manager_id, 
+                   i_units, 
+                   i_size) 
+SELECT c_last_name, 
+       c_first_name, 
+       s_store_name, 
+       Sum(netpaid) paid 
+FROM   ssales 
+WHERE  i_color = 'papaya' 
+GROUP  BY c_last_name, 
+          c_first_name, 
+          s_store_name 
+HAVING Sum(netpaid) > (SELECT 0.05 * Avg(netpaid) 
+                       FROM   ssales); 
+
+WITH ssales 
+     AS (SELECT c_last_name, 
+                c_first_name, 
+                s_store_name, 
+                ca_state, 
+                s_state, 
+                i_color, 
+                i_current_price, 
+                i_manager_id, 
+                i_units, 
+                i_size, 
+                Sum(ss_net_profit) netpaid 
+         FROM   store_sales, 
+                store_returns, 
+                store, 
+                item, 
+                customer, 
+                customer_address 
+         WHERE  ss_ticket_number = sr_ticket_number 
+                AND ss_item_sk = sr_item_sk 
+                AND ss_customer_sk = c_customer_sk 
+                AND ss_item_sk = i_item_sk 
+                AND ss_store_sk = s_store_sk 
+                AND c_birth_country = Upper(ca_country) 
+                AND s_zip = ca_zip 
+                AND s_market_id = 6 
+         GROUP  BY c_last_name, 
+                   c_first_name, 
+                   s_store_name, 
+                   ca_state, 
+                   s_state, 
+                   i_color, 
+                   i_current_price, 
+                   i_manager_id, 
+                   i_units, 
+                   i_size) 
+SELECT c_last_name, 
+       c_first_name, 
+       s_store_name, 
+       Sum(netpaid) paid 
+FROM   ssales 
+WHERE  i_color = 'chartreuse' 
+GROUP  BY c_last_name, 
+          c_first_name, 
+          s_store_name 
+HAVING Sum(netpaid) > (SELECT 0.05 * Avg(netpaid) 
+                       FROM   ssales); 
