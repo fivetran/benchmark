@@ -68,8 +68,8 @@ PRESTO_JVM_MB=$(( ${SPARK_CONTAINER_MB} * ${SPARK_EXECUTOR_COUNT} ))
 # system MB as a crude approximation of other unaccounted overhead that we need
 # to leave betweenused bytes and Xmx bytes. Rounding down by integer division
 # here also effectively places round-down bytes in the "general" pool.
-PRESTO_QUERY_NODE_MB=$(( ${PRESTO_JVM_MB} * 6 / 10 - ${SPARK_EXECUTOR_OVERHEAD_MB} ))
-PRESTO_RESERVED_SYSTEM_MB=$(( ${PRESTO_JVM_MB} * 4 / 10 - ${SPARK_EXECUTOR_OVERHEAD_MB} ))
+PRESTO_QUERY_NODE_MB=$(( ${PRESTO_JVM_MB} * 7 / 10 - ${SPARK_EXECUTOR_OVERHEAD_MB} ))
+PRESTO_RESERVED_SYSTEM_MB=$(( ${PRESTO_JVM_MB} * 3 / 10 - ${SPARK_EXECUTOR_OVERHEAD_MB} ))
 
 cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
 -server
