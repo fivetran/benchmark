@@ -123,5 +123,10 @@ discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
 EOF
 fi
 
+cat > presto-server-${PRESTO_VERSION}/etc/catalog/memory.properties <<EOF
+connector.name=memory
+memory.max-data-per-node=10GB
+EOF
+
 # Start presto
 presto-server-${PRESTO_VERSION}/bin/launcher start
