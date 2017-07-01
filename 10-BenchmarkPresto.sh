@@ -3,6 +3,10 @@
 # Run this on the dataproc cluster master
 set -e 
 
+# Create external tables references the data in gs://fivetran-benchmark that we generated with the big cluster
+echo 'Create tables'
+hive -f ParquetDdl.sql
+
 # Read all tables to warm up google cloud storage
 echo 'Warmup.sql...'
 presto --catalog=hive --schema=tpcds_parquet -f Warmup.sql > /dev/null

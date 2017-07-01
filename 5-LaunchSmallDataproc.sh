@@ -22,6 +22,3 @@ gcloud compute scp --recurse *.* tpcds-m:~
 gcloud compute scp --recurse */ tpcds-m:~
 
 gcloud compute ssh tpcds-m
-
-# Create external tables references the data in gs://fivetran-benchmark that we generated with the big cluster
-hive -f ParquetDdl.sql
