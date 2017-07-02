@@ -26,7 +26,7 @@ WITH ssr AS
                   store 
          WHERE    date_sk = d_date_sk 
          AND      Cast(d_date AS DATE) BETWEEN Cast('2002-08-22' AS DATE) AND      ( 
-                           Cast('2002-08-22' AS DATE) + INTERVAL '14' day) 
+                           Cast('2002-09-05' AS DATE)) 
          AND      store_sk = s_store_sk 
          GROUP BY s_store_id) , csr AS 
 ( 
@@ -55,7 +55,7 @@ WITH ssr AS
                   catalog_page 
          WHERE    date_sk = d_date_sk 
          AND      Cast(d_date AS DATE) BETWEEN cast('2002-08-22' AS date) AND      ( 
-                           cast('2002-08-22' AS date) + INTERVAL '14' day) 
+                           Cast('2002-09-05' AS DATE)) 
          AND      page_sk = cp_catalog_page_sk 
          GROUP BY cp_catalog_page_id) , wsr AS 
 ( 
@@ -88,7 +88,7 @@ WITH ssr AS
                   web_site 
          WHERE    date_sk = d_date_sk 
          AND      Cast(d_date AS DATE) BETWEEN cast('2002-08-22' AS date) AND      ( 
-                           cast('2002-08-22' AS date) + INTERVAL '14' day) 
+                           Cast('2002-09-05' AS DATE)) 
          AND      wsr_web_site_sk = web_site_sk 
          GROUP BY web_site_id) 
 SELECT 

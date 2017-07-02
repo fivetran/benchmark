@@ -17,7 +17,7 @@ FROM     web_sales ws1 ,
          customer_address , 
          web_site 
 WHERE    d_date BETWEEN '2000-4-01' AND      ( 
-                  Cast('2000-4-01' AS DATE) + INTERVAL '60' day) 
+                  Cast('2000-6-01' AS DATE)) 
 AND      ws1.ws_ship_date_sk = d_date_sk 
 AND      ws1.ws_ship_addr_sk = ca_address_sk 
 AND      ca_state = 'IN' 

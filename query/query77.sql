@@ -10,7 +10,7 @@ WITH ss AS
                   store 
          WHERE    ss_sold_date_sk = d_date_sk 
          AND      d_date BETWEEN Cast('2001-08-16' AS DATE) AND      ( 
-                           Cast('2001-08-16' AS DATE) + INTERVAL '30' day) 
+                           Cast('2001-09-15' AS DATE)) 
          AND      ss_store_sk = s_store_sk 
          GROUP BY s_store_sk) , sr AS 
 ( 
@@ -22,7 +22,7 @@ WITH ss AS
                   store 
          WHERE    sr_returned_date_sk = d_date_sk 
          AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
+                           Cast('2001-09-15' AS DATE)) 
          AND      sr_store_sk = s_store_sk 
          GROUP BY s_store_sk), cs AS 
 ( 
@@ -33,7 +33,7 @@ WITH ss AS
                   date_dim 
          WHERE    cs_sold_date_sk = d_date_sk 
          AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
+                           Cast('2001-09-15' AS DATE)) 
          GROUP BY cs_call_center_sk ), cr AS 
 ( 
          SELECT   cr_call_center_sk, 
@@ -43,7 +43,7 @@ WITH ss AS
                   date_dim 
          WHERE    cr_returned_date_sk = d_date_sk 
          AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
+                           Cast('2001-09-15' AS DATE)) 
          GROUP BY cr_call_center_sk ), ws AS 
 ( 
          SELECT   wp_web_page_sk, 
@@ -54,7 +54,7 @@ WITH ss AS
                   web_page 
          WHERE    ws_sold_date_sk = d_date_sk 
          AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
+                           Cast('2001-09-15' AS DATE)) 
          AND      ws_web_page_sk = wp_web_page_sk 
          GROUP BY wp_web_page_sk), wr AS 
 ( 
@@ -66,7 +66,7 @@ WITH ss AS
                   web_page 
          WHERE    wr_returned_date_sk = d_date_sk 
          AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
+                           Cast('2001-09-15' AS DATE)) 
          AND      wr_web_page_sk = wp_web_page_sk 
          GROUP BY wp_web_page_sk) 
 SELECT

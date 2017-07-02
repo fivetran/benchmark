@@ -7,7 +7,7 @@ FROM   catalog_sales ,
 WHERE  i_manufact_id = 610 
 AND    i_item_sk = cs_item_sk 
 AND    Cast(d_date AS DATE) BETWEEN Cast('2001-03-04' AS DATE) AND    ( 
-              Cast('2001-03-04' AS DATE) + INTERVAL '90' day) 
+              Cast('2001-06-03' AS DATE)) 
 AND    d_date_sk = cs_sold_date_sk 
 AND    cs_ext_discount_amt > 
        ( 
@@ -16,7 +16,7 @@ AND    cs_ext_discount_amt >
                      date_dim 
               WHERE  cs_item_sk = i_item_sk 
               AND    Cast(d_date AS DATE) BETWEEN Cast('2001-03-04' AS DATE) AND    ( 
-                            cast('2001-03-04' AS date) + INTERVAL '90' day) 
+                            Cast('2001-06-03' AS DATE)) 
               AND    d_date_sk = cs_sold_date_sk ) 
 LIMIT 100; 
 

@@ -7,7 +7,7 @@ FROM     web_sales ,
 WHERE    i_manufact_id = 718 
 AND      i_item_sk = ws_item_sk 
 AND      d_date BETWEEN '2002-03-29' AND      ( 
-                  Cast('2002-03-29' AS DATE) +  INTERVAL '90' day) 
+                  Cast('2002-06-28' AS DATE)) 
 AND      d_date_sk = ws_sold_date_sk 
 AND      ws_ext_discount_amt > 
          ( 
@@ -16,7 +16,7 @@ AND      ws_ext_discount_amt >
                        date_dim 
                 WHERE  ws_item_sk = i_item_sk 
                 AND    d_date BETWEEN '2002-03-29' AND    ( 
-                              cast('2002-03-29' AS date) + INTERVAL '90' day) 
+                              cast('2002-06-28' AS date)) 
                 AND    d_date_sk = ws_sold_date_sk ) 
 ORDER BY sum(ws_ext_discount_amt) 
 LIMIT 100; 

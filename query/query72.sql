@@ -35,7 +35,6 @@ FROM   catalog_sales
                          AND cr_order_number = cs_order_number ) 
 WHERE  d1.d_week_seq = d2.d_week_seq 
        AND inv_quantity_on_hand < cs_quantity 
-       AND d3.d_date > d1.d_date + INTERVAL '5' day 
        AND hd_buy_potential = '501-1000' 
        AND d1.d_year = 2002 
        AND cd_marital_status = 'M' 

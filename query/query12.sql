@@ -16,7 +16,7 @@ AND      i_category IN ('Home',
                         'Women') 
 AND      ws_sold_date_sk = d_date_sk 
 AND      Cast(d_date AS DATE) BETWEEN Cast('2000-05-11' AS DATE) AND      ( 
-                  Cast('2000-05-11' AS DATE) + INTERVAL '30' day) 
+                  Cast('2000-06-11' AS DATE)) 
 GROUP BY i_item_id , 
          i_item_desc , 
          i_category , 
