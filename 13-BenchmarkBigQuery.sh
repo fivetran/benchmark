@@ -11,7 +11,7 @@ done < Warmup.sql
 
 # Test
 echo "Query,Started,Ended,Billing Tier,Bytes" > BigQueryResults.csv
-for f in bigquery/*.sql; 
+for f in query/*.sql; 
 do
   echo $f
   ID=$(echo $f | tr / _ | tr . _)

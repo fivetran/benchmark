@@ -2,13 +2,21 @@
 # Don't forget to export PGPASSWORD=?
 set -e 
 
-echo 'Warmup.sql...'
-psql --host tpcds.cw43lptekopo.us-east-1.redshift.amazonaws.com --port 5439 --user developers tpcds -f Warmup.sql > /dev/null
+HOST=tpcds.cw43lptekopo.us-east-1.redshift.amazonaws.com
+DB=tpcds
+USER=developers
+export PGPASSWORD=Charteau1
 
-for f in redshift/*.sql; 
+echo 'Create tables...'
+psql --host ${HOST} --port 5439 --user ${USER} ${DB} -f PopulateRedshift.sql 
+
+echo 'Warmup.sql...'
+psql --host ${HOST} --port 5439 --user ${USER} ${DB} -f Warmup.sql > /dev/null
+
+for f in query/*.sql; 
 do
   echo $f
-  time psql --host tpcds.cw43lptekopo.us-east-1.redshift.amazonaws.com --port 5439 --user developers tpcds -f $f > /dev/null
+  time psql --host ${HOST} --port 5439 --user ${USER} ${DB} -f $f > /dev/null
 done
 
-psql --host tpcds.cw43lptekopo.us-east-1.redshift.amazonaws.com --port 5439 --user developers tpcds -f RedshiftTiming.sql
+psql --host ${HOST} --port 5439 --user ${USER} ${DB} -f RedshiftTiming.sql
