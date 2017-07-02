@@ -1,4 +1,4 @@
--- start query 42 in stream 0 using template query42.tpl 
+-- query42
 SELECT dt.d_year, 
                item.i_category_id, 
                item.i_category, 

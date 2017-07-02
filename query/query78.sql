@@ -1,4 +1,4 @@
--- start query 78 in stream 0 using template query78.tpl 
+-- query78
 WITH ws 
      AS (SELECT d_year                 AS ws_sold_year, 
                 ws_item_sk, 

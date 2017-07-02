@@ -1,4 +1,4 @@
--- start query 21 in stream 0 using template query21.tpl 
+-- query21
 SELECT
          * 
 FROM    ( 

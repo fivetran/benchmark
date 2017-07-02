@@ -1,5 +1,5 @@
 
--- start query 90 in stream 0 using template query90.tpl 
+-- query90
 SELECT amc / pmc AS am_pm_ratio 
 FROM   (SELECT Count(*) amc 
         FROM   web_sales, 

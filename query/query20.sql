@@ -1,4 +1,4 @@
--- start query 20 in stream 0 using template query20.tpl 
+-- query20
 SELECT 
          i_item_id , 
          i_item_desc , 

@@ -1,4 +1,4 @@
--- start query 17 in stream 0 using template query17.tpl 
+-- query17
 SELECT i_item_id, 
                i_item_desc, 
                s_state, 

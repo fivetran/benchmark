@@ -1,4 +1,4 @@
--- start query 28 in stream 0 using template query28.tpl 
+-- query28
 SELECT * 
 FROM   (SELECT Avg(ss_list_price)            B1_LP, 
                Count(ss_list_price)          B1_CNT, 

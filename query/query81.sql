@@ -1,5 +1,5 @@
 
--- start query 81 in stream 0 using template query81.tpl 
+-- query81
 WITH customer_total_return 
      AS (SELECT cr_returning_customer_sk   AS ctr_customer_sk, 
                 ca_state                   AS ctr_state, 

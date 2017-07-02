@@ -1,4 +1,4 @@
--- start query 75 in stream 0 using template query75.tpl 
+-- query75
 WITH all_sales 
      AS (SELECT d_year, 
                 i_brand_id, 

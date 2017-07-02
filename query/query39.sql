@@ -1,4 +1,4 @@
--- start query 39 in stream 0 using template query39.tpl 
+-- query39
 WITH inv 
      AS (SELECT w_warehouse_name, 
                 w_warehouse_sk, 

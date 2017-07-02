@@ -1,4 +1,4 @@
--- start query 48 in stream 0 using template query48.tpl 
+-- query48
 SELECT Sum (ss_quantity) 
 FROM   store_sales, 
        store, 

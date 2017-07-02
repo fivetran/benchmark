@@ -1,4 +1,4 @@
--- start query 57 in stream 0 using template query57.tpl 
+-- query57
 WITH v1 
      AS (SELECT i_category, 
                 i_brand, 

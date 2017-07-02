@@ -1,4 +1,4 @@
--- start query 10 in stream 0 using template query10.tpl 
+-- query10
 SELECT cd_gender, 
                cd_marital_status, 
                cd_education_status, 

@@ -1,6 +1,6 @@
 
 
--- start query 99 in stream 0 using template query99.tpl 
+-- query99
 SELECT Substr(w_warehouse_name, 1, 20), 
                sm_type, 
                cc_name, 

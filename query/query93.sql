@@ -1,4 +1,4 @@
--- start query 93 in stream 0 using template query93.tpl 
+-- query93
 SELECT ss_customer_sk, 
                Sum(act_sales) sumsales 
 FROM   (SELECT ss_item_sk, 

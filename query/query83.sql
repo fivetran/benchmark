@@ -1,4 +1,4 @@
--- start query 83 in stream 0 using template query83.tpl 
+-- query83
 WITH sr_items 
      AS (SELECT i_item_id               item_id, 
                 Sum(sr_return_quantity) sr_item_qty 

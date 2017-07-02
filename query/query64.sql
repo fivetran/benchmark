@@ -1,4 +1,4 @@
--- start query 64 in stream 0 using template query64.tpl 
+-- query64
 WITH cs_ui 
      AS (SELECT cs_item_sk, 
                 Sum(cs_ext_list_price) AS sale, 

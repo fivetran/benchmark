@@ -1,4 +1,4 @@
--- start query 14 in stream 0 using template query14.tpl 
+-- query14
 WITH cross_items 
      AS (SELECT i_item_sk ss_item_sk 
          FROM   item, 

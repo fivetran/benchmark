@@ -1,4 +1,4 @@
--- start query 3 in stream 0 using template query3.tpl 
+-- query3
 SELECT dt.d_year, 
                item.i_brand_id          brand_id, 
                item.i_brand             brand, 

@@ -1,4 +1,4 @@
--- start query 88 in stream 0 using template query88.tpl
+-- query88
 select  *
 from
  (select count(*) h8_30_to_9

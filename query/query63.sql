@@ -1,4 +1,4 @@
--- start query 63 in stream 0 using template query63.tpl 
+-- query63
 SELECT * 
 FROM   (SELECT i_manager_id, 
                Sum(ss_sales_price)            sum_sales, 

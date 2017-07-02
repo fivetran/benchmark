@@ -1,4 +1,4 @@
--- start query 80 in stream 0 using template query80.tpl 
+-- query80
 WITH ssr AS 
 ( 
                 SELECT          s_store_id                                    AS store_id, 

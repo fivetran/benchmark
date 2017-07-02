@@ -1,4 +1,4 @@
--- start query 18 in stream 0 using template query18.tpl 
+-- query18
 SELECT i_item_id, 
                ca_country, 
                ca_state, 

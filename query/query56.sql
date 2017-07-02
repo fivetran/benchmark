@@ -1,4 +1,4 @@
--- start query 56 in stream 0 using template query56.tpl 
+-- query56
 WITH ss 
      AS (SELECT i_item_id, 
                 Sum(ss_ext_sales_price) total_sales 

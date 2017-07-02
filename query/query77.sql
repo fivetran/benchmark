@@ -1,5 +1,5 @@
 
--- start query 77 in stream 0 using template query77.tpl 
+-- query77
 WITH ss AS 
 ( 
          SELECT   s_store_sk, 

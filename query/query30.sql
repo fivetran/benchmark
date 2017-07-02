@@ -1,4 +1,4 @@
--- start query 30 in stream 0 using template query30.tpl 
+-- query30
 WITH customer_total_return 
      AS (SELECT wr_returning_customer_sk AS ctr_customer_sk, 
                 ca_state                 AS ctr_state, 

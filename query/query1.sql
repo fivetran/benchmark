@@ -1,4 +1,4 @@
--- start query 1 in stream 0 using template query1.tpl 
+-- query1
 WITH customer_total_return 
      AS (SELECT sr_customer_sk     AS ctr_customer_sk, 
                 sr_store_sk        AS ctr_store_sk, 

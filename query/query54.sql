@@ -1,4 +1,4 @@
--- start query 54 in stream 0 using template query54.tpl 
+-- query54
 WITH my_customers 
      AS (SELECT DISTINCT c_customer_sk, 
                          c_current_addr_sk 

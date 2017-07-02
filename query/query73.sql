@@ -1,4 +1,4 @@
--- start query 73 in stream 0 using template query73.tpl 
+-- query73
 SELECT c_last_name, 
        c_first_name, 
        c_salutation, 

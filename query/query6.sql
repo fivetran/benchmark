@@ -1,4 +1,4 @@
--- start query 6 in stream 0 using template query6.tpl 
+-- query6
 SELECT a.ca_state state, 
                Count(*)   cnt 
 FROM   customer_address a, 

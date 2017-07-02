@@ -1,4 +1,4 @@
--- start query 86 in stream 0 using template query86.tpl 
+-- query86
 SELECT Sum(ws_net_paid)                         AS total_sum, 
                i_category, 
                i_class, 

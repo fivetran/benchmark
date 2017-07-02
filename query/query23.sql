@@ -1,4 +1,4 @@
--- start query 23 in stream 0 using template query23.tpl 
+-- query23
 WITH frequent_ss_items 
      AS (SELECT Substr(i_item_desc, 1, 30) itemdesc, 
                 i_item_sk                  item_sk, 

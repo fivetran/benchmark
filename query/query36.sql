@@ -1,4 +1,4 @@
--- start query 36 in stream 0 using template query36.tpl 
+-- query36
 SELECT Sum(ss_net_profit) / Sum(ss_ext_sales_price)                 AS 
                gross_margin, 
                i_category, 

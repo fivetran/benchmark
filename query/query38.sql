@@ -1,4 +1,4 @@
--- start query 38 in stream 0 using template query38.tpl 
+-- query38
 SELECT Count(*) 
 FROM   (SELECT DISTINCT c_last_name, 
                         c_first_name, 

@@ -1,4 +1,4 @@
--- start query 27 in stream 0 using template query27.tpl 
+-- query27
 SELECT i_item_id, 
                s_state, 
                Grouping(s_state)   g_state, 

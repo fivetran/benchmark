@@ -1,4 +1,4 @@
--- start query 70 in stream 0 using template query70.tpl 
+-- query70
 SELECT Sum(ss_net_profit)                     AS total_sum, 
                s_state, 
                s_county, 

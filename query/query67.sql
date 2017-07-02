@@ -1,4 +1,4 @@
--- start query 67 in stream 0 using template query67.tpl
+-- query67
 select top 100 *
 from (select i_category
             ,i_class

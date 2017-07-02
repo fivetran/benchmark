@@ -1,4 +1,4 @@
--- start query 65 in stream 0 using template query65.tpl 
+-- query65
 SELECT s_store_name, 
                i_item_desc, 
                sc.revenue, 

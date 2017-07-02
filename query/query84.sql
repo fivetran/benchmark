@@ -1,4 +1,4 @@
--- start query 84 in stream 0 using template query84.tpl 
+-- query84
 SELECT c_customer_id   AS customer_id, 
                c_last_name 
                || ', ' 

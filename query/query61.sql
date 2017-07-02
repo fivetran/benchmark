@@ -1,4 +1,4 @@
--- start query 61 in stream 0 using template query61.tpl 
+-- query61
 SELECT promotions, 
                total, 
                promotions / 

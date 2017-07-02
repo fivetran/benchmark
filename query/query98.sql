@@ -1,5 +1,5 @@
 
--- start query 98 in stream 0 using template query98.tpl 
+-- query98
 SELECT i_item_id, 
        i_item_desc, 
        i_category, 

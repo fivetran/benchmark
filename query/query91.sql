@@ -1,4 +1,4 @@
--- start query 91 in stream 0 using template query91.tpl 
+-- query91
 SELECT cc_call_center_id Call_Center, 
        cc_name           Call_Center_Name, 
        cc_manager        Manager, 

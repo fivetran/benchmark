@@ -1,4 +1,4 @@
--- start query 16 in stream 0 using template query16.tpl
+-- query16
 SELECT
          Count(DISTINCT cs_order_number) AS "order count" ,
          Sum(cs_ext_ship_cost)           AS "total shipping cost" ,

@@ -1,4 +1,4 @@
--- start query 15 in stream 0 using template query15.tpl 
+-- query15
 SELECT ca_zip, 
                Sum(cs_sales_price) 
 FROM   catalog_sales, 

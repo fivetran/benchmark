@@ -1,4 +1,4 @@
--- start query 66 in stream 0 using template query66.tpl 
+-- query66
 SELECT w_warehouse_name, 
                w_warehouse_sq_ft, 
                w_city, 

@@ -1,4 +1,4 @@
--- start query 9 in stream 0 using template query9.tpl 
+-- query9
 SELECT CASE 
          WHEN (SELECT Count(*) 
                FROM   store_sales 

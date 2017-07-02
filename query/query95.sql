@@ -1,4 +1,4 @@
--- start query 95 in stream 0 using template query95.tpl 
+-- query95
 WITH ws_wh AS 
 ( 
        SELECT ws1.ws_order_number, 

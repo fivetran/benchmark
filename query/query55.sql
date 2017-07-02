@@ -1,4 +1,4 @@
--- start query 55 in stream 0 using template query55.tpl 
+-- query55
 SELECT i_brand_id              brand_id, 
                i_brand                 brand, 
                Sum(ss_ext_sales_price) ext_price 

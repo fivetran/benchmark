@@ -1,4 +1,4 @@
--- start query 5 in stream 0 using template query5.tpl 
+-- query5
 WITH ssr AS 
 ( 
          SELECT   s_store_id, 

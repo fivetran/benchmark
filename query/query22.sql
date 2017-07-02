@@ -1,4 +1,4 @@
--- start query 22 in stream 0 using template query22.tpl 
+-- query22
 SELECT i_product_name, 
                i_brand, 
                i_class, 

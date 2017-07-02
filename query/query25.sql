@@ -1,4 +1,4 @@
--- start query 25 in stream 0 using template query25.tpl 
+-- query25
 SELECT i_item_id, 
                i_item_desc, 
                s_store_id, 

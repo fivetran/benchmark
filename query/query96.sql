@@ -1,4 +1,4 @@
--- start query 96 in stream 0 using template query96.tpl 
+-- query96
 SELECT Count(*) 
 FROM   store_sales, 
        household_demographics, 

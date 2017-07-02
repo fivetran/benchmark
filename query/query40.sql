@@ -1,4 +1,4 @@
--- start query 40 in stream 0 using template query40.tpl 
+-- query40
 SELECT
                 w_state , 
                 i_item_id , 

@@ -1,4 +1,4 @@
--- start query 94 in stream 0 using template query94.tpl 
+-- query94
 SELECT 
          Count(DISTINCT ws_order_number) AS "order count" , 
          Sum(ws_ext_ship_cost)           AS "total shipping cost" , 

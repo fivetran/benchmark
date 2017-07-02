@@ -1,4 +1,4 @@
--- start query 72 in stream 0 using template query72.tpl 
+-- query72
 SELECT i_item_desc, 
                w_warehouse_name, 
                d1.d_week_seq, 

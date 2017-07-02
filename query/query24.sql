@@ -1,4 +1,4 @@
--- start query 24 in stream 0 using template query24.tpl 
+-- query24
 WITH ssales 
      AS (SELECT c_last_name, 
                 c_first_name, 

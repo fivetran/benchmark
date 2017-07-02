@@ -1,5 +1,5 @@
 
--- start query 82 in stream 0 using template query82.tpl 
+-- query82
 SELECT
          i_item_id , 
          i_item_desc , 

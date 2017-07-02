@@ -1,4 +1,4 @@
--- start query 68 in stream 0 using template query68.tpl 
+-- query68
 SELECT c_last_name, 
                c_first_name, 
                ca_city, 

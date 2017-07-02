@@ -1,4 +1,4 @@
--- start query 19 in stream 0 using template query19.tpl 
+-- query19
 SELECT i_brand_id              brand_id, 
                i_brand                 brand, 
                i_manufact_id, 

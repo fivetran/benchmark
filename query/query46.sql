@@ -1,4 +1,4 @@
--- start query 46 in stream 0 using template query46.tpl 
+-- query46
 SELECT c_last_name, 
                c_first_name, 
                ca_city, 
