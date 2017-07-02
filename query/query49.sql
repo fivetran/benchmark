@@ -13,19 +13,12 @@ FROM   (SELECT item,
                Rank() 
                  OVER ( 
                    ORDER BY currency_ratio) AS currency_rank 
-        FROM   (SELECT ws.ws_item_sk                                       AS 
-                       item, 
-                       ( Cast(Sum(COALESCE(wr.wr_return_quantity, 0)) AS DEC(15, 
-                              4)) / 
-                         Cast( 
-                         Sum(COALESCE(ws.ws_quantity, 0)) AS DEC(15, 4)) ) AS 
+        FROM   (SELECT ws.ws_item_sk AS item, 
+                       ( Sum(COALESCE(wr.wr_return_quantity, 0)) / 
+                         Sum(COALESCE(ws.ws_quantity, 0)) ) AS 
                        return_ratio, 
-                       ( Cast(Sum(COALESCE(wr.wr_return_amt, 0)) AS DEC(15, 4)) 
-                         / Cast( 
-                         Sum( 
-                         COALESCE(ws.ws_net_paid, 0)) AS DEC(15, 
-                         4)) )                                             AS 
-                       currency_ratio 
+                       ( Sum(COALESCE(wr.wr_return_amt, 0)) / 
+                         Sum(COALESCE(ws.ws_net_paid, 0)) ) AS currency_ratio 
                 FROM   web_sales ws 
                        LEFT OUTER JOIN web_returns wr 
                                     ON ( ws.ws_order_number = wr.wr_order_number 
@@ -41,7 +34,7 @@ FROM   (SELECT item,
                 GROUP  BY ws.ws_item_sk) in_web) web 
 WHERE  ( web.return_rank <= 10 
           OR web.currency_rank <= 10 ) 
-UNION 
+UNION ALL 
 SELECT 'catalog' AS channel, 
        catalog.item, 
        catalog.return_ratio, 
@@ -56,18 +49,13 @@ FROM   (SELECT item,
                Rank() 
                  OVER ( 
                    ORDER BY currency_ratio) AS currency_rank 
-        FROM   (SELECT cs.cs_item_sk                                       AS 
+        FROM   (SELECT cs.cs_item_sk AS 
                        item, 
-                       ( Cast(Sum(COALESCE(cr.cr_return_quantity, 0)) AS DEC(15, 
-                              4)) / 
-                         Cast( 
-                         Sum(COALESCE(cs.cs_quantity, 0)) AS DEC(15, 4)) ) AS 
+                       ( Sum(COALESCE(cr.cr_return_quantity, 0)) / 
+                         Sum(COALESCE(cs.cs_quantity, 0)) ) AS 
                        return_ratio, 
-                       ( Cast(Sum(COALESCE(cr.cr_return_amount, 0)) AS DEC(15, 4 
-                              )) / 
-                         Cast(Sum( 
-                         COALESCE(cs.cs_net_paid, 0)) AS DEC( 
-                         15, 4)) )                                         AS 
+                       ( Sum(COALESCE(cr.cr_return_amount, 0)) / 
+                         Sum(COALESCE(cs.cs_net_paid, 0)) ) AS 
                        currency_ratio 
                 FROM   catalog_sales cs 
                        LEFT OUTER JOIN catalog_returns cr 
@@ -84,7 +72,7 @@ FROM   (SELECT item,
                 GROUP  BY cs.cs_item_sk) in_cat) catalog 
 WHERE  ( catalog.return_rank <= 10 
           OR catalog.currency_rank <= 10 ) 
-UNION 
+UNION ALL
 SELECT 'store' AS channel, 
        store.item, 
        store.return_ratio, 
@@ -99,17 +87,13 @@ FROM   (SELECT item,
                Rank() 
                  OVER ( 
                    ORDER BY currency_ratio) AS currency_rank 
-        FROM   (SELECT sts.ss_item_sk                                       AS 
+        FROM   (SELECT sts.ss_item_sk AS 
                        item, 
-                       ( Cast(Sum(COALESCE(sr.sr_return_quantity, 0)) AS DEC(15, 
-                              4)) / 
-                         Cast( 
-                         Sum(COALESCE(sts.ss_quantity, 0)) AS DEC(15, 4)) ) AS 
+                       ( Sum(COALESCE(sr.sr_return_quantity, 0)) / 
+                         Sum(COALESCE(sts.ss_quantity, 0)) ) AS 
                        return_ratio, 
-                       ( Cast(Sum(COALESCE(sr.sr_return_amt, 0)) AS DEC(15, 4)) 
-                         / Cast( 
-                         Sum( 
-                         COALESCE(sts.ss_net_paid, 0)) AS DEC(15, 4)) )     AS 
+                       ( Sum(COALESCE(sr.sr_return_amt, 0)) 
+                         / Sum(COALESCE(sts.ss_net_paid, 0)) ) AS 
                        currency_ratio 
                 FROM   store_sales sts 
                        LEFT OUTER JOIN store_returns sr 
