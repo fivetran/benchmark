@@ -3,8 +3,8 @@ WITH customer_total_return
      AS (SELECT sr_customer_sk     AS ctr_customer_sk, 
                 sr_store_sk        AS ctr_store_sk, 
                 Sum(sr_return_amt) AS ctr_total_return 
-         FROM   tpcds.store_returns, 
-                tpcds.date_dim 
+         FROM   store_returns, 
+                date_dim 
          WHERE  sr_returned_date_sk = d_date_sk 
                 AND d_year = 2001 
          GROUP  BY sr_customer_sk, 
@@ -16,8 +16,8 @@ high_return AS (
 )
 SELECT c_customer_id 
 FROM   customer_total_return ctr1, 
-       tpcds.store, 
-       tpcds.customer 
+       store, 
+       customer 
 WHERE  ctr1.ctr_total_return > (SELECT return_limit
                                 FROM high_return
                                 WHERE  ctr1.ctr_store_sk = high_return.ctr_store_sk) 
