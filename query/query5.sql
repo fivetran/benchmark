@@ -11,14 +11,14 @@ WITH ssr AS
                                 ss_sold_date_sk         AS date_sk, 
                                 ss_ext_sales_price      AS sales_price, 
                                 ss_net_profit           AS profit, 
-                                Cast(0 AS DECIMAL(7,2)) AS return_amt, 
-                                Cast(0 AS DECIMAL(7,2)) AS net_loss 
+                                0 AS return_amt, 
+                                0 AS net_loss 
                          FROM   store_sales 
                          UNION ALL 
                          SELECT sr_store_sk             AS store_sk, 
                                 sr_returned_date_sk     AS date_sk, 
-                                Cast(0 AS DECIMAL(7,2)) AS sales_price, 
-                                Cast(0 AS DECIMAL(7,2)) AS profit, 
+                                0 AS sales_price, 
+                                0 AS profit, 
                                 sr_return_amt           AS return_amt, 
                                 sr_net_loss             AS net_loss 
                          FROM   store_returns ) salesreturns, 
@@ -40,14 +40,14 @@ WITH ssr AS
                                 cs_sold_date_sk         AS date_sk, 
                                 cs_ext_sales_price      AS sales_price, 
                                 cs_net_profit           AS profit, 
-                                cast(0 AS decimal(7,2)) AS return_amt, 
-                                cast(0 AS decimal(7,2)) AS net_loss 
+                                0 AS return_amt, 
+                                0 AS net_loss 
                          FROM   catalog_sales 
                          UNION ALL 
                          SELECT cr_catalog_page_sk      AS page_sk, 
                                 cr_returned_date_sk     AS date_sk, 
-                                cast(0 AS decimal(7,2)) AS sales_price, 
-                                cast(0 AS decimal(7,2)) AS profit, 
+                                0 AS sales_price, 
+                                0 AS profit, 
                                 cr_return_amount        AS return_amt, 
                                 cr_net_loss             AS net_loss 
                          FROM   catalog_returns ) salesreturns, 
@@ -69,14 +69,14 @@ WITH ssr AS
                                 ws_sold_date_sk         AS date_sk, 
                                 ws_ext_sales_price      AS sales_price, 
                                 ws_net_profit           AS profit, 
-                                cast(0 AS decimal(7,2)) AS return_amt, 
-                                cast(0 AS decimal(7,2)) AS net_loss 
+                                0 AS return_amt, 
+                                0 AS net_loss 
                          FROM   web_sales 
                          UNION ALL 
                          SELECT          ws_web_site_sk          AS wsr_web_site_sk, 
                                          wr_returned_date_sk     AS date_sk, 
-                                         cast(0 AS decimal(7,2)) AS sales_price, 
-                                         cast(0 AS decimal(7,2)) AS profit, 
+                                         0 AS sales_price, 
+                                         0 AS profit, 
                                          wr_return_amt           AS return_amt, 
                                          wr_net_loss             AS net_loss 
                          FROM            web_returns 

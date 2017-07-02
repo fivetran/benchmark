@@ -1,8 +1,8 @@
 -- start query 94 in stream 0 using template query94.tpl 
 SELECT 
-         Count(DISTINCT ws_order_number) AS `order count` , 
-         Sum(ws_ext_ship_cost)           AS `total shipping cost` , 
-         Sum(ws_net_profit)              AS `total net profit` 
+         Count(DISTINCT ws_order_number) AS "order count" , 
+         Sum(ws_ext_ship_cost)           AS "total shipping cost" , 
+         Sum(ws_net_profit)              AS "total net profit" 
 FROM     web_sales ws1 , 
          date_dim , 
          customer_address , 

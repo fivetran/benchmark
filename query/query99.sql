@@ -7,27 +7,27 @@ SELECT Substr(w_warehouse_name, 1, 20),
                Sum(CASE 
                      WHEN ( cs_ship_date_sk - cs_sold_date_sk <= 30 ) THEN 1 
                      ELSE 0 
-                   END) AS `30 days`, 
+                   END) AS "30 days", 
                Sum(CASE 
                      WHEN ( cs_ship_date_sk - cs_sold_date_sk > 30 ) 
                           AND ( cs_ship_date_sk - cs_sold_date_sk <= 60 ) THEN 1 
                      ELSE 0 
-                   END) AS `31-60 days`, 
+                   END) AS "31-60 days", 
                Sum(CASE 
                      WHEN ( cs_ship_date_sk - cs_sold_date_sk > 60 ) 
                           AND ( cs_ship_date_sk - cs_sold_date_sk <= 90 ) THEN 1 
                      ELSE 0 
-                   END) AS `61-90 days`, 
+                   END) AS "61-90 days", 
                Sum(CASE 
                      WHEN ( cs_ship_date_sk - cs_sold_date_sk > 90 ) 
                           AND ( cs_ship_date_sk - cs_sold_date_sk <= 120 ) THEN 
                      1 
                      ELSE 0 
-                   END) AS `91-120 days`, 
+                   END) AS "91-120 days", 
                Sum(CASE 
                      WHEN ( cs_ship_date_sk - cs_sold_date_sk > 120 ) THEN 1 
                      ELSE 0 
-                   END) AS `>120 days` 
+                   END) AS ">120 days" 
 FROM   catalog_sales, 
        warehouse, 
        ship_mode, 

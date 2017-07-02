@@ -1,6 +1,6 @@
 -- start query 92 in stream 0 using template query92.tpl 
 SELECT 
-         Sum(ws_ext_discount_amt) AS `Excess Discount Amount`
+         Sum(ws_ext_discount_amt) AS "Excess Discount Amount"
 FROM     web_sales , 
          item , 
          date_dim 

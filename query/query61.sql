@@ -1,8 +1,8 @@
 -- start query 61 in stream 0 using template query61.tpl 
 SELECT promotions, 
                total, 
-               Cast(promotions AS DECIMAL(15, 4)) / 
-               Cast(total AS DECIMAL(15, 4)) * 100 
+               promotions / 
+               total * 100 
 FROM   (SELECT Sum(ss_ext_sales_price) promotions 
         FROM   store_sales, 
                store, 
