@@ -1,5 +1,5 @@
 -- query67
-select top 100 *
+select *
 from (select i_category
             ,i_class
             ,i_brand
@@ -39,5 +39,6 @@ order by i_category
         ,s_store_id
         ,sumsales
         ,rk
+limit 100
 ;
 
