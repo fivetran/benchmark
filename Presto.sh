@@ -50,12 +50,12 @@ hive.parquet-optimized-reader.enabled=true
 hive.parquet-predicate-pushdown.enabled=true
 EOF
 
-# Allocation 80% of system memory to Presto
+# Allocate 90% of system memory to Presto
 MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}' )
 MEM_MB=$(( $MEM_KB / 1024 ))
-PRESTO_JVM_MB=$(( $MEM_MB * 8 / 10 ))
+PRESTO_JVM_MB=$(( $MEM_MB * 9 / 10 ))
 
-# Allocate JVM memory to 70% query / 30% system / overhead
+# Allocate JVM memory to overhead / (70% query / 30% system)
 PRESTO_OVERHEAD=500
 PRESTO_QUERY_NODE_MB=$(( ${PRESTO_JVM_MB} * 7 / 10 - ${PRESTO_OVERHEAD} ))
 PRESTO_RESERVED_SYSTEM_MB=$(( ${PRESTO_JVM_MB} * 3 / 10 - ${PRESTO_OVERHEAD} ))
