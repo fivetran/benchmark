@@ -3,23 +3,28 @@ set -e
 ACCOUNT=singular-vector-135519
 
 # Warm-up
-while read line;
-do 
-  echo "$line"
-  bq --project_id=${ACCOUNT} --dataset_id=tpcds query --use_legacy_sql=false "$line"
-done < Warmup.sql
+# while read line;
+# do 
+#   echo "$line"
+#   bq --project_id=${ACCOUNT} --dataset_id=tpcds \
+#     query --use_legacy_sql=false --batch=false --format=none <<< $line
+# done < Warmup.sql
 
 # Test
-echo "Query,Started,Ended,Billing Tier,Bytes" > BigQueryResults.csv
+mkdir -p results
+echo "Query,Started,Ended,Billing Tier,Bytes" > results/BigQueryResults.csv
 for f in query/*.sql; 
 do
   echo $f
-  ID=$(echo $f | tr / _ | tr . _)
-  cat $f | bq --project_id=${ACCOUNT} --dataset_id=tpcds query --use_legacy_sql=false --batch=false --job_id=$ID
-  JOB=$(bq --project_id=${ACCOUNT} --format=prettyjson show -j ${ID})
-  STARTED=$(echo $JOB | json statistics.startTime)
-  ENDED=$(echo $JOB | json statistics.endTime)
-  BILLING_TIER=$(echo $JOB | json statistics.query.billingTier)
-  BYTES=$(echo $JOB | json statistics.query.totalBytesBilled)
-  echo "$f,$STARTED,$ENDED,$BILLING_TIER,$BYTES" >> BigQueryResults.csv
+  RM_DIR=${f#query/}
+  QUERY=${RM_DIR%.sql}
+  ID=${QUERY}_$(date +%s)
+  bq --project_id=${ACCOUNT} --dataset_id=tpcds \
+    query --use_legacy_sql=false --batch=false --job_id=$ID --format=none < $f
+  JOB=$(bq --project_id=${ACCOUNT} --format=json show -j ${ID})
+  STARTED=$(json statistics.startTime <<< $JOB )
+  ENDED=$(json statistics.endTime <<< $JOB )
+  BILLING_TIER=$(json statistics.query.billingTier <<< $JOB )
+  BYTES=$(json statistics.query.totalBytesBilled <<< $JOB )
+  echo "$f,$STARTED,$ENDED,$BILLING_TIER,$BYTES" >> results/BigQueryResults.csv
 done

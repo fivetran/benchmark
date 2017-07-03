@@ -7,16 +7,32 @@ DB=tpcds
 USER=developers
 export PGPASSWORD=Charteau1
 
-echo 'Create tables...'
-psql --host ${HOST} --port 5439 --user ${USER} ${DB} -f PopulateRedshift.sql 
+# echo 'Create tables...'
+while read line;
+do
+  psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
+    --echo-queries --output /dev/null \
+    --command "$line" 
+done < PopulateRedshift.sql
 
 echo 'Warmup.sql...'
-psql --host ${HOST} --port 5439 --user ${USER} ${DB} -f Warmup.sql > /dev/null
+while read line;
+do
+  psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
+    --echo-queries --output /dev/null \
+    --command "$line" 
+done < Warmup.sql
 
 for f in query/*.sql; 
 do
   echo $f
-  time psql --host ${HOST} --port 5439 --user ${USER} ${DB} -f $f > /dev/null
+  psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
+    --echo-queries --output /dev/null \
+    --file $f 
 done
 
-psql --host ${HOST} --port 5439 --user ${USER} ${DB} -f RedshiftTiming.sql
+echo 'RedshiftTiming.sql...'
+mkdir -p results
+psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
+  --no-align --field-separator '\t' --output results/RedshiftResults.tsv \
+  --file results/RedshiftTiming.sql
