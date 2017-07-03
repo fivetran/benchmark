@@ -3,12 +3,12 @@ set -e
 ACCOUNT=singular-vector-135519
 
 # Warm-up
-# while read line;
-# do 
-#   echo "$line"
-#   bq --project_id=${ACCOUNT} --dataset_id=tpcds \
-#     query --use_legacy_sql=false --batch=false --format=none <<< $line
-# done < Warmup.sql
+while read line;
+do 
+  echo "$line"
+  bq --project_id=${ACCOUNT} --dataset_id=tpcds \
+    query --use_legacy_sql=false --batch=false --format=none <<< $line
+done < Warmup.sql
 
 # Test
 mkdir -p results
