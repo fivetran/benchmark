@@ -27,9 +27,10 @@ done < Warmup.sql
 for f in query/*.sql; 
 do
   echo $f
+  SQL=$( cat $f | sed -e 's/Substr/Substring/g' )
   psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
     --output /dev/null \
-    --file $f 
+    --command "$SQL"
 done
 
 echo 'RedshiftTiming.sql...'
