@@ -9,12 +9,16 @@ hive -f ParquetDdl.sql
 
 # Read all tables to warm up google cloud storage
 echo 'Warmup.sql...'
-presto --catalog=hive --schema=tpcds_parquet -f Warmup.sql > /dev/null
+while read line;
+do
+  echo "$line"
+  presto --catalog=hive --schema=tpcds_parquet --execute "$line" > /dev/null
+done < Warmup.sql
 
 # Run each query
 for f in query/*.sql; 
 do
-  echo $f
+  echo "$f"
   presto --catalog=hive --schema tpcds_parquet -f $f > /dev/null
 done
 
