@@ -26,7 +26,7 @@ WHERE           i_current_price BETWEEN 0.99 AND             1.49
 AND             i_item_sk = cs_item_sk 
 AND             cs_warehouse_sk = w_warehouse_sk 
 AND             cs_sold_date_sk = d_date_sk 
-AND             d_date BETWEEN (Cast ('2002-05-01' AS DATE)) AND cast ('2002-07-01' AS date)
+AND             Cast(d_date AS DATE) BETWEEN (Cast ('2002-05-01' AS DATE)) AND cast ('2002-07-01' AS date)
 GROUP BY        w_state, 
                 i_item_id 
 ORDER BY        w_state, 
