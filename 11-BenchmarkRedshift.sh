@@ -7,7 +7,7 @@ DB=tpcds
 USER=developers
 export PGPASSWORD=Charteau1
 
-# echo 'Create tables...'
+echo 'Create tables...'
 while read line;
 do
   psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
