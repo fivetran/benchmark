@@ -20,7 +20,7 @@ do
   QUERY=${RM_DIR%.sql}
   ID=${QUERY}_$(date +%s)
   bq --project_id=${ACCOUNT} --dataset_id=tpcds \
-    query --use_legacy_sql=false --batch=false --job_id=$ID --format=none < $f
+    query --use_legacy_sql=false --batch=false --maximum_billing_tier=10 --job_id=$ID --format=none < $f
   JOB=$(bq --project_id=${ACCOUNT} --format=json show -j ${ID})
   STARTED=$(json statistics.startTime <<< $JOB )
   ENDED=$(json statistics.endTime <<< $JOB )
