@@ -77,24 +77,21 @@ SELECT
          sum(profit)  AS profit 
 FROM     ( 
                 SELECT 'store channel' AS channel , 
-                       'store' 
-                              || store_id AS id , 
+                       Concat('store', store_id) AS id , 
                        sales , 
                        returns1 , 
                        profit 
                 FROM   ssr 
                 UNION ALL 
                 SELECT 'catalog channel' AS channel , 
-                       'catalog_page' 
-                              || catalog_page_id AS id , 
+                       Concat('catalog_page', catalog_page_id) AS id , 
                        sales , 
                        returns1 , 
                        profit 
                 FROM   csr 
                 UNION ALL 
                 SELECT 'web channel' AS channel , 
-                       'web_site' 
-                              || web_site_id AS id , 
+                       Concat('web_site', web_site_id) AS id , 
                        sales , 
                        returns1 , 
                        profit 

@@ -1,8 +1,6 @@
 -- query84
 SELECT c_customer_id   AS customer_id, 
-               c_last_name 
-               || ', ' 
-               || c_first_name AS customername 
+       Concat(c_last_name, Concat(', ', c_first_name))  AS customername 
 FROM   customer, 
        customer_address, 
        customer_demographics, 
