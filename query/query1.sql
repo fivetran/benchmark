@@ -17,12 +17,12 @@ high_return AS (
 SELECT c_customer_id 
 FROM   customer_total_return ctr1, 
        store, 
-       customer 
-WHERE  ctr1.ctr_total_return > (SELECT return_limit
-                                FROM high_return
-                                WHERE  ctr1.ctr_store_sk = high_return.ctr_store_sk) 
+       customer,
+       high_return 
+WHERE  ctr1.ctr_total_return > high_return.return_limit
        AND s_store_sk = ctr1.ctr_store_sk 
        AND s_state = 'TN' 
        AND ctr1.ctr_customer_sk = c_customer_sk 
+       AND ctr1.ctr_store_sk = high_return.ctr_store_sk
 ORDER  BY c_customer_id
 LIMIT 100;
