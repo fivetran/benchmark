@@ -104,11 +104,11 @@ SELECT cs1.product_name,
        cs1.s1, 
        cs1.s2, 
        cs1.s3, 
-       cs2.s1, 
-       cs2.s2, 
-       cs2.s3, 
-       cs2.syear, 
-       cs2.cnt 
+       cs2.s1 AS s1_, 
+       cs2.s2 AS s2_, 
+       cs2.s3 AS s3_, 
+       cs2.syear AS syear_, 
+       cs2.cnt AS cnt_ 
 FROM   cross_sales cs1, 
        cross_sales cs2 
 WHERE  cs1.item_sk = cs2.item_sk 
