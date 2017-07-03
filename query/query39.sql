@@ -37,11 +37,11 @@ SELECT inv1.w_warehouse_sk,
        inv1.d_moy, 
        inv1.mean, 
        inv1.cov, 
-       inv2.w_warehouse_sk, 
-       inv2.i_item_sk, 
-       inv2.d_moy, 
-       inv2.mean, 
-       inv2.cov 
+       inv2.w_warehouse_sk AS w_warehouse_sk_2, 
+       inv2.i_item_sk AS i_item_sk_2, 
+       inv2.d_moy AS d_moy_2, 
+       inv2.mean AS mean_2, 
+       inv2.cov AS cov_2 
 FROM   inv inv1, 
        inv inv2 
 WHERE  inv1.i_item_sk = inv2.i_item_sk 
