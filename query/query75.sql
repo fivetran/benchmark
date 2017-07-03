@@ -25,7 +25,7 @@ WITH all_sales
                                ON ( cs_order_number = cr_order_number 
                                     AND cs_item_sk = cr_item_sk ) 
                  WHERE  i_category = 'Men' 
-                 UNION 
+                 UNION ALL
                  SELECT d_year, 
                         i_brand_id, 
                         i_class_id, 
@@ -44,7 +44,7 @@ WITH all_sales
                                ON ( ss_ticket_number = sr_ticket_number 
                                     AND ss_item_sk = sr_item_sk ) 
                  WHERE  i_category = 'Men' 
-                 UNION 
+                 UNION ALL
                  SELECT d_year, 
                         i_brand_id, 
                         i_class_id, 
