@@ -1,7 +1,6 @@
 -- query27
 SELECT i_item_id, 
                s_state, 
-               Grouping(s_state)   g_state, 
                Avg(ss_quantity)    agg1, 
                Avg(ss_list_price)  agg2, 
                Avg(ss_coupon_amt)  agg3, 

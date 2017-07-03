@@ -2,12 +2,9 @@
 SELECT Sum(ss_net_profit)                     AS total_sum, 
                s_state, 
                s_county, 
-               Grouping(s_state) + Grouping(s_county) AS lochierarchy, 
                Rank() 
                  OVER ( 
-                   partition BY Grouping(s_state)+Grouping(s_county), CASE WHEN 
-                 Grouping( 
-                 s_county) = 0 THEN s_state END 
+                   PARTITION BY s_state, s_county
                    ORDER BY Sum(ss_net_profit) DESC)  AS rank_within_parent 
 FROM   store_sales, 
        date_dim d1, 
@@ -32,9 +29,6 @@ WHERE  d1.d_month_seq BETWEEN 1200 AND 1200 + 11
                                GROUP  BY s_state) tmp1 
                        WHERE  ranking <= 5) 
 GROUP  BY s_state, s_county 
-ORDER  BY lochierarchy DESC, 
-          CASE 
-            WHEN lochierarchy = 0 THEN s_state 
-          END, 
+ORDER  BY s_state, 
           rank_within_parent
 LIMIT 100; 
