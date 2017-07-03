@@ -1,4 +1,5 @@
-# Run this locally
+# You will probably need to run this on an EC2 instance or it will fail in the middle
+# See 6-ConnectToEc2Instance.sh
 # Don't forget to export PGPASSWORD=?
 set -e 
 
@@ -27,7 +28,7 @@ for f in query/*.sql;
 do
   echo $f
   psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
-    --echo-queries --output /dev/null \
+    --output /dev/null \
     --file $f 
 done
 
