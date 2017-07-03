@@ -50,26 +50,15 @@ hive.parquet-optimized-reader.enabled=true
 hive.parquet-predicate-pushdown.enabled=true
 EOF
 
-# Compute memory settings based on Spark's settings.
-# We use "tail -n 1" since overrides are applied just by order of appearance.
-SPARK_EXECUTOR_MB=$(grep spark.executor.memory /etc/spark/conf/spark-defaults.conf | tail -n 1 | cut -d '=' -f 2 | cut -d 'm' -f 1)
-SPARK_EXECUTOR_CORES=$(grep spark.executor.cores /etc/spark/conf/spark-defaults.conf | tail -n 1 | cut -d '=' -f 2)
-SPARK_EXECUTOR_OVERHEAD_MB=$(grep spark.yarn.executor.memoryOverhead /etc/spark/conf/spark-defaults.conf | tail -n 1 | cut -d '=' -f 2)
-SPARK_EXECUTOR_COUNT=$(( $(nproc) / ${SPARK_EXECUTOR_CORES} ))
+# Allocation 80% of system memory to Presto
+MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}' )
+MEM_MB=$(( $MEM_KB / 1024 ))
+PRESTO_JVM_MB=$(( $MEM_MB * 8 / 10 ))
 
-# Add up overhead and allocated executor MB for container size.
-SPARK_CONTAINER_MB=$(( ${SPARK_EXECUTOR_MB} + ${SPARK_EXECUTOR_OVERHEAD_MB} ))
-PRESTO_JVM_MB=$(( ${SPARK_CONTAINER_MB} * ${SPARK_EXECUTOR_COUNT} ))
-
-# Give query.max-memorr-per-node 60% of Xmx; this more-or-less assumes a
-# single-tenant use case rather than trying to allow many concurrent queries
-# against a shared cluster.
-# Subtract out SPARK_EXECUTOR_OVERHEAD_MB in both the query MB and reserved
-# system MB as a crude approximation of other unaccounted overhead that we need
-# to leave betweenused bytes and Xmx bytes. Rounding down by integer division
-# here also effectively places round-down bytes in the "general" pool.
-PRESTO_QUERY_NODE_MB=$(( ${PRESTO_JVM_MB} * 7 / 10 - ${SPARK_EXECUTOR_OVERHEAD_MB} ))
-PRESTO_RESERVED_SYSTEM_MB=$(( ${PRESTO_JVM_MB} * 3 / 10 - ${SPARK_EXECUTOR_OVERHEAD_MB} ))
+# Allocate JVM memory to 70% query / 30% system / overhead
+PRESTO_OVERHEAD=500
+PRESTO_QUERY_NODE_MB=$(( ${PRESTO_JVM_MB} * 7 / 10 - ${PRESTO_OVERHEAD} ))
+PRESTO_RESERVED_SYSTEM_MB=$(( ${PRESTO_JVM_MB} * 3 / 10 - ${PRESTO_OVERHEAD} ))
 
 cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
 -server
