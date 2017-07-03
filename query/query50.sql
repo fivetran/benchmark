@@ -12,29 +12,29 @@ SELECT s_store_name,
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk <= 30 ) THEN 1 
                      ELSE 0 
-                   END) AS "30 days", 
+                   END) AS days_30, 
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 30 ) 
                           AND ( sr_returned_date_sk - ss_sold_date_sk <= 60 ) 
                    THEN 1 
                      ELSE 0 
-                   END) AS "31-60 days", 
+                   END) AS days_31_60, 
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 60 ) 
                           AND ( sr_returned_date_sk - ss_sold_date_sk <= 90 ) 
                    THEN 1 
                      ELSE 0 
-                   END) AS "61-90 days", 
+                   END) AS days_61_90, 
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 90 ) 
                           AND ( sr_returned_date_sk - ss_sold_date_sk <= 120 ) 
                    THEN 1 
                      ELSE 0 
-                   END) AS "91-120 days", 
+                   END) AS days_91_120, 
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 120 ) THEN 1 
                      ELSE 0 
-                   END) AS ">120 days" 
+                   END) AS days_over_120 
 FROM   store_sales, 
        store_returns, 
        store, 

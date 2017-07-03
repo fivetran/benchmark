@@ -1,6 +1,6 @@
 -- query32
 SELECT 
-       Sum(cs_ext_discount_amt) AS "excess discount amount"
+       Sum(cs_ext_discount_amt) AS excess_discount_amount
 FROM   catalog_sales , 
        item , 
        date_dim 
