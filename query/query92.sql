@@ -1,6 +1,6 @@
 -- query92
 SELECT 
-         Sum(ws_ext_discount_amt) AS "Excess Discount Amount"
+         Sum(ws_ext_discount_amt) AS excess_discount_amount
 FROM     web_sales , 
          item , 
          date_dim 
