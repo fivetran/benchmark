@@ -36,10 +36,10 @@ WHERE  d_month_seq BETWEEN 1222 AND 1222 + 11
        AND ws_warehouse_sk = w_warehouse_sk 
        AND ws_ship_mode_sk = sm_ship_mode_sk 
        AND ws_web_site_sk = web_site_sk 
-GROUP  BY Substr(w_warehouse_name, 1, 20), 
+GROUP  BY 1, 
           sm_type, 
           web_name 
-ORDER  BY Substr(w_warehouse_name, 1, 20), 
+ORDER  BY 1, 
           sm_type, 
           web_name
 LIMIT 100; 
