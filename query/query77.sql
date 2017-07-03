@@ -9,7 +9,7 @@ WITH ss AS
                   date_dim, 
                   store 
          WHERE    ss_sold_date_sk = d_date_sk 
-         AND      d_date BETWEEN Cast('2001-08-16' AS DATE) AND      ( 
+         AND      Cast(d_date AS DATE) BETWEEN Cast('2001-08-16' AS DATE) AND      ( 
                            Cast('2001-09-15' AS DATE)) 
          AND      ss_store_sk = s_store_sk 
          GROUP BY s_store_sk) , sr AS 
@@ -21,7 +21,7 @@ WITH ss AS
                   date_dim, 
                   store 
          WHERE    sr_returned_date_sk = d_date_sk 
-         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
                            Cast('2001-09-15' AS DATE)) 
          AND      sr_store_sk = s_store_sk 
          GROUP BY s_store_sk), cs AS 
@@ -32,7 +32,7 @@ WITH ss AS
          FROM     catalog_sales, 
                   date_dim 
          WHERE    cs_sold_date_sk = d_date_sk 
-         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
                            Cast('2001-09-15' AS DATE)) 
          GROUP BY cs_call_center_sk ), cr AS 
 ( 
@@ -42,7 +42,7 @@ WITH ss AS
          FROM     catalog_returns, 
                   date_dim 
          WHERE    cr_returned_date_sk = d_date_sk 
-         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
                            Cast('2001-09-15' AS DATE)) 
          GROUP BY cr_call_center_sk ), ws AS 
 ( 
@@ -53,7 +53,7 @@ WITH ss AS
                   date_dim, 
                   web_page 
          WHERE    ws_sold_date_sk = d_date_sk 
-         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
                            Cast('2001-09-15' AS DATE)) 
          AND      ws_web_page_sk = wp_web_page_sk 
          GROUP BY wp_web_page_sk), wr AS 
@@ -65,7 +65,7 @@ WITH ss AS
                   date_dim, 
                   web_page 
          WHERE    wr_returned_date_sk = d_date_sk 
-         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
                            Cast('2001-09-15' AS DATE)) 
          AND      wr_web_page_sk = wp_web_page_sk 
          GROUP BY wp_web_page_sk) 

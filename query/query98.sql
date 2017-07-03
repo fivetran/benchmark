@@ -15,7 +15,7 @@ FROM   store_sales,
 WHERE  ss_item_sk = i_item_sk 
        AND i_category IN ( 'Men', 'Home', 'Electronics' ) 
        AND ss_sold_date_sk = d_date_sk 
-       AND d_date BETWEEN CAST('2000-05-18' AS DATE) AND ( 
+       AND Cast(d_date AS DATE) BETWEEN CAST('2000-05-18' AS DATE) AND ( 
                           CAST('2000-06-18' AS DATE) ) 
 GROUP  BY i_item_id, 
           i_item_desc, 

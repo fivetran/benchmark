@@ -11,7 +11,7 @@ FROM     item,
 WHERE    i_current_price BETWEEN 63 AND      63+30 
 AND      inv_item_sk = i_item_sk 
 AND      d_date_sk=inv_date_sk 
-AND      d_date BETWEEN Cast('1998-04-27' AS DATE) AND      ( 
+AND      Cast(d_date AS DATE) BETWEEN Cast('1998-04-27' AS DATE) AND      ( 
                   Cast('1998-06-27' AS DATE)) 
 AND      i_manufact_id IN (57,293,427,320) 
 AND      inv_quantity_on_hand BETWEEN 100 AND      500 

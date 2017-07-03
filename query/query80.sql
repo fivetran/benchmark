@@ -15,7 +15,7 @@ WITH ssr AS
                                 item, 
                                 promotion 
                 WHERE           ss_sold_date_sk = d_date_sk 
-                AND             d_date BETWEEN Cast('2000-08-26' AS DATE) AND             ( 
+                AND             Cast(d_date AS DATE) BETWEEN Cast('2000-08-26' AS DATE) AND             ( 
                                                 Cast('2001-09-25' AS DATE)) 
                 AND             ss_store_sk = s_store_sk 
                 AND             ss_item_sk = i_item_sk 
@@ -38,7 +38,7 @@ WITH ssr AS
                                 item, 
                                 promotion 
                 WHERE           cs_sold_date_sk = d_date_sk 
-                AND             d_date BETWEEN cast('2000-08-26' AS date) AND             ( 
+                AND             Cast(d_date AS DATE) BETWEEN cast('2000-08-26' AS date) AND             ( 
                                                 Cast('2001-09-25' AS DATE)) 
                 AND             cs_catalog_page_sk = cp_catalog_page_sk 
                 AND             cs_item_sk = i_item_sk 
@@ -61,7 +61,7 @@ WITH ssr AS
                                 item, 
                                 promotion 
                 WHERE           ws_sold_date_sk = d_date_sk 
-                AND             d_date BETWEEN cast('2000-08-26' AS date) AND             ( 
+                AND             Cast(d_date AS DATE) BETWEEN cast('2000-08-26' AS date) AND             ( 
                                                 Cast('2001-09-25' AS DATE)) 
                 AND             ws_web_site_sk = web_site_sk 
                 AND             ws_item_sk = i_item_sk 
