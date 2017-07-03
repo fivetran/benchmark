@@ -30,7 +30,7 @@ WHERE  cs_sold_date_sk = d_date_sk
        AND d_year = 2001 
        AND ca_state IN ( 'KS', 'IA', 'AL', 'UT', 
                          'VA', 'NC', 'TX' ) 
-GROUP  BY rollup ( i_item_id, ca_country, ca_state, ca_county ) 
+GROUP  BY i_item_id, ca_country, ca_state, ca_county 
 ORDER  BY ca_country, 
           ca_state, 
           ca_county, 

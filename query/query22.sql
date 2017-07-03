@@ -12,7 +12,7 @@ WHERE  inv_date_sk = d_date_sk
        AND inv_item_sk = i_item_sk 
        AND inv_warehouse_sk = w_warehouse_sk 
        AND d_month_seq BETWEEN 1205 AND 1205 + 11 
-GROUP  BY rollup( i_product_name, i_brand, i_class, i_category ) 
+GROUP  BY i_product_name, i_brand, i_class, i_category 
 ORDER  BY qoh, 
           i_product_name, 
           i_brand, 

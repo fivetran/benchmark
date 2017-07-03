@@ -22,7 +22,7 @@ WHERE  d1.d_year = 2000
        AND s_store_sk = ss_store_sk 
        AND s_state IN ( 'TN', 'TN', 'TN', 'TN', 
                         'TN', 'TN', 'TN', 'TN' ) 
-GROUP  BY rollup( i_category, i_class ) 
+GROUP  BY i_category, i_class 
 ORDER  BY lochierarchy DESC, 
           CASE 
             WHEN lochierarchy = 0 THEN i_category 

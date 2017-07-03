@@ -27,7 +27,7 @@ from (select i_category
           and ss_item_sk=i_item_sk
           and ss_store_sk = s_store_sk
           and d_month_seq between 1181 and 1181+11
-       group by  rollup(i_category, i_class, i_brand, i_product_name, d_year, d_qoy, d_moy,s_store_id))dw1) dw2
+       group by i_category, i_class, i_brand, i_product_name, d_year, d_qoy, d_moy,s_store_id)dw1) dw2
 where rk <= 100
 order by i_category
         ,i_class

@@ -15,7 +15,7 @@ FROM   web_sales,
 WHERE  d1.d_month_seq BETWEEN 1183 AND 1183 + 11 
        AND d1.d_date_sk = ws_sold_date_sk 
        AND i_item_sk = ws_item_sk 
-GROUP  BY rollup( i_category, i_class ) 
+GROUP  BY i_category, i_class 
 ORDER  BY lochierarchy DESC, 
           CASE 
             WHEN lochierarchy = 0 THEN i_category 

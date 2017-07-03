@@ -99,7 +99,7 @@ FROM     (
                        returns1 , 
                        profit 
                 FROM   wsr ) x 
-GROUP BY rollup (channel, id) 
+GROUP BY channel, id
 ORDER BY channel , 
          id 
 LIMIT 100; 

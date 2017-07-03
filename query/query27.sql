@@ -21,7 +21,7 @@ WHERE  ss_sold_date_sk = d_date_sk
        AND d_year = 2000 
        AND s_state IN ( 'TN', 'TN', 'TN', 'TN', 
                         'TN', 'TN' ) 
-GROUP  BY rollup ( i_item_id, s_state ) 
+GROUP  BY i_item_id, s_state 
 ORDER  BY i_item_id, 
           s_state
 LIMIT 100; 
