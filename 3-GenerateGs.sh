@@ -1,5 +1,7 @@
--- Generate TPCS data in hive
--- Run this script in Hive
+# Generate TPCS data in gs://fivetran-benchmark
+
+hive -f CsvDdl.sql
+hive -f PopulateCsv.sql
+
 hive -f ParquetDdl.sql
 hive -f PopulateParquet.sql
-hive -f PopulateCsv.sql

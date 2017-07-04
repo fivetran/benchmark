@@ -1,5 +1,5 @@
 
-use tpcds_text_100;
+use tpcds_csv;
 
 insert into tpcds_parquet.call_center
 select * from call_center;
