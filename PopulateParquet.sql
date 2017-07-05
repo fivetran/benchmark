@@ -1,3 +1,4 @@
+-- It's important to run this in Presto rather than Hive so it generates a small number of large files
 
 insert into tpcds_parquet.call_center
 select * from call_center;
