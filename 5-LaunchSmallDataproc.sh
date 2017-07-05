@@ -11,8 +11,8 @@ gcloud dataproc clusters \
       --zone us-central1-a \
       --master-machine-type n1-standard-4 \
       --master-boot-disk-size 100 \
-      --num-workers 4 \
-      --worker-machine-type n1-highmem-4 \
+      --num-workers 8 \
+      --worker-machine-type n1-standard-4 \
       --worker-boot-disk-size 100 \
       --scopes 'https://www.googleapis.com/auth/cloud-platform' \
       --project digital-arbor-400 \
