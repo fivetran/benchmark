@@ -4,4 +4,4 @@ hive -f CsvDdl.sql
 hive -f PopulateCsv.sql
 
 hive -f ParquetDdl.sql
-hive -f PopulateParquet.sql
+presto --catalog hive --schema tpcds_csv -f PopulateParquet.sql

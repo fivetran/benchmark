@@ -48,6 +48,7 @@ connector.name=hive-hadoop2
 hive.metastore.uri=thrift://localhost:9083
 hive.parquet-optimized-reader.enabled=true
 hive.parquet-predicate-pushdown.enabled=true
+hive.non-managed-table-writes-enabled=true
 EOF
 
 # Allocate 90% of system memory to Presto
