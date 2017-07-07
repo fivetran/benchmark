@@ -6,4 +6,4 @@ hive -f PopulateCsv.sql
 
 echo 'Generate Parquet files...'
 hive -f ParquetDdl.sql
-presto --catalog hive --schema tpcds_csv -f PopulateParquet.sql
+hive -f PopulateParquet.sql

@@ -1,4 +1,10 @@
--- It's important to run this in Presto rather than Hive so it generates a small number of large files
+-- Merge small files 
+set hive.merge.mapfiles=true;
+set hive.merge.mapredfiles=true;
+set hive.merge.size.per.task=500000000;
+set hive.merge.smallfiles.avgsize=500000000;
+
+use tpcds_csv;
 
 insert into tpcds_parquet.call_center
 select * from call_center;

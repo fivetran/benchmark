@@ -38,7 +38,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/call_center'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.catalog_page(
@@ -56,7 +56,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/catalog_page'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.catalog_returns
@@ -93,7 +93,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/catalog_returns'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.catalog_sales
@@ -137,7 +137,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/catalog_sales'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.customer_address
@@ -160,7 +160,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/customer_address'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.customer_demographics
@@ -179,7 +179,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/customer_demographics'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.customer
@@ -207,7 +207,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/customer'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.date_dim
@@ -245,7 +245,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/date_dim'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.household_demographics
@@ -260,7 +260,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/household_demographics'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.income_band(
@@ -272,7 +272,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/income_band'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.inventory
@@ -286,7 +286,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/inventory'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.item
@@ -318,7 +318,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/item'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.promotion
@@ -347,7 +347,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/promotion'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.reason(
@@ -359,7 +359,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/reason'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.ship_mode(
@@ -374,7 +374,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/ship_mode'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.store_returns
@@ -404,7 +404,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/store_returns'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.store_sales
@@ -437,7 +437,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/store_sales'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.store
@@ -476,7 +476,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/store'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.time_dim
@@ -496,7 +496,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/time_dim'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.warehouse(
@@ -519,7 +519,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/warehouse'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.web_page(
@@ -542,7 +542,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/web_page'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.web_returns
@@ -576,7 +576,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/web_returns'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.web_sales
@@ -620,7 +620,7 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/web_sales'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
 
 create external table tpcds_parquet.web_site
@@ -656,5 +656,5 @@ stored as parquet
 location 'gs://fivetran-benchmark/tpcds/parquet/web_site'
 tblproperties (
      'parquet.compression' = 'snappy',
-     'parquet.block.size' = '1000000000' -- 1 GB
+     'parquet.block.size' = '2000000000' -- 2 GB
 );
