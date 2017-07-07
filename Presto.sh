@@ -20,7 +20,7 @@ HOSTNAME=$(hostname)
 DNSNAME=$(dnsdomainname)
 FQDN=${HOSTNAME}.$DNSNAME
 CONNECTOR_JAR=$(find /usr/lib/hadoop/lib -name 'gcs-connector-*.jar')
-PRESTO_VERSION="0.179"
+PRESTO_VERSION="0.180"
 HTTP_PORT="8080"
 
 # Download and unpack Presto server
