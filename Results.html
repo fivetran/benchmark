@@ -328,33 +328,47 @@ BigQuery	query/query99.sql	3.942	0.02606868744	1.978927776	2	4	1.382317945	2	0.0
 
             return result;
         }
+        function median(measure, warehouse) {
+            var selected = [];
+
+            data.forEach(d => {
+                if (warehouse == null || d['Warehouse'] == warehouse) {
+                    var value = d[measure];
+
+                    selected.push(value);
+                }
+            });
+
+            return d3.median(selected);
+        }
 
         // Divide SVG into 6 panels
-        var measures = ['Time Bin', 'Cost Bin'],
+        var measures = [{binnedMeasure: 'Time Bin', exactMeasure: 'Time'}, {binnedMeasure: 'Cost Bin', exactMeasure: 'Cost'}],
             warehouses = ['Redshift', 'Snowflake', 'BigQuery'];
 
-        var xPanel = d3.scaleBand().domain(measures).range([0, width]).padding(0.1),
+        var xPanel = d3.scaleBand().domain(measures.map(m => m.binnedMeasure)).range([0, width]).padding(0.1),
             yPanel = d3.scaleBand().domain(warehouses).range([0, height]).padding(0.1);
         
-        measures.forEach((measure, paneX) => {
+        measures.forEach(({binnedMeasure, exactMeasure}, paneX) => {
             // Compute histogram across warehouses so every histogram has same limits
-            var allCounts = histogram(measure),
+            var allCounts = histogram(binnedMeasure),
                 allBins = Object.keys(allCounts).sort((x, y) => x - y),
                 maxCount = d3.max(Object.values(allCounts));
 
             // Figure out where to draw x-axis of pane
-            var xMin = xPanel(measure),
-                xMax = xPanel(measure) + xPanel.bandwidth(),
+            var xMin = xPanel(binnedMeasure),
+                xMax = xPanel(binnedMeasure) + xPanel.bandwidth(),
                 x = d3.scaleBand().domain(allBins).range([xMin, xMax]).padding(0.1);
 
             warehouses.forEach((warehouse, paneY) => {
                 // Figure out where to draw y-axis of pane
                 var yMin = yPanel(warehouse),
                     yMax = yPanel(warehouse) + yPanel.bandwidth(),
-                    y = d3.scaleLinear().domain([0, 50]).range([yMax, yMin]);
+                    yDomainMax = 50,
+                    y = d3.scaleLinear().domain([0, yDomainMax]).range([yMax, yMin]);
 
                 // Compute histogram for 1 warehouse
-                var counts = histogram(measure, warehouse),
+                var counts = histogram(binnedMeasure, warehouse),
                     bins = Object.keys(allCounts).sort((x, y) => x - y);
 
                 // Draw 1 histogram
@@ -406,6 +420,13 @@ BigQuery	query/query99.sql	3.942	0.02606868744	1.978927776	2	4	1.382317945	2	0.0
                     .attr("y", bin => y(counts[bin] || 0))
                     .attr("width", x.bandwidth())
                     .attr("height", bin => yMax - y(counts[bin] || 0));
+
+                let medianLine = median(exactMeasure);
+
+                g.append("line")
+                    .attr("class", "median")
+                    .attr("x1", x(medianLine)).attr("y1", y(0)) // TODO x is not a continuous scale
+                    .attr("x2", x(medianLine)).attr("y2", y(yDomainMax));
             });
         });
     </script>
