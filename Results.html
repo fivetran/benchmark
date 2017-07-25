@@ -1,5 +1,6 @@
 <head>
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-format.v1.js"></script>
 </head>
 <body>
     <svg width="1000" height="800"></svg>
@@ -359,21 +360,29 @@ BigQuery	query/query99.sql	3.942	0.02606868744	1.978927776	2	4	1.382317945	2	0.0
                 // Draw 1 histogram
                 var g = svg.append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                function xTickFormat(value) {
+                    value = +value;
+
+                    if (value < .01) {
+                        let pow = Math.ceil(Math.log10(value));
+
+                        return "10e" + pow;
+                    }
+                    else
+                        return value;
+                }
 
                 if (paneY == 2) {
                     g.append("g")
                         .attr("class", "axis axis--x")
                         .attr("transform", "translate(0," + yMax + ")")
-                        .call(d3.axisBottom(x));
+                        .call(d3.axisBottom(x).tickFormat(xTickFormat));
                 }
                 else {
-                    /*
-                    g.append("line")
-                        .data([xMin, xMax])
-                        .enter()
-                        .attr("x", x => x)
-                        .attr("y")
-                        */
+                    g.append("g")
+                        .attr("class", "axis axis--x")
+                        .attr("transform", "translate(0," + yMax + ")")
+                        .call(d3.axisBottom(x).tickFormat(_ => ""));
                 }
 
                 if (paneX == 0) {
