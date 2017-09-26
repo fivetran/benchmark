@@ -313,11 +313,13 @@ const spec = {
     "padding": 5,
     "data": [
         {
-            "name": "table",
-            "format": {
-                "type": "tsv"
-            },
+            "name": "raw",
+            "format": {"type": "tsv"},
             "values": tsv,
+        },
+        {
+            "name": "table",
+            "source": "raw",
             "transform": [
                 {
                     "type": "formula",
@@ -347,6 +349,19 @@ const spec = {
                     "as": "TimeBinRight"
                 }
             ]
+        },
+        {
+            "name": "medians",
+            "source": "raw",
+            "transform": [
+                {
+                    "type": "aggregate",
+                    "groupby": ["Warehouse"],
+                    "fields": ["Time"],
+                    "ops": ["median"],
+                    "as": ["MedianTime"]
+                }
+            ]
         }
     ],
     "scales": [
@@ -364,7 +379,7 @@ const spec = {
                 "field": "Warehouse"
             },
             "range": "height",
-            "padding": 0.2
+            "padding": 0.3
         },
         {
             "name": "yscale",
@@ -378,7 +393,6 @@ const spec = {
     ],
     "marks": [
         {
-            "name": "cell",
             "type": "group",
             "from": {
                 "facet": {
@@ -413,9 +427,7 @@ const spec = {
             "marks": [
                 {
                     "type": "text",
-                    "from": {
-                        "data": "facet"
-                    },
+                    "from": {"data": "facet"},
                     "encode": {
                         "enter": {
                             "text": {"field": "Warehouse"},
@@ -453,6 +465,59 @@ const spec = {
                                 "scale": "yscale",
                                 "value": 0
                             }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "from": {
+                "facet": {
+                    "data": "medians",
+                    "name": "facet",
+                    "groupby": "Warehouse"
+                }
+            },
+            "encode": {
+                "enter": {
+                    "y": {
+                        "scale": "ypane", 
+                        "field": "Warehouse"
+                    },
+                    "width": {"signal": "width"},
+                    "height": {"signal": "bandwidth('ypane')"}
+                }
+            },
+            "marks": [
+                {
+                    "type": "text",
+                    "from": {"data": "facet"},
+                    "encode": {
+                        "enter": {
+                            "text": {"signal": "'Median = ' + round(datum.MedianTime * 10) / 10"},
+                            "dx": {"value": 5},
+                            "x": {
+                                "scale": "xscale",
+                                "field": "MedianTime"
+                            },
+                            "fill": {"value": "firebrick"},
+                        }
+                    }
+                },
+                {
+                    "type": "rule",
+                    "from": {"data": "facet"},
+                    "encode": {
+                        "enter": {
+                            "x": {
+                                "scale": "xscale",
+                                "field": "MedianTime"
+                            },
+                            "y": {"value": 0},
+                            "y2": {"signal": "bandwidth('ypane')"},
+                            "stroke": {"value": "firebrick"},
+                            "strokeWidth": {"value": 2}
                         }
                     }
                 }
