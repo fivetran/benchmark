@@ -531,7 +531,7 @@ const spec = {
             "encode": {
                 "enter": {
                     "x": {"signal": "width / 2"},
-                    "y": {"signal": "height + 10"},
+                    "y": {"signal": "height"},
                     "text": {"value": "Execution time [s]"},
                     "baseline": {"value": "top"},
                     "align": {"value": "center"},
@@ -546,7 +546,7 @@ const spec = {
 const view = new vega.View(vega.parse(spec), {
     loader: vega.loader({ baseURL: 'https://vega.github.io/vega/' }),
     logLevel: vega.Warn,
-    renderer: 'svg'
+    renderer: 'canvas'
 }).initialize('#results').hover().run();
 
 </script>
