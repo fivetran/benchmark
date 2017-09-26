@@ -391,6 +391,24 @@ const spec = {
             "round": true
         }
     ],
+    "axes": [
+        {
+            "orient": "right",
+            "scale": "ypane",
+            "domain": false,
+            "ticks": false,
+            "offset": {"value": 10},
+            "encode": {
+                "labels": {
+                    "enter": {
+                        "text": {"signal": "datum.value"},
+                        "fontSize": {"value": 13},
+                        "fontWeight": {"value": 100}
+                    }
+                }
+            }
+        }
+    ],
     "marks": [
         {
             "type": "group",
@@ -425,21 +443,6 @@ const spec = {
                 }
             ],
             "marks": [
-                {
-                    "type": "text",
-                    "from": {"data": "facet"},
-                    "encode": {
-                        "enter": {
-                            "text": {"field": "Warehouse"},
-                            "baseline": {"value": "center"},
-                            "align": {"value": "left"},
-                            "x": {"value": -100},
-                            "y": {"signal": "bandwidth('ypane') / 2"},
-                            "fontSize": {"value": 13},
-                            "fontWeight": {"value": 100}
-                        }
-                    }
-                },
                 {
                     "type": "rect",
                     "from": {
