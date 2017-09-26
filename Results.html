@@ -404,7 +404,8 @@ const spec = {
                 },
                 {
                     "orient": "left",
-                    "scale": "yscale"
+                    "scale": "yscale",
+                    "tickCount": 5
                 }
             ],
             "marks": [
@@ -415,7 +416,13 @@ const spec = {
                     },
                     "encode": {
                         "enter": {
-                            "text": {"field": "Warehouse"}
+                            "text": {"field": "Warehouse"},
+                            "baseline": {"value": "center"},
+                            "align": {"value": "left"},
+                            "x": {"value": -100},
+                            "y": {"signal": "bandwidth('ypane') / 2"},
+                            "fontSize": {"value": 13},
+                            "fontWeight": {"value": 100}
                         }
                     }
                 },
@@ -448,6 +455,20 @@ const spec = {
                     }
                 }
             ]
+        },
+        {
+            "type": "text",
+            "encode": {
+                "enter": {
+                    "x": {"signal": "width / 2"},
+                    "y": {"signal": "height + 10"},
+                    "text": {"value": "Execution time [s]"},
+                    "baseline": {"value": "top"},
+                    "align": {"value": "center"},
+                    "fontSize": {"value": 13},
+                    "fontWeight": {"value": 100}
+                }
+            }
         }
     ]
 };
@@ -457,8 +478,6 @@ const view = new vega.View(vega.parse(spec), {
     logLevel: vega.Warn,
     renderer: 'svg'
 }).initialize('#results').hover().run();
-
-console.log(view.data('table'));
 
 </script>
 </body>
