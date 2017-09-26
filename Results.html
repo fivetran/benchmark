@@ -309,7 +309,7 @@ BigQuery	query/query99.sql	3.942	0.02606868744`;
 const spec = {
     "$schema": "https://vega.github.io/schema/vega/v3.0.json",
     "width": 400,
-    "height": 200,
+    "height": 400,
     "padding": 5,
     "data": [
         {
@@ -327,13 +327,13 @@ const spec = {
                 {
                     "type": "bin",
                     "field": "LogTime",
-                    "step": 1,
+                    "step": 0.25,
                     "extent": [-10, 10],
                     "as": ["LogTimeBinLeft", "LogTimeBinRight"]
                 },
                 {
                     "type": "aggregate",
-                    "groupby": ["LogTimeBinLeft", "LogTimeBinRight"],
+                    "groupby": ["Warehouse", "LogTimeBinLeft", "LogTimeBinRight"],
                     "as": ["Count"]
                 },
                 {
@@ -357,53 +357,97 @@ const spec = {
             "range": "width"
         },
         {
+            "name": "ypane",
+            "type": "band",
+            "domain": {
+                "data": "table",
+                "field": "Warehouse"
+            },
+            "range": "height",
+            "padding": 0.2
+        },
+        {
             "name": "yscale",
             "domain": {
                 "data": "table",
                 "field": "Count"
             },
-            "range": "height",
+            "range": [{"signal": "bandwidth('ypane')"}, 0],
             "round": true
-        }
-    ],
-    "axes": [
-        {
-            "orient": "bottom",
-            "scale": "xscale"
-        },
-        {
-            "orient": "left",
-            "scale": "yscale"
         }
     ],
     "marks": [
         {
-            "type": "rect",
+            "name": "cell",
+            "type": "group",
             "from": {
-                "data": "table"
+                "facet": {
+                    "data": "table",
+                    "name": "facet",
+                    "groupby": "Warehouse"
+                }
             },
             "encode": {
                 "enter": {
-                    "x": {
-                        "scale": "xscale",
-                        "field": "TimeBinLeft",
-                        "offset": "1"
-                    },
-                    "x2": {
-                        "scale": "xscale",
-                        "field": "TimeBinRight",
-                        "offset": "-1"
-                    },
                     "y": {
-                        "scale": "yscale",
-                        "field": "Count"
+                        "scale": "ypane", 
+                        "field": "Warehouse"
                     },
-                    "y2": {
-                        "scale": "yscale",
-                        "value": 0
+                    "width": {"signal": "width"},
+                    "height": {"signal": "bandwidth('ypane')"}
+                }
+            },
+            "axes": [
+                {
+                    "orient": "bottom",
+                    "scale": "xscale"
+                },
+                {
+                    "orient": "left",
+                    "scale": "yscale"
+                }
+            ],
+            "marks": [
+                {
+                    "type": "text",
+                    "from": {
+                        "data": "facet"
+                    },
+                    "encode": {
+                        "enter": {
+                            "text": {"field": "Warehouse"}
+                        }
+                    }
+                },
+                {
+                    "type": "rect",
+                    "from": {
+                        "data": "facet"
+                    },
+                    "encode": {
+                        "enter": {
+                            "x": {
+                                "scale": "xscale",
+                                "field": "TimeBinLeft",
+                                "offset": "1"
+                            },
+                            "x2": {
+                                "scale": "xscale",
+                                "field": "TimeBinRight",
+                                "offset": "-1"
+                            },
+                            "y": {
+                                "scale": "yscale",
+                                "field": "Count"
+                            },
+                            "y2": {
+                                "scale": "yscale",
+                                "value": 0
+                            }
+                        }
                     }
                 }
-            }
+            ]
         }
     ]
 };
