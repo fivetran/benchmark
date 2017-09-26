@@ -5,7 +5,8 @@
 </head>
 
 <body style="cursor: default;">
-<div id="results"></div>
+<div id="time"></div>
+<div id="cost"></div>
 <script>
 const tsv = `Warehouse	Query	Time	Cost
 Snowflake	query/query1.sql	1.829	0.005494160138
@@ -306,7 +307,7 @@ BigQuery	query/query97.sql	7.356	0.04616260529
 BigQuery	query/query98.sql	4.561	0.03064155579
 BigQuery	query/query99.sql	3.942	0.02606868744`;
 
-const spec = {
+const time = {
     "$schema": "https://vega.github.io/schema/vega/v3.0.json",
     "width": 400,
     "height": 400,
@@ -543,11 +544,11 @@ const spec = {
     ]
 };
 
-const view = new vega.View(vega.parse(spec), {
+new vega.View(vega.parse(time), {
     loader: vega.loader({ baseURL: 'https://vega.github.io/vega/' }),
     logLevel: vega.Warn,
     renderer: 'canvas'
-}).initialize('#results').hover().run();
+}).initialize('#time').hover().run();
 
 </script>
 </body>
