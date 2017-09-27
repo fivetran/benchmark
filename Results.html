@@ -533,7 +533,7 @@ const time = {
                 "enter": {
                     "x": {"signal": "width / 2"},
                     "y": {"signal": "height"},
-                    "text": {"value": "Execution time [s]"},
+                    "text": {"value": "Execution time, log scale [s]"},
                     "baseline": {"value": "top"},
                     "align": {"value": "center"},
                     "fontSize": {"value": 13},
@@ -549,6 +549,250 @@ new vega.View(vega.parse(time), {
     logLevel: vega.Warn,
     renderer: 'canvas'
 }).initialize('#time').hover().run();
+
+const cost = {
+    "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+    "width": 400,
+    "height": 400,
+    "padding": 5,
+    "data": [
+        {
+            "name": "raw",
+            "format": {"type": "tsv"},
+            "values": tsv,
+        },
+        {
+            "name": "table",
+            "source": "raw",
+            "transform": [
+                {
+                    "type": "formula",
+                    "expr": "log(datum.Cost) / LN2",
+                    "as": "LogCost"
+                },
+                {
+                    "type": "bin",
+                    "field": "LogCost",
+                    "step": 0.5,
+                    "extent": [-10, 10],
+                    "as": ["LogCostBinLeft", "LogCostBinRight"]
+                },
+                {
+                    "type": "aggregate",
+                    "groupby": ["Warehouse", "LogCostBinLeft", "LogCostBinRight"],
+                    "as": ["Count"]
+                },
+                {
+                    "type": "formula",
+                    "expr": "pow(2, datum.LogCostBinLeft)",
+                    "as": "TimeBinLeft"
+                },
+                {
+                    "type": "formula",
+                    "expr": "pow(2, datum.LogCostBinRight)",
+                    "as": "TimeBinRight"
+                }
+            ]
+        },
+        {
+            "name": "medians",
+            "source": "raw",
+            "transform": [
+                {
+                    "type": "aggregate",
+                    "groupby": ["Warehouse"],
+                    "fields": ["Cost"],
+                    "ops": ["median"],
+                    "as": ["MedianCost"]
+                }
+            ]
+        }
+    ],
+    "scales": [
+        {
+            "name": "xscale",
+            "type": "log",
+            "domain": [0.001, 2],
+            "range": "width"
+        },
+        {
+            "name": "ypane",
+            "type": "band",
+            "domain": {
+                "data": "table",
+                "field": "Warehouse"
+            },
+            "range": "height",
+            "padding": 0.3
+        },
+        {
+            "name": "yscale",
+            "domain": {
+                "data": "table",
+                "field": "Count"
+            },
+            "range": [{"signal": "bandwidth('ypane')"}, 0],
+            "round": true
+        }
+    ],
+    "axes": [
+        {
+            "orient": "right",
+            "scale": "ypane",
+            "domain": false,
+            "ticks": false,
+            "offset": {"value": 10},
+            "encode": {
+                "labels": {
+                    "enter": {
+                        "text": {"signal": "datum.value"},
+                        "fontSize": {"value": 13},
+                        "fontWeight": {"value": 100}
+                    }
+                }
+            }
+        }
+    ],
+    "marks": [
+        {
+            "type": "group",
+            "from": {
+                "facet": {
+                    "data": "table",
+                    "name": "facet",
+                    "groupby": "Warehouse"
+                }
+            },
+            "encode": {
+                "enter": {
+                    "y": {
+                        "scale": "ypane", 
+                        "field": "Warehouse"
+                    },
+                    "width": {"signal": "width"},
+                    "height": {"signal": "bandwidth('ypane')"}
+                }
+            },
+            "axes": [
+                {
+                    "orient": "left",
+                    "scale": "yscale",
+                    "tickCount": 5,
+                    "grid": true,
+                    "domain": false
+                },
+                {
+                    "orient": "bottom",
+                    "scale": "xscale",
+                    "tickCount": 8,
+                }
+            ],
+            "marks": [
+                {
+                    "type": "rect",
+                    "from": {
+                        "data": "facet"
+                    },
+                    "encode": {
+                        "enter": {
+                            "x": {
+                                "scale": "xscale",
+                                "field": "TimeBinLeft",
+                                "offset": "1"
+                            },
+                            "x2": {
+                                "scale": "xscale",
+                                "field": "TimeBinRight",
+                                "offset": "-1"
+                            },
+                            "y": {
+                                "scale": "yscale",
+                                "field": "Count"
+                            },
+                            "y2": {
+                                "scale": "yscale",
+                                "value": 0
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "from": {
+                "facet": {
+                    "data": "medians",
+                    "name": "facet",
+                    "groupby": "Warehouse"
+                }
+            },
+            "encode": {
+                "enter": {
+                    "y": {
+                        "scale": "ypane", 
+                        "field": "Warehouse"
+                    },
+                    "width": {"signal": "width"},
+                    "height": {"signal": "bandwidth('ypane')"}
+                }
+            },
+            "marks": [
+                {
+                    "type": "text",
+                    "from": {"data": "facet"},
+                    "encode": {
+                        "enter": {
+                            "text": {"signal": "'Median = $' + round(datum.MedianCost * 1000) / 1000"},
+                            "dx": {"value": 5},
+                            "x": {
+                                "scale": "xscale",
+                                "field": "MedianCost"
+                            },
+                            "fill": {"value": "firebrick"},
+                        }
+                    }
+                },
+                {
+                    "type": "rule",
+                    "from": {"data": "facet"},
+                    "encode": {
+                        "enter": {
+                            "x": {
+                                "scale": "xscale",
+                                "field": "MedianCost"
+                            },
+                            "y": {"value": 0},
+                            "y2": {"signal": "bandwidth('ypane')"},
+                            "stroke": {"value": "firebrick"},
+                            "strokeWidth": {"value": 2}
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "encode": {
+                "enter": {
+                    "x": {"signal": "width / 2"},
+                    "y": {"signal": "height"},
+                    "text": {"value": "Cost to run query, log scale [$]"},
+                    "baseline": {"value": "top"},
+                    "align": {"value": "center"},
+                    "fontSize": {"value": 13},
+                    "fontWeight": {"value": 100}
+                }
+            }
+        }
+    ]
+};
+
+new vega.View(vega.parse(cost), {
+    loader: vega.loader({ baseURL: 'https://vega.github.io/vega/' }),
+    logLevel: vega.Warn,
+    renderer: 'canvas'
+}).initialize('#cost').hover().run();
 
 </script>
 </body>
