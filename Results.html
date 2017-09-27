@@ -2,6 +2,7 @@
 
 <head>
     <script src="https://vega.github.io/vega/vega.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin" rel="stylesheet">
 </head>
 
 <body style="cursor: default;">
@@ -307,6 +308,18 @@ BigQuery	query/query97.sql	7.356	0.04616260529
 BigQuery	query/query98.sql	4.561	0.03064155579
 BigQuery	query/query99.sql	3.942	0.02606868744`;
 
+const config = {
+    "axis": {
+        "labelFont": "Libre Franklin"
+    },
+    "text": {
+        "font": "Libre Franklin"
+    },
+    "rect": {
+        "fill": "#1AC9FF"
+    }
+};
+
 const time = {
     "$schema": "https://vega.github.io/schema/vega/v3.0.json",
     "width": 400,
@@ -468,8 +481,7 @@ const time = {
                             "y2": {
                                 "scale": "yscale",
                                 "value": 0
-                            },
-                            "fill": {"value": "#1AC9FF"}
+                            }
                         }
                     }
                 }
@@ -542,7 +554,8 @@ const time = {
                 }
             }
         }
-    ]
+    ],
+    "config": config
 };
 
 new vega.View(vega.parse(time), {
@@ -713,8 +726,7 @@ const cost = {
                             "y2": {
                                 "scale": "yscale",
                                 "value": 0
-                            },
-                            "fill": {"value": "#1AC9FF"}
+                            }
                         }
                     }
                 }
@@ -787,13 +799,14 @@ const cost = {
                 }
             }
         }
-    ]
+    ],
+    "config": config
 };
 
 new vega.View(vega.parse(cost), {
     loader: vega.loader({ baseURL: 'https://vega.github.io/vega/' }),
     logLevel: vega.Warn,
-    renderer: 'canvas'
+    renderer: 'svg'
 }).initialize('#cost').hover().run();
 
 </script>
