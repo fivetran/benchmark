@@ -806,7 +806,7 @@ const cost = {
 new vega.View(vega.parse(cost), {
     loader: vega.loader({ baseURL: 'https://vega.github.io/vega/' }),
     logLevel: vega.Warn,
-    renderer: 'svg'
+    renderer: 'canvas'
 }).initialize('#cost').hover().run();
 
 </script>
