@@ -313,20 +313,25 @@ const config = {
         "labelFont": "Libre Franklin",
         "labelFontSize": 12,
         "labelColor": "rgb(150, 150, 150)",
-        "gridWidth": 1.5,
+        "gridWidth": 1.25,
         "gridColor": "rgb(223, 223, 223)",
         "tickColor": "rgb(223, 223, 223)",
-        "tickSize": 10
+        "tickSize": 10,
+        "titleFont": "Libre Franklin",
+        "titleFontSize": 16,
+        "titleFontWeight": "bolder"
     },
     "text": {
-        "font": "Libre Franklin"
+        "font": "Libre Franklin",
+        "fontSize": 12,
+        "fontWeight": "bolder"
     },
     "rect": {
         "fill": "#1AC9FF"
     }
 };
 
-const width = 600, height = 600;
+const width = 600, height = 400;
 const background = "rgb(240, 240, 240)";
 
 const time = {
@@ -464,8 +469,7 @@ const time = {
                 {
                     "orient": "bottom",
                     "scale": "xscale",
-                    "values": [0.25,0.5,1,2,4,8,16,32,64,128,256,512],
-                    "grid": true
+                    "values": [0.25,0.5,1,2,4,8,16,32,64,128,256,512]
                 }
             ],
             "marks": [
@@ -524,7 +528,7 @@ const time = {
                     "from": {"data": "facet"},
                     "encode": {
                         "enter": {
-                            "text": {"signal": "'Median = ' + round(datum.MedianTime * 10) / 10"},
+                            "text": {"signal": "'Median = ' + round(datum.MedianTime * 10) / 10 + ' s'"},
                             "dx": {"value": 5},
                             "x": {
                                 "scale": "xscale",
@@ -551,20 +555,6 @@ const time = {
                     }
                 }
             ]
-        },
-        {
-            "type": "text",
-            "encode": {
-                "enter": {
-                    "x": {"signal": "width / 2"},
-                    "y": {"signal": "height"},
-                    "text": {"value": "Execution time, log scale [s]"},
-                    "baseline": {"value": "top"},
-                    "align": {"value": "center"},
-                    "fontSize": {"value": 13},
-                    "fontWeight": {"value": 100}
-                }
-            }
         }
     ],
     "config": config
@@ -594,7 +584,12 @@ const cost = {
             "transform": [
                 {
                     "type": "formula",
-                    "expr": "log(datum.Cost) / LN2",
+                    "expr": "datum.Cost * 100",
+                    "as": "Cents"
+                },
+                {
+                    "type": "formula",
+                    "expr": "log(datum.Cents) / LN2",
                     "as": "LogCost"
                 },
                 {
@@ -626,9 +621,14 @@ const cost = {
             "source": "raw",
             "transform": [
                 {
+                    "type": "formula",
+                    "expr": "datum.Cost * 100",
+                    "as": "Cents"
+                },
+                {
                     "type": "aggregate",
                     "groupby": ["Warehouse"],
-                    "fields": ["Cost"],
+                    "fields": ["Cents"],
                     "ops": ["median"],
                     "as": ["MedianCost"]
                 }
@@ -639,7 +639,8 @@ const cost = {
         {
             "name": "xscale",
             "type": "log",
-            "domain": [0.001, 2],
+            "domain": [0.05, 256],
+            "clamp": true,
             "range": "width"
         },
         {
@@ -711,8 +712,7 @@ const cost = {
                 {
                     "orient": "bottom",
                     "scale": "xscale",
-                    "values": [0.03125/2/2/2, 0.03125/2/2, 0.03125/2, 0.03125, 0.0625, 0.125, 0.25, 0.5, 1],
-                    "grid": true
+                    "values": [0.125, 0.25, 0.5, 1,2,4,8,16,32,64,128,256,512]
                 }
             ],
             "marks": [
@@ -771,7 +771,7 @@ const cost = {
                     "from": {"data": "facet"},
                     "encode": {
                         "enter": {
-                            "text": {"signal": "'Median = $' + round(datum.MedianCost * 1000) / 1000"},
+                            "text": {"signal": "'Median = $' + round(datum.MedianCost * 10) / 1000"},
                             "dx": {"value": 5},
                             "x": {
                                 "scale": "xscale",
@@ -798,20 +798,6 @@ const cost = {
                     }
                 }
             ]
-        },
-        {
-            "type": "text",
-            "encode": {
-                "enter": {
-                    "x": {"signal": "width / 2"},
-                    "y": {"signal": "height"},
-                    "text": {"value": "Cost to run query, log scale [$]"},
-                    "baseline": {"value": "top"},
-                    "align": {"value": "center"},
-                    "fontSize": {"value": 13},
-                    "fontWeight": {"value": 100}
-                }
-            }
         }
     ],
     "config": config
