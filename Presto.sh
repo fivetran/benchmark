@@ -20,7 +20,7 @@ HOSTNAME=$(hostname)
 DNSNAME=$(dnsdomainname)
 FQDN=${HOSTNAME}.$DNSNAME
 CONNECTOR_JAR=$(find /usr/lib/hadoop/lib -name 'gcs-connector-*.jar')
-PRESTO_VERSION="0.180"
+PRESTO_VERSION="0.185"
 HTTP_PORT="8080"
 
 # Download and unpack Presto server
@@ -52,9 +52,7 @@ hive.non-managed-table-writes-enabled=true
 EOF
 
 # Allocate 90% of system memory to Presto
-MEM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}' )
-MEM_MB=$(( $MEM_KB / 1024 ))
-PRESTO_JVM_MB=$(( $MEM_MB * 9 / 10 ))
+PRESTO_JVM_MB=13567
 
 # Allocate JVM memory to overhead / (70% query / 30% system)
 PRESTO_OVERHEAD=500
