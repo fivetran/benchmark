@@ -7,6 +7,7 @@
 
 <body style="cursor: default;">
 <div id="time"></div>
+<div id="spacer" style="height: 100px"></div>
 <div id="cost"></div>
 <script>
 const tsv = `Warehouse	Query	Time	Cost
@@ -561,7 +562,7 @@ const time = {
             "encode": {
                 "enter": {                		
                     "x": {"value": -20},		
-                    "y": {"value": 0},		
+                    "y": {"value": -40},		
                     "text": {"value": "Which data warehouse is the fastest?"},		
                     "baseline": {"value": "top"},		
                     "align": {"value": "left"},	
@@ -576,7 +577,7 @@ const time = {
             "encode": {
                 "enter": {                		
                     "x": {"value": -20},		
-                    "y": {"value": 25},		
+                    "y": {"value": -15},		
                     "text": {"value": "Histogram of execution times for 99 TPC-DS queries (seconds, log scale)"},		
                     "baseline": {"value": "top"},		
                     "align": {"value": "left"},	
@@ -828,6 +829,36 @@ const cost = {
                     }
                 }
             ]
+        },
+        {
+            "type": "text",
+            "encode": {
+                "enter": {                		
+                    "x": {"value": -20},		
+                    "y": {"value": -40},		
+                    "text": {"value": "Which data warehouse is the cheapest?"},		
+                    "baseline": {"value": "top"},		
+                    "align": {"value": "left"},	
+                    "font": "Libre Franklin",    	
+                    "fontSize": {"value": 18},		
+                    "fontWeight": {"value": 700}
+                }
+            }
+        },
+        {
+            "type": "text",
+            "encode": {
+                "enter": {                		
+                    "x": {"value": -20},		
+                    "y": {"value": -15},		
+                    "text": {"value": "Histogram of cost for 99 TPC-DS queries (cents, log scale)"},		
+                    "baseline": {"value": "top"},		
+                    "align": {"value": "left"},	
+                    "font": "Libre Franklin",    	
+                    "fontSize": {"value": 14},		
+                    "fontWeight": {"value": 100}
+                }
+            }
         }
     ],
     "config": config
