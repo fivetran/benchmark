@@ -586,6 +586,44 @@ const time = {
                     "fontWeight": {"value": 100}
                 }
             }
+        },
+        {
+            "type": "rule",
+            "encode": {
+                "enter": {
+                    "x": {"value": -25},
+                    "x2": {"signal": "width + 70"},
+                    "y": {"signal": "height"},
+                    "stroke": {"value": "rgb(150, 150, 150)"},
+                }
+            }
+        },
+        {
+            "type": "text",
+            "encode": {
+                "enter": {
+                    "x": {"value": -25},
+                    "y": {"signal": "height + 15"},
+                    "text": {"value": "FIVETRAN"},	
+                    "font": {"value": "Libre Franklin"},
+                    "fontSize": {"value": 12},
+                    "fill": {"value": "rgb(150, 150, 150)"},
+                }
+            }
+        },
+        {
+            "type": "text",
+            "encode": {
+                "enter": {
+                    "x": {"signal": "width + 70"},
+                    "y": {"signal": "height + 15"},
+                    "align": {"value": "right"},
+                    "text": {"value": "github.com/fivetran/benchmark"},	
+                    "font": {"value": "Libre Franklin"},
+                    "fontSize": {"value": 12},
+                    "fill": {"value": "rgb(150, 150, 150)"},
+                }
+            }
         }
     ],
     "config": config
@@ -857,6 +895,44 @@ const cost = {
                     "font": "Libre Franklin",    	
                     "fontSize": {"value": 14},		
                     "fontWeight": {"value": 100}
+                }
+            }
+        },
+        {
+            "type": "rule",
+            "encode": {
+                "enter": {
+                    "x": {"value": -25},
+                    "x2": {"signal": "width + 70"},
+                    "y": {"signal": "height"},
+                    "stroke": {"value": "rgb(150, 150, 150)"},
+                }
+            }
+        },
+        {
+            "type": "text",
+            "encode": {
+                "enter": {
+                    "x": {"value": -25},
+                    "y": {"signal": "height + 15"},
+                    "text": {"value": "FIVETRAN"},	
+                    "font": {"value": "Libre Franklin"},
+                    "fontSize": {"value": 12},
+                    "fill": {"value": "rgb(150, 150, 150)"},
+                }
+            }
+        },
+        {
+            "type": "text",
+            "encode": {
+                "enter": {
+                    "x": {"signal": "width + 70"},
+                    "y": {"signal": "height + 15"},
+                    "align": {"value": "right"},
+                    "text": {"value": "github.com/fivetran/benchmark"},	
+                    "font": {"value": "Libre Franklin"},
+                    "fontSize": {"value": 12},
+                    "fill": {"value": "rgb(150, 150, 150)"},
                 }
             }
         }
