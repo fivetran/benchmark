@@ -1,5 +1,5 @@
 # Results
-https://docs.google.com/a/fivetran.com/spreadsheets/d/1maw-SNZTZdqOySSx_JAxqwurheuQZnUharSyBTB3XvU/edit?usp=sharing
+https://blog.fivetran.com/warehouse-benchmark-dce9f4c529c1
 
 # Design
 This is based on the TPC-DS benchmark, a standard data warehouse benchmark that includes a lot of complicated queries.
