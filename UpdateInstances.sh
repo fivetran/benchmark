@@ -1,4 +1,4 @@
-CLUSTER=tpcds-skylake
+CLUSTER=tpcds
 INSTANCES="${CLUSTER}-m ${CLUSTER}-w-0 ${CLUSTER}-w-1 ${CLUSTER}-w-2 ${CLUSTER}-w-3 ${CLUSTER}-w-4 ${CLUSTER}-w-5 ${CLUSTER}-w-6 ${CLUSTER}-w-7"
 
 # Stop all instances

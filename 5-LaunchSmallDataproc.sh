@@ -14,8 +14,6 @@ gcloud dataproc clusters \
       --master-machine-type n1-standard-4 \
       --master-boot-disk-size 100 \
       --num-workers 8 \
-      --num-preemptible-workers 40 \
-      --preemptible-worker-boot-disk-size=100 \
       --worker-machine-type n1-standard-4 \
       --worker-boot-disk-size 100 \
       --scopes 'https://www.googleapis.com/auth/cloud-platform' \
