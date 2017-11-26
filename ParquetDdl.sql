@@ -1,7 +1,7 @@
 
-create database tpcds_parquet;
+create database tpcds_parquet_50mb;
 
-create external table tpcds_parquet.call_center(
+create external table tpcds_parquet_50mb.call_center(
       cc_call_center_sk         bigint               
 ,     cc_call_center_id         string              
 ,     cc_rec_start_date        string                         
@@ -35,13 +35,13 @@ create external table tpcds_parquet.call_center(
 ,     cc_tax_percentage         double
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/call_center'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/call_center'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.catalog_page(
+create external table tpcds_parquet_50mb.catalog_page(
       cp_catalog_page_sk        bigint               
 ,     cp_catalog_page_id        string              
 ,     cp_start_date_sk          bigint                       
@@ -53,13 +53,13 @@ create external table tpcds_parquet.catalog_page(
 ,     cp_type                   string
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/catalog_page'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/catalog_page'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.catalog_returns
+create external table tpcds_parquet_50mb.catalog_returns
 (
     cr_returned_date_sk       bigint,
     cr_returned_time_sk       bigint,
@@ -90,13 +90,13 @@ create external table tpcds_parquet.catalog_returns
     cr_net_loss               double
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/catalog_returns'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/catalog_returns'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.catalog_sales
+create external table tpcds_parquet_50mb.catalog_sales
 (
     cs_sold_date_sk           bigint,
     cs_sold_time_sk           bigint,
@@ -134,13 +134,13 @@ create external table tpcds_parquet.catalog_sales
     cs_net_profit             double
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/catalog_sales'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/catalog_sales'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.customer_address
+create external table tpcds_parquet_50mb.customer_address
 (
     ca_address_sk             bigint,
     ca_address_id             string,
@@ -157,13 +157,13 @@ create external table tpcds_parquet.customer_address
     ca_location_type          string
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/customer_address'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/customer_address'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.customer_demographics
+create external table tpcds_parquet_50mb.customer_demographics
 (
     cd_demo_sk                bigint,
     cd_gender                 string,
@@ -176,13 +176,13 @@ create external table tpcds_parquet.customer_demographics
     cd_dep_college_count      int 
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/customer_demographics'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/customer_demographics'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.customer
+create external table tpcds_parquet_50mb.customer
 (
     c_customer_sk             bigint,
     c_customer_id             string,
@@ -204,13 +204,13 @@ create external table tpcds_parquet.customer
     c_last_review_date        string
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/customer'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/customer'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.date_dim
+create external table tpcds_parquet_50mb.date_dim
 (
     d_date_sk                 bigint,
     d_date_id                 string,
@@ -242,13 +242,13 @@ create external table tpcds_parquet.date_dim
     d_current_year            string 
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/date_dim'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/date_dim'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.household_demographics
+create external table tpcds_parquet_50mb.household_demographics
 (
     hd_demo_sk                bigint,
     hd_income_band_sk         bigint,
@@ -257,25 +257,25 @@ create external table tpcds_parquet.household_demographics
     hd_vehicle_count          int
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/household_demographics'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/household_demographics'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.income_band(
+create external table tpcds_parquet_50mb.income_band(
       ib_income_band_sk         bigint               
 ,     ib_lower_bound            int                       
 ,     ib_upper_bound            int
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/income_band'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/income_band'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.inventory
+create external table tpcds_parquet_50mb.inventory
 (
     inv_date_sk            bigint,
     inv_item_sk            bigint,
@@ -283,13 +283,13 @@ create external table tpcds_parquet.inventory
     inv_quantity_on_hand    int
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/inventory'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/inventory'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.item
+create external table tpcds_parquet_50mb.item
 (
     i_item_sk                 bigint,
     i_item_id                 string,
@@ -315,13 +315,13 @@ create external table tpcds_parquet.item
     i_product_name            string
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/item'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/item'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.promotion
+create external table tpcds_parquet_50mb.promotion
 (
     p_promo_sk                bigint,
     p_promo_id                string,
@@ -344,25 +344,25 @@ create external table tpcds_parquet.promotion
     p_discount_active         string 
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/promotion'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/promotion'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.reason(
+create external table tpcds_parquet_50mb.reason(
       r_reason_sk               bigint               
 ,     r_reason_id               string              
 ,     r_reason_desc             string                
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/reason'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/reason'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.ship_mode(
+create external table tpcds_parquet_50mb.ship_mode(
       sm_ship_mode_sk           bigint               
 ,     sm_ship_mode_id           string              
 ,     sm_type                   string                      
@@ -371,13 +371,13 @@ create external table tpcds_parquet.ship_mode(
 ,     sm_contract               string                      
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/ship_mode'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/ship_mode'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.store_returns
+create external table tpcds_parquet_50mb.store_returns
 (
     sr_returned_date_sk       bigint,
     sr_return_time_sk         bigint,
@@ -401,13 +401,13 @@ create external table tpcds_parquet.store_returns
     sr_net_loss               double             
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/store_returns'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/store_returns'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.store_sales
+create external table tpcds_parquet_50mb.store_sales
 (
     ss_sold_date_sk           bigint,
     ss_sold_time_sk           bigint,
@@ -434,13 +434,13 @@ create external table tpcds_parquet.store_sales
     ss_net_profit             double                  
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/store_sales'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/store_sales'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.store
+create external table tpcds_parquet_50mb.store
 (
     s_store_sk                bigint,
     s_store_id                string,
@@ -473,13 +473,13 @@ create external table tpcds_parquet.store
     s_tax_precentage          double                  
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/store'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/store'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.time_dim
+create external table tpcds_parquet_50mb.time_dim
 (
     t_time_sk                 bigint,
     t_time_id                 string,
@@ -493,13 +493,13 @@ create external table tpcds_parquet.time_dim
     t_meal_time               string
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/time_dim'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/time_dim'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.warehouse(
+create external table tpcds_parquet_50mb.warehouse(
       w_warehouse_sk            bigint               
 ,     w_warehouse_id            string              
 ,     w_warehouse_name          string                   
@@ -516,13 +516,13 @@ create external table tpcds_parquet.warehouse(
 ,     w_gmt_offset              double                  
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/warehouse'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/warehouse'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.web_page(
+create external table tpcds_parquet_50mb.web_page(
       wp_web_page_sk            bigint               
 ,     wp_web_page_id            string              
 ,     wp_rec_start_date        string                         
@@ -539,13 +539,13 @@ create external table tpcds_parquet.web_page(
 ,     wp_max_ad_count           int
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/web_page'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/web_page'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.web_returns
+create external table tpcds_parquet_50mb.web_returns
 (
     wr_returned_date_sk       bigint,
     wr_returned_time_sk       bigint,
@@ -573,13 +573,13 @@ create external table tpcds_parquet.web_returns
     wr_net_loss               double
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/web_returns'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/web_returns'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.web_sales
+create external table tpcds_parquet_50mb.web_sales
 (
     ws_sold_date_sk           bigint,
     ws_sold_time_sk           bigint,
@@ -617,13 +617,13 @@ create external table tpcds_parquet.web_sales
     ws_net_profit             double
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/web_sales'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/web_sales'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB
 );
 
-create external table tpcds_parquet.web_site
+create external table tpcds_parquet_50mb.web_site
 (
     web_site_sk           bigint,
     web_site_id           string,
@@ -653,7 +653,7 @@ create external table tpcds_parquet.web_site
     web_tax_percentage    double
 )
 stored as parquet
-location 'gs://fivetran-benchmark/tpcds/parquet/web_site'
+location 'gs://fivetran-benchmark/tpcds/parquet_50mb/web_site'
 tblproperties (
      'parquet.compression' = 'snappy',
      'parquet.block.size' = '2000000000' -- 2 GB

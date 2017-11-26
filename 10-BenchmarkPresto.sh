@@ -3,6 +3,8 @@
 # Run this on the dataproc cluster master
 set -e 
 
+SCHEMA=tpcds_parquet_50mb
+
 # Create external tables references the data in gs://fivetran-benchmark that we generated with the big cluster
 echo 'Create tables'
 hive -f ParquetDdl.sql
@@ -12,14 +14,14 @@ echo 'Warmup.sql...'
 while read line;
 do
   echo "$line"
-  presto --catalog=hive --schema=tpcds_parquet --execute "$line" > /dev/null
+  presto --catalog=hive --schema=${SCHEMA} --execute "$line" > /dev/null
 done < Warmup.sql
 
 # Run each query
 for f in query/*.sql; 
 do
   echo "$f"
-  presto --catalog=hive --schema tpcds_parquet -f $f > /dev/null
+  presto --catalog=hive --schema ${SCHEMA} -f $f > /dev/null
 done
 
-presto --catalog=hive --schema tpcds_parquet -f PrestoTiming.sql
+presto --catalog=hive --schema ${SCHEMA} -f PrestoTiming.sql
