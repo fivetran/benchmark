@@ -25,6 +25,7 @@ HTTP_PORT="8080"
 
 # Download and unpack Presto server
 wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz
+#gsutil cp gs://fivetran-benchmark/presto-server-${PRESTO_VERSION}.tar.gz .
 tar -zxvf presto-server-${PRESTO_VERSION}.tar.gz
 mkdir /var/presto
 mkdir /var/presto/data
@@ -63,11 +64,8 @@ cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
 -server
 -Xmx${PRESTO_JVM_MB}m
 -Xmn512m
--XX:+UseConcMarkSweepGC
+-XX:+UseG1GC
 -XX:+ExplicitGCInvokesConcurrent
--XX:ReservedCodeCacheSize=150M
--XX:+ExplicitGCInvokesConcurrent
--XX:+CMSClassUnloadingEnabled
 -XX:+AggressiveOpts
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:OnOutOfMemoryError=kill -9 %p
