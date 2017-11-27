@@ -21,7 +21,7 @@ done < Warmup.sql
 for f in query/*.sql; 
 do
   echo "$f"
-  presto --catalog=hive --schema ${SCHEMA} -f $f > /dev/null
+  time presto --catalog=hive --schema ${SCHEMA} -f $f > /dev/null
 done
 
 presto --catalog=hive --schema ${SCHEMA} -f PrestoTiming.sql
