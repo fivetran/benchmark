@@ -12,10 +12,10 @@ gcloud dataproc clusters \
       create ${CLUSTER} \
       --zone us-central1-a \
       --master-machine-type n1-standard-4 \
-      --master-boot-disk-size 100 \
+      --master-boot-disk-size 10 \
       --num-workers 8 \
       --worker-machine-type n1-standard-4 \
-      --worker-boot-disk-size 100 \
+      --worker-boot-disk-size 10 \
       --scopes 'https://www.googleapis.com/auth/cloud-platform' \
       --project digital-arbor-400 \
       --initialization-actions gs://fivetran-benchmark/Presto.sh
