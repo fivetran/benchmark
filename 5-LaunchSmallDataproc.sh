@@ -20,10 +20,7 @@ gcloud dataproc clusters \
       --project digital-arbor-400 \
       --initialization-actions gs://fivetran-benchmark/Presto.sh
 
-gcloud compute scp ParquetDdl.sql ${CLUSTER}-m:~
-gcloud compute scp Warmup.sql ${CLUSTER}-m:~
-gcloud compute scp PrestoTiming.sql ${CLUSTER}-m:~
-gcloud compute scp 10-BenchmarkPresto.sh ${CLUSTER}-m:~
-gcloud compute scp --recurse query ${CLUSTER}-m:~
+zip -r query.zip ParquetDdl.sql Warmup.sql PrestoTiming.sql 10-BenchmarkPresto.sh query
+gcloud compute scp query.zip ${CLUSTER}-m:~
 
 gcloud compute ssh ${CLUSTER}-m
