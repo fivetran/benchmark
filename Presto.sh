@@ -53,7 +53,7 @@ hive.non-managed-table-writes-enabled=true
 EOF
 
 # Allocate 85% of system memory to Presto
-PRESTO_JVM_MB=$(( 15075 * 0.85 ))
+PRESTO_JVM_MB=$(( 15075 * 85 / 100 ))
 
 # Allocate JVM memory to overhead / (70% query / 30% system)
 PRESTO_OVERHEAD=500
