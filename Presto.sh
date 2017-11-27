@@ -52,8 +52,8 @@ hive.parquet-predicate-pushdown.enabled=true
 hive.non-managed-table-writes-enabled=true
 EOF
 
-# Allocate 90% of system memory to Presto
-PRESTO_JVM_MB=13567
+# Allocate 85% of system memory to Presto
+PRESTO_JVM_MB=$(( 15075 * 0.85 ))
 
 # Allocate JVM memory to overhead / (70% query / 30% system)
 PRESTO_OVERHEAD=500

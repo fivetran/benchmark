@@ -2,7 +2,7 @@
 # Be sure to delete the cluster created in 1-LaunchDataproc.sh before running this
 set -e
 
-CLUSTER=tpcds
+CLUSTER=tpcds-50mb
 
 # Copy Presto/Hive setup script to gs
 gsutil cp ./Presto.sh gs://fivetran-benchmark/Presto.sh
@@ -22,6 +22,7 @@ gcloud dataproc clusters \
 
 gcloud compute scp ParquetDdl.sql ${CLUSTER}-m:~
 gcloud compute scp Warmup.sql ${CLUSTER}-m:~
+gcloud compute scp PrestoTiming.sql ${CLUSTER}-m:~
 gcloud compute scp 10-BenchmarkPresto.sh ${CLUSTER}-m:~
 gcloud compute scp --recurse query ${CLUSTER}-m:~
 
