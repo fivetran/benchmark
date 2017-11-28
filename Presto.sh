@@ -23,6 +23,7 @@ CONNECTOR_JAR=$(find /usr/lib/hadoop/lib -name 'gcs-connector-*.jar')
 PRESTO_VERSION="0.185"
 HTTP_PORT="8080"
 CORES_PER_INSTANCE=4
+INSTANCE_MEMORY=15075
 
 # Download and unpack Presto server
 wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz
@@ -54,7 +55,7 @@ hive.non-managed-table-writes-enabled=true
 EOF
 
 # Allocate 80% of system memory to Presto
-PRESTO_JVM_MB=$(( 15075 * 8 / 10 ))
+PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 
 # Allocate JVM memory to overhead / (70% query / 30% system)
 PRESTO_OVERHEAD=500
