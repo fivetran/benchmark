@@ -22,6 +22,7 @@ FQDN=${HOSTNAME}.$DNSNAME
 CONNECTOR_JAR=$(find /usr/lib/hadoop/lib -name 'gcs-connector-*.jar')
 PRESTO_VERSION="0.185"
 HTTP_PORT="8080"
+CORES_PER_INSTANCE=4
 
 # Download and unpack Presto server
 wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz
@@ -92,6 +93,7 @@ resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery-server.enabled=true
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
 query.max-history=1000
+task.concurrency=${CORES_PER_INSTANCE}
 EOF
 
 	# Install cli
@@ -108,6 +110,7 @@ query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
 query.max-history=1000
+task.concurrency=${CORES_PER_INSTANCE}
 EOF
 fi
 
