@@ -58,8 +58,8 @@ PRESTO_JVM_MB=$(( 15075 * 8 / 10 ))
 
 # Allocate JVM memory to overhead / (70% query / 30% system)
 PRESTO_OVERHEAD=500
-PRESTO_QUERY_NODE_MB=$(( ${PRESTO_JVM_MB} * 7 / 10 - ${PRESTO_OVERHEAD} ))
-PRESTO_RESERVED_SYSTEM_MB=$(( ${PRESTO_JVM_MB} * 3 / 10 - ${PRESTO_OVERHEAD} ))
+PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
+PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
 
 cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
 -server
