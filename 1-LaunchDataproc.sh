@@ -19,5 +19,3 @@ gcloud dataproc clusters \
       --scopes 'https://www.googleapis.com/auth/cloud-platform' \
       --project digital-arbor-400 \
       --initialization-actions gs://fivetran-benchmark/Presto.sh
-
-gcloud compute scp --recurse . tpcds-m:~/benchmark
