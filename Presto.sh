@@ -15,25 +15,33 @@
 set -x -e
 
 # Variables for running this script
-ROLE=$(/usr/share/google/get_metadata_value attributes/dataproc-role)
+ROLE=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoRole)
 HOSTNAME=$(hostname)
 DNSNAME=$(dnsdomainname)
-FQDN=${HOSTNAME}.$DNSNAME
-CONNECTOR_JAR=$(find /usr/lib/hadoop/lib -name 'gcs-connector-*.jar')
+FQDN=${HOSTNAME}.${DNSNAME}
+PRESTO_MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
+PRESTO_MASTER_FQDN=${PRESTO_MASTER}.${DNSNAME}
+HIVE_FQDN=tpcds-hive-m.${DNSNAME}
 PRESTO_VERSION="0.185"
 HTTP_PORT="8080"
 CORES_PER_INSTANCE=4
 INSTANCE_MEMORY=15075
+PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
+PRESTO_OVERHEAD=500
+PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
+PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
+
+# Install Java
+apt-get install openjdk-8-jre-headless -y
 
 # Download and unpack Presto server
 wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz
-#gsutil cp gs://fivetran-benchmark/presto-server-${PRESTO_VERSION}.tar.gz .
 tar -zxvf presto-server-${PRESTO_VERSION}.tar.gz
 mkdir /var/presto
 mkdir /var/presto/data
 
-# Copy required Jars
-cp ${CONNECTOR_JAR} presto-server-${PRESTO_VERSION}/plugin/hive-hadoop2
+# Copy GCS connector
+wget -O presto-server-${PRESTO_VERSION}/plugin/hive-hadoop2/gcs-connector-latest-hadoop2.jar https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar 
 
 # Configure Presto
 mkdir presto-server-${PRESTO_VERSION}/etc
@@ -45,22 +53,28 @@ node.id=$(uuidgen)
 node.data-dir=/var/presto/data
 EOF
 
-# TODO - Inspect /etc/hive/conf/hite-site.xml to pull this uri
+# Configure hive metastore
 cat > presto-server-${PRESTO_VERSION}/etc/catalog/hive.properties <<EOF
 connector.name=hive-hadoop2
-hive.metastore.uri=thrift://localhost:9083
+hive.metastore.uri=thrift://${HIVE_FQDN}:9083
 hive.parquet-optimized-reader.enabled=true
 hive.parquet-predicate-pushdown.enabled=true
 hive.non-managed-table-writes-enabled=true
 EOF
 
-# Allocate 80% of system memory to Presto
-PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
-
-# Allocate JVM memory to overhead / (70% query / 30% system)
-PRESTO_OVERHEAD=500
-PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
-PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
+# Configure GCS connector
+# TODO fiddle with caching options in https://github.com/GoogleCloudPlatform/bigdata-interop/blob/master/gcs/src/main/java/com/google/cloud/hadoop/fs/gcs/GoogleHadoopFileSystemBase.java
+mkdir -p /etc/hadoop/conf
+cat > /etc/hadoop/conf/core-site.xml <<EOF
+<?xml version="1.0" ?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>fs.gs.project.id</name>
+    <value>digital-arbor-400</value>
+  </property>
+</configuration>
+EOF
 
 cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
 -server
@@ -71,7 +85,7 @@ cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
 -XX:+AggressiveOpts
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:OnOutOfMemoryError=kill -9 %p
--Dhive.config.resources=/etc/hadoop/conf/core-site.xml,/etc/hadoop/conf/hdfs-site.xml
+-Dhive.config.resources=/etc/hadoop/conf/core-site.xml
 -Djava.library.path=/usr/lib/hadoop/lib/native/:/usr/lib/
 -Dcom.sun.management.jmxremote 
 -Dcom.sun.management.jmxremote.ssl=false 
@@ -83,7 +97,6 @@ EOF
 
 if [[ "${ROLE}" == 'Master' ]]; then
 	# Configure master properties
-	PRESTO_MASTER_FQDN=${FQDN}
 	cat > presto-server-${PRESTO_VERSION}/etc/config.properties <<EOF
 coordinator=true
 node-scheduler.include-coordinator=false
@@ -101,8 +114,6 @@ EOF
 	$(wget https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar -O /usr/bin/presto)
 	$(chmod a+x /usr/bin/presto)
 else
-	MASTER_NODE_NAME=$(hostname | sed 's/\(.*\)-s\?w-[a-z0-9]*.*/\1/g')
-	PRESTO_MASTER_FQDN=${MASTER_NODE_NAME}-m.${DNSNAME}
 	cat > presto-server-${PRESTO_VERSION}/etc/config.properties <<EOF
 coordinator=false
 http-server.http.port=${HTTP_PORT}
