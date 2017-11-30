@@ -22,7 +22,7 @@ FQDN=${HOSTNAME}.${DNSNAME}
 PRESTO_MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
 PRESTO_MASTER_FQDN=${PRESTO_MASTER}.${DNSNAME}
 HIVE_FQDN=tpcds-hive-m.${DNSNAME}
-PRESTO_VERSION="0.185"
+PRESTO_VERSION="0.189"
 HTTP_PORT="8080"
 CORES_PER_INSTANCE=4
 INSTANCE_MEMORY=15075
@@ -39,6 +39,12 @@ wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_V
 tar -zxvf presto-server-${PRESTO_VERSION}.tar.gz
 mkdir /var/presto
 mkdir /var/presto/data
+
+# Install cli
+if [[ "${ROLE}" == 'Master' ]]; then
+	wget https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar -O /usr/bin/presto
+	chmod a+x /usr/bin/presto
+fi
 
 # Copy GCS connector
 wget -O presto-server-${PRESTO_VERSION}/plugin/hive-hadoop2/gcs-connector-latest-hadoop2.jar https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar 
@@ -109,10 +115,6 @@ discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
 query.max-history=1000
 task.concurrency=${CORES_PER_INSTANCE}
 EOF
-
-	# Install cli
-	$(wget https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar -O /usr/bin/presto)
-	$(chmod a+x /usr/bin/presto)
 else
 	cat > presto-server-${PRESTO_VERSION}/etc/config.properties <<EOF
 coordinator=false
