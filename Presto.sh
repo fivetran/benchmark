@@ -44,10 +44,11 @@ mkdir /var/presto/data
 if [[ "${ROLE}" == 'Master' ]]; then
 	wget https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar -O /usr/bin/presto
 	chmod a+x /usr/bin/presto
+	sudo apt-get install unzip
 fi
 
 # Copy GCS connector
-wget -O presto-server-${PRESTO_VERSION}/plugin/hive-hadoop2/gcs-connector-latest-hadoop2.jar https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar 
+wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -O presto-server-${PRESTO_VERSION}/plugin/hive-hadoop2/gcs-connector-latest-hadoop2.jar 
 
 # Configure Presto
 mkdir presto-server-${PRESTO_VERSION}/etc

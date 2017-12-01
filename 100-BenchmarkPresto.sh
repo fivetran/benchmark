@@ -5,10 +5,6 @@ set -e
 
 SCHEMA=tpcds_parquet_50mb
 
-# Create external tables references the data in gs://fivetran-benchmark that we generated with the big cluster
-echo 'Create tables'
-hive -f ParquetDdl.sql
-
 # Read all tables to warm up google cloud storage
 echo 'Warmup.sql...'
 while read line;
