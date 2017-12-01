@@ -25,11 +25,11 @@ gcloud compute instance-templates delete "presto-worker" \
 gcloud compute \
       --project "digital-arbor-400" \
       instance-templates create "presto-worker" \
-      --machine-type "n1-standard-4" \
+      --machine-type "n1-standard-32" \
       --image-project "ubuntu-os-cloud" \
       --image-family "ubuntu-1710" \
       --metadata "PrestoRole=Worker,PrestoMaster=tpcds-presto-m" \
-      --metadata-from-file "startup-script=Presto.sh" \
+      --metadata-from-file "startup-script=Presto.sh,shutdown-script=PrestoShutdown.sh" \
       --boot-disk-size "10" 
 gcloud compute \
       --project "digital-arbor-400" \
@@ -37,7 +37,7 @@ gcloud compute \
       --zone "us-central1-f" \
       --base-instance-name "tpcds-presto-w" \
       --template "presto-worker" \
-      --size "8"
+      --size "4"
 
 # Create preemptible worker instance group
 gcloud compute instance-templates delete "presto-preemptible-worker" \
@@ -46,17 +46,17 @@ gcloud compute instance-templates delete "presto-preemptible-worker" \
 gcloud compute \
       --project "digital-arbor-400" \
       instance-templates create "presto-preemptible-worker" \
-      --machine-type "n1-standard-4" \
+      --machine-type "n1-standard-32" \
       --image-project "ubuntu-os-cloud" \
       --image-family "ubuntu-1710" \
       --preemptible \
       --metadata "PrestoRole=Worker,PrestoMaster=tpcds-presto-m" \
-      --metadata-from-file "startup-script=Presto.sh" \
+      --metadata-from-file "startup-script=Presto.sh,shutdown-script=PrestoShutdown.sh" \
       --boot-disk-size "10" 
 gcloud compute \
       --project "digital-arbor-400" \
       instance-groups managed create "tpcds-presto-p" \
       --zone "us-central1-f" \
-      --base-instance-name "tpcds-presto-w" \
-      --template "presto-worker" \
-      --size "24"
+      --base-instance-name "tpcds-presto-p" \
+      --template "presto-preemptible-worker" \
+      --size "16"

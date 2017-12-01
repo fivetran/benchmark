@@ -24,12 +24,20 @@ PRESTO_MASTER_FQDN=${PRESTO_MASTER}.${DNSNAME}
 HIVE_FQDN=tpcds-hive-m.${DNSNAME}
 PRESTO_VERSION="0.189"
 HTTP_PORT="8080"
-CORES_PER_INSTANCE=4
-INSTANCE_MEMORY=15075
+TASKS_PER_INSTANCE_PER_QUERY=32
+INSTANCE_MEMORY=120000
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 PRESTO_OVERHEAD=500
 PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
 PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
+
+# Prevents "Too many open files"
+cat > /etc/security/limits.conf <<EOF
+presto soft nofile 32768
+presto hard nofile 65536
+presto soft nproc 32768
+presto hard nproc 65536
+EOF
 
 # Install Java
 apt-get install openjdk-8-jre-headless -y
@@ -108,24 +116,24 @@ if [[ "${ROLE}" == 'Master' ]]; then
 coordinator=true
 node-scheduler.include-coordinator=false
 http-server.http.port=${HTTP_PORT}
-query.max-memory=999TB
+query.max-memory=150GB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery-server.enabled=true
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
 query.max-history=1000
-task.concurrency=${CORES_PER_INSTANCE}
+task.concurrency=${TASKS_PER_INSTANCE_PER_QUERY}
 EOF
 else
 	cat > presto-server-${PRESTO_VERSION}/etc/config.properties <<EOF
 coordinator=false
 http-server.http.port=${HTTP_PORT}
-query.max-memory=999TB
+query.max-memory=150GB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
 query.max-history=1000
-task.concurrency=${CORES_PER_INSTANCE}
+task.concurrency=${TASKS_PER_INSTANCE_PER_QUERY}
 EOF
 fi
 

@@ -1,1 +1,0 @@
-less /var/presto/data/var/log/server.log 

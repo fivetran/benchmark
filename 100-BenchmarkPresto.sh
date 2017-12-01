@@ -3,7 +3,7 @@
 # Run this on the dataproc cluster master
 set -e 
 
-SCHEMA=tpcds_parquet_50mb
+SCHEMA=tpcds_parquet_20mb
 
 # Read all tables to warm up google cloud storage
 echo 'Warmup.sql...'
