@@ -32,12 +32,7 @@ PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
 PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
 
 # Prevents "Too many open files"
-cat > /etc/security/limits.conf <<EOF
-presto soft nofile 32768
-presto hard nofile 65536
-presto soft nproc 32768
-presto hard nproc 65536
-EOF
+ulimit -n 30000
 
 # Install Java
 apt-get install openjdk-8-jre-headless -y
