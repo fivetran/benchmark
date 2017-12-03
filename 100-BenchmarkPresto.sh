@@ -13,11 +13,16 @@ do
   presto --catalog=hive --schema=${SCHEMA} --execute "$line" > /dev/null
 done < Warmup.sql
 
+# Randomize the order if $1 is present
+if [ -z $1 ]; then 
+  ls query/*.sql > order$1.txt
+else 
+  ls query/*.sql | sort -R > order$1.txt
+fi
+
 # Run each query
-for f in query/*.sql; 
-do
+while read f;
+do 
   echo "$f"
   presto --catalog=hive --schema ${SCHEMA} -f $f > /dev/null
-done
-
-presto --catalog=hive --schema ${SCHEMA} -f PrestoTiming.sql
+done < order$1.txt
