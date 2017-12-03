@@ -24,8 +24,8 @@ PRESTO_MASTER_FQDN=${PRESTO_MASTER}.${DNSNAME}
 HIVE_FQDN=tpcds-hive-m.${DNSNAME}
 PRESTO_VERSION="0.189"
 HTTP_PORT="8080"
-TASKS_PER_INSTANCE_PER_QUERY=32
-INSTANCE_MEMORY=120000
+TASKS_PER_INSTANCE_PER_QUERY=16
+INSTANCE_MEMORY=60000
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 PRESTO_OVERHEAD=500
 PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
@@ -111,7 +111,7 @@ if [[ "${ROLE}" == 'Master' ]]; then
 coordinator=true
 node-scheduler.include-coordinator=false
 http-server.http.port=${HTTP_PORT}
-query.max-memory=150GB
+query.max-memory=999TB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery-server.enabled=true
@@ -123,7 +123,7 @@ else
 	cat > presto-server-${PRESTO_VERSION}/etc/config.properties <<EOF
 coordinator=false
 http-server.http.port=${HTTP_PORT}
-query.max-memory=150GB
+query.max-memory=999TB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
