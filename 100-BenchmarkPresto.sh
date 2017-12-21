@@ -6,12 +6,14 @@ set -e
 SCHEMA=tpcds_parquet_20mb
 
 # Read all tables to warm up google cloud storage
-echo 'Warmup.sql...'
-while read line;
-do
-  echo "$line"
-  presto --catalog=hive --schema=${SCHEMA} --execute "$line" > /dev/null
-done < Warmup.sql
+if [ ! -z $1 ]; then 
+  echo 'Warmup.sql...'
+  while read line;
+  do
+    echo "$line"
+    presto --catalog=hive --schema=${SCHEMA} --execute "$line" > /dev/null
+  done < Warmup.sql
+fi
 
 # Randomize the order if $1 is present
 if [ -z $1 ]; then 
