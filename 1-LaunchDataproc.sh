@@ -9,13 +9,11 @@ gsutil cp ./Presto.sh gs://fivetran-benchmark/Presto.sh
 gcloud dataproc clusters \
       create tpcds \
       --zone us-central1-a \
-      --master-machine-type n1-standard-4 \
+      --master-machine-type n1-standard-16 \
       --master-boot-disk-size 100 \
-      --num-workers 10 \
-      --worker-machine-type n1-standard-4 \
+      --num-workers 50 \
+      --worker-machine-type n1-standard-16 \
       --worker-boot-disk-size 100 \
-      --num-preemptible-workers 40 \
-      --preemptible-worker-boot-disk-size=100 \
       --scopes 'https://www.googleapis.com/auth/cloud-platform' \
       --project digital-arbor-400 \
       --initialization-actions gs://fivetran-benchmark/Presto.sh

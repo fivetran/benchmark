@@ -12,4 +12,4 @@ cd hive-testbench-hive14/
 ./tpcds-build.sh
 
 # Generate 100gb of TPC-DS data
-./tpcds-setup.sh 100
+./tpcds-setup.sh 1000
