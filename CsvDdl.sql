@@ -35,7 +35,7 @@ create external table tpcds_csv.call_center(
 ,     cc_tax_percentage         double
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/call_center';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/call_center';
 
 create external table tpcds_csv.catalog_page(
       cp_catalog_page_sk        bigint               
@@ -49,7 +49,7 @@ create external table tpcds_csv.catalog_page(
 ,     cp_type                   string
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/catalog_page';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/catalog_page';
 
 create external table tpcds_csv.catalog_returns
 (
@@ -82,7 +82,7 @@ create external table tpcds_csv.catalog_returns
     cr_net_loss               double
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/catalog_returns';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/catalog_returns';
 
 create external table tpcds_csv.catalog_sales
 (
@@ -122,7 +122,7 @@ create external table tpcds_csv.catalog_sales
     cs_net_profit             double
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/catalog_sales';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/catalog_sales';
 
 create external table tpcds_csv.customer_address
 (
@@ -141,7 +141,7 @@ create external table tpcds_csv.customer_address
     ca_location_type          string
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/customer_address';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/customer_address';
 
 create external table tpcds_csv.customer_demographics
 (
@@ -156,7 +156,7 @@ create external table tpcds_csv.customer_demographics
     cd_dep_college_count      int 
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/customer_demographics';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/customer_demographics';
 
 create external table tpcds_csv.customer
 (
@@ -180,7 +180,7 @@ create external table tpcds_csv.customer
     c_last_review_date        string
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/customer';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/customer';
 
 create external table tpcds_csv.date_dim
 (
@@ -214,7 +214,7 @@ create external table tpcds_csv.date_dim
     d_current_year            string 
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/date_dim';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/date_dim';
 
 create external table tpcds_csv.household_demographics
 (
@@ -225,7 +225,7 @@ create external table tpcds_csv.household_demographics
     hd_vehicle_count          int
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/household_demographics';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/household_demographics';
 
 create external table tpcds_csv.income_band(
       ib_income_band_sk         bigint               
@@ -233,7 +233,7 @@ create external table tpcds_csv.income_band(
 ,     ib_upper_bound            int
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/income_band';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/income_band';
 
 create external table tpcds_csv.inventory
 (
@@ -243,7 +243,7 @@ create external table tpcds_csv.inventory
     inv_quantity_on_hand    int
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/inventory';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/inventory';
 
 create external table tpcds_csv.item
 (
@@ -271,7 +271,7 @@ create external table tpcds_csv.item
     i_product_name            string
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/item';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/item';
 
 create external table tpcds_csv.promotion
 (
@@ -296,7 +296,7 @@ create external table tpcds_csv.promotion
     p_discount_active         string 
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/promotion';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/promotion';
 
 create external table tpcds_csv.reason(
       r_reason_sk               bigint               
@@ -304,7 +304,7 @@ create external table tpcds_csv.reason(
 ,     r_reason_desc             string                
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/reason';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/reason';
 
 create external table tpcds_csv.ship_mode(
       sm_ship_mode_sk           bigint               
@@ -315,7 +315,7 @@ create external table tpcds_csv.ship_mode(
 ,     sm_contract               string                      
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/ship_mode';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/ship_mode';
 
 create external table tpcds_csv.store_returns
 (
@@ -341,7 +341,7 @@ create external table tpcds_csv.store_returns
     sr_net_loss               double             
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/store_returns';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/store_returns';
 
 create external table tpcds_csv.store_sales
 (
@@ -370,7 +370,7 @@ create external table tpcds_csv.store_sales
     ss_net_profit             double                  
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/store_sales';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/store_sales';
 
 create external table tpcds_csv.store
 (
@@ -405,7 +405,7 @@ create external table tpcds_csv.store
     s_tax_precentage          double                  
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/store';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/store';
 
 create external table tpcds_csv.time_dim
 (
@@ -421,7 +421,7 @@ create external table tpcds_csv.time_dim
     t_meal_time               string
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/time_dim';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/time_dim';
 
 create external table tpcds_csv.warehouse(
       w_warehouse_sk            bigint               
@@ -440,7 +440,7 @@ create external table tpcds_csv.warehouse(
 ,     w_gmt_offset              double                  
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/warehouse';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/warehouse';
 
 create external table tpcds_csv.web_page(
       wp_web_page_sk            bigint               
@@ -459,7 +459,7 @@ create external table tpcds_csv.web_page(
 ,     wp_max_ad_count           int
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/web_page';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/web_page';
 
 create external table tpcds_csv.web_returns
 (
@@ -489,7 +489,7 @@ create external table tpcds_csv.web_returns
     wr_net_loss               double
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/web_returns';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/web_returns';
 
 create external table tpcds_csv.web_sales
 (
@@ -529,7 +529,7 @@ create external table tpcds_csv.web_sales
     ws_net_profit             double
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/web_sales';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/web_sales';
 
 create external table tpcds_csv.web_site
 (
@@ -561,4 +561,4 @@ create external table tpcds_csv.web_site
     web_tax_percentage    double
 )
 row format delimited fields terminated by '|' lines terminated by '\n'
-location 'gs://fivetran-benchmark/tpcds/csv/web_site';
+location 'gs://fivetran-benchmark/tpcds_1000/csv/web_site';

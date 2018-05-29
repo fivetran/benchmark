@@ -3,7 +3,7 @@ export ACCOUNT=singular-vector-135519
 
 bq --project_id=${ACCOUNT} mk tpcds
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.call_center gs://fivetran-benchmark/tpcds/csv/call_center/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.call_center gs://fivetran-benchmark/tpcds_1000/csv/call_center/* \
 cc_call_center_sk:integer,\
 cc_call_center_id:string,\
 cc_rec_start_date:string,\
@@ -36,7 +36,7 @@ cc_country:string,\
 cc_gmt_offset:float,\
 cc_tax_percentage:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.catalog_page gs://fivetran-benchmark/tpcds/csv/catalog_page/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.catalog_page gs://fivetran-benchmark/tpcds_1000/csv/catalog_page/* \
 cp_catalog_page_sk:integer,\
 cp_catalog_page_id:string,\
 cp_start_date_sk:integer,\
@@ -47,7 +47,7 @@ cp_catalog_page_number:integer,\
 cp_description:string,\
 cp_type:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.catalog_returns gs://fivetran-benchmark/tpcds/csv/catalog_returns/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.catalog_returns gs://fivetran-benchmark/tpcds_1000/csv/catalog_returns/* \
 cr_returned_date_sk:integer,\
 cr_returned_time_sk:integer,\
 cr_item_sk:integer,\
@@ -76,7 +76,7 @@ cr_reversed_charge:float,\
 cr_store_credit:float,\
 cr_net_loss:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.catalog_sales gs://fivetran-benchmark/tpcds/csv/catalog_sales/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.catalog_sales gs://fivetran-benchmark/tpcds_1000/csv/catalog_sales/* \
 cs_sold_date_sk:integer,\
 cs_sold_time_sk:integer,\
 cs_ship_date_sk:integer,\
@@ -112,7 +112,7 @@ cs_net_paid_inc_ship:float,\
 cs_net_paid_inc_ship_tax:float,\
 cs_net_profit:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.customer_address gs://fivetran-benchmark/tpcds/csv/customer_address/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.customer_address gs://fivetran-benchmark/tpcds_1000/csv/customer_address/* \
 ca_address_sk:integer,\
 ca_address_id:string,\
 ca_street_number:string,\
@@ -127,7 +127,7 @@ ca_country:string,\
 ca_gmt_offset:float,\
 ca_location_type:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.customer_demographics gs://fivetran-benchmark/tpcds/csv/customer_demographics/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.customer_demographics gs://fivetran-benchmark/tpcds_1000/csv/customer_demographics/* \
 cd_demo_sk:integer,\
 cd_gender:string,\
 cd_marital_status:string,\
@@ -138,7 +138,7 @@ cd_dep_count:integer,\
 cd_dep_employed_count:integer,\
 cd_dep_college_count:integer
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.customer gs://fivetran-benchmark/tpcds/csv/customer/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.customer gs://fivetran-benchmark/tpcds_1000/csv/customer/* \
 c_customer_sk:integer,\
 c_customer_id:string,\
 c_current_cdemo_sk:integer,\
@@ -158,7 +158,7 @@ c_login:string,\
 c_email_address:string,\
 c_last_review_date:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.date_dim gs://fivetran-benchmark/tpcds/csv/date_dim/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.date_dim gs://fivetran-benchmark/tpcds_1000/csv/date_dim/* \
 d_date_sk:integer,\
 d_date_id:string,\
 d_date:string,\
@@ -188,25 +188,25 @@ d_current_month:string,\
 d_current_quarter:string,\
 d_current_year:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.household_demographics gs://fivetran-benchmark/tpcds/csv/household_demographics/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.household_demographics gs://fivetran-benchmark/tpcds_1000/csv/household_demographics/* \
 hd_demo_sk:integer,\
 hd_income_band_sk:integer,\
 hd_buy_potential:string,\
 hd_dep_count:integer,\
 hd_vehicle_count:integer
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.income_band gs://fivetran-benchmark/tpcds/csv/income_band/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.income_band gs://fivetran-benchmark/tpcds_1000/csv/income_band/* \
 ib_income_band_sk:integer,\
 ib_lower_bound:integer,\
 ib_upper_bound:integer
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.inventory gs://fivetran-benchmark/tpcds/csv/inventory/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.inventory gs://fivetran-benchmark/tpcds_1000/csv/inventory/* \
 inv_date_sk:integer,\
 inv_item_sk:integer,\
 inv_warehouse_sk:integer,\
 inv_quantity_on_hand:integer
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.item gs://fivetran-benchmark/tpcds/csv/item/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.item gs://fivetran-benchmark/tpcds_1000/csv/item/* \
 i_item_sk:integer,\
 i_item_id:string,\
 i_rec_start_date:string,\
@@ -230,7 +230,7 @@ i_container:string,\
 i_manager_id:integer,\
 i_product_name:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.promotion gs://fivetran-benchmark/tpcds/csv/promotion/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.promotion gs://fivetran-benchmark/tpcds_1000/csv/promotion/* \
 p_promo_sk:integer,\
 p_promo_id:string,\
 p_start_date_sk:integer,\
@@ -251,12 +251,12 @@ p_channel_details:string,\
 p_purpose:string,\
 p_discount_active:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.reason gs://fivetran-benchmark/tpcds/csv/reason/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.reason gs://fivetran-benchmark/tpcds_1000/csv/reason/* \
 r_reason_sk:integer,\
 r_reason_id:string,\
 r_reason_desc:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.ship_mode gs://fivetran-benchmark/tpcds/csv/ship_mode/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.ship_mode gs://fivetran-benchmark/tpcds_1000/csv/ship_mode/* \
 sm_ship_mode_sk:integer,\
 sm_ship_mode_id:string,\
 sm_type:string,\
@@ -264,7 +264,7 @@ sm_code:string,\
 sm_carrier:string,\
 sm_contract:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.store_returns gs://fivetran-benchmark/tpcds/csv/store_returns/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.store_returns gs://fivetran-benchmark/tpcds_1000/csv/store_returns/* \
 sr_returned_date_sk:integer,\
 sr_return_time_sk:integer,\
 sr_item_sk:integer,\
@@ -286,7 +286,7 @@ sr_reversed_charge:float,\
 sr_store_credit:float,\
 sr_net_loss:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.store_sales gs://fivetran-benchmark/tpcds/csv/store_sales/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.store_sales gs://fivetran-benchmark/tpcds_1000/csv/store_sales/* \
 ss_sold_date_sk:integer,\
 ss_sold_time_sk:integer,\
 ss_item_sk:integer,\
@@ -311,7 +311,7 @@ ss_net_paid:float,\
 ss_net_paid_inc_tax:float,\
 ss_net_profit:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.store gs://fivetran-benchmark/tpcds/csv/store/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.store gs://fivetran-benchmark/tpcds_1000/csv/store/* \
 s_store_sk:integer,\
 s_store_id:string,\
 s_rec_start_date:string,\
@@ -342,7 +342,7 @@ s_country:string,\
 s_gmt_offset:float,\
 s_tax_precentage:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.time_dim gs://fivetran-benchmark/tpcds/csv/time_dim/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.time_dim gs://fivetran-benchmark/tpcds_1000/csv/time_dim/* \
 t_time_sk:integer,\
 t_time_id:string,\
 t_time:integer,\
@@ -354,7 +354,7 @@ t_shift:string,\
 t_sub_shift:string,\
 t_meal_time:string
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.warehouse gs://fivetran-benchmark/tpcds/csv/warehouse/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.warehouse gs://fivetran-benchmark/tpcds_1000/csv/warehouse/* \
 w_warehouse_sk:integer,\
 w_warehouse_id:string,\
 w_warehouse_name:string,\
@@ -370,7 +370,7 @@ w_zip:string,\
 w_country:string,\
 w_gmt_offset:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.web_page gs://fivetran-benchmark/tpcds/csv/web_page/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.web_page gs://fivetran-benchmark/tpcds_1000/csv/web_page/* \
 wp_web_page_sk:integer,\
 wp_web_page_id:string,\
 wp_rec_start_date:string,\
@@ -386,7 +386,7 @@ wp_link_count:integer,\
 wp_image_count:integer,\
 wp_max_ad_count:integer
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.web_returns gs://fivetran-benchmark/tpcds/csv/web_returns/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.web_returns gs://fivetran-benchmark/tpcds_1000/csv/web_returns/* \
 wr_returned_date_sk:integer,\
 wr_returned_time_sk:integer,\
 wr_item_sk:integer,\
@@ -412,7 +412,7 @@ wr_reversed_charge:float,\
 wr_account_credit:float,\
 wr_net_loss:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.web_sales gs://fivetran-benchmark/tpcds/csv/web_sales/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.web_sales gs://fivetran-benchmark/tpcds_1000/csv/web_sales/* \
 ws_sold_date_sk:integer,\
 ws_sold_time_sk:integer,\
 ws_ship_date_sk:integer,\
@@ -448,7 +448,7 @@ ws_net_paid_inc_ship:float,\
 ws_net_paid_inc_ship_tax:float,\
 ws_net_profit:float
 
-bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.web_site gs://fivetran-benchmark/tpcds/csv/web_site/* \
+bq --project_id=${ACCOUNT} load --field_delimiter '|' --null_marker '\N' tpcds.web_site gs://fivetran-benchmark/tpcds_1000/csv/web_site/* \
 web_site_sk:integer,\
 web_site_id:string,\
 web_rec_start_date:string,\
