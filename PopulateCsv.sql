@@ -1,7 +1,7 @@
 -- Generate CSV files in gs
 -- Run this script in Hive
 
-use tpcds_text_100;
+use tpcds_bin_partitioned_orc_1000;
 
 insert into tpcds_csv.call_center
 select * from call_center;
