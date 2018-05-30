@@ -44,6 +44,10 @@ PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 PRESTO_OVERHEAD=500
 PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
 PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
+RAPTOR_MYSQL_HOST=35.232.79.11
+RAPTOR_MYSQL_DB=presto_db
+RAPTOR_MYSQL_USER=presto_user
+RAPTOR_MYSQL_PASSWORD=???
 
 # Prevents "Too many open files"
 ulimit -n 30000
@@ -154,8 +158,8 @@ EOF
 sudo mkdir -p /mnt/disks/ssd-array/raptor
 cat > presto-server-${PRESTO_VERSION}/etc/catalog/raptor.properties <<EOF
 connector.name=raptor
-metadata.db.type=h2
-metadata.db.filename=mem:raptor
+metadata.db.type=mysql
+metadata.db.url=jdbc:mysql://${RAPTOR_MYSQL_HOST}:3306/${RAPTOR_MYSQL_DB}?user=${RAPTOR_MYSQL_USER}&password=${RAPTOR_MYSQL_PASSWORD}
 storage.data-directory=/mnt/disks/ssd-array/raptor
 EOF
 
