@@ -1,53 +1,51 @@
 
-create database raptor.tpcds;
-
-create external table raptor.tpcds.call_center(
+create table raptor.tpcds.call_center(
       cc_call_center_sk         bigint               
-,     cc_call_center_id         string              
-,     cc_rec_start_date        string                         
-,     cc_rec_end_date          string                         
+,     cc_call_center_id         varchar              
+,     cc_rec_start_date        varchar                         
+,     cc_rec_end_date          varchar                         
 ,     cc_closed_date_sk         bigint                       
 ,     cc_open_date_sk           bigint                       
-,     cc_name                   string                   
-,     cc_class                  string                   
+,     cc_name                   varchar                   
+,     cc_class                  varchar                   
 ,     cc_employees              int                       
 ,     cc_sq_ft                  int                       
-,     cc_hours                  string                      
-,     cc_manager                string                   
+,     cc_hours                  varchar                      
+,     cc_manager                varchar                   
 ,     cc_mkt_id                 int                       
-,     cc_mkt_class              string                      
-,     cc_mkt_desc               string                  
-,     cc_market_manager         string                   
+,     cc_mkt_class              varchar                      
+,     cc_mkt_desc               varchar                  
+,     cc_market_manager         varchar                   
 ,     cc_division               int                       
-,     cc_division_name          string                   
+,     cc_division_name          varchar                   
 ,     cc_company                int                       
-,     cc_company_name           string                      
-,     cc_street_number          string                      
-,     cc_street_name            string                   
-,     cc_street_type            string                      
-,     cc_suite_number           string                      
-,     cc_city                   string                   
-,     cc_county                 string                   
-,     cc_state                  string                       
-,     cc_zip                    string                      
-,     cc_country                string                   
+,     cc_company_name           varchar                      
+,     cc_street_number          varchar                      
+,     cc_street_name            varchar                   
+,     cc_street_type            varchar                      
+,     cc_suite_number           varchar                      
+,     cc_city                   varchar                   
+,     cc_county                 varchar                   
+,     cc_state                  varchar                       
+,     cc_zip                    varchar                      
+,     cc_country                varchar                   
 ,     cc_gmt_offset             double                  
 ,     cc_tax_percentage         double
 );
 
-create external table raptor.tpcds.catalog_page(
+create table raptor.tpcds.catalog_page(
       cp_catalog_page_sk        bigint               
-,     cp_catalog_page_id        string              
+,     cp_catalog_page_id        varchar              
 ,     cp_start_date_sk          bigint                       
 ,     cp_end_date_sk            bigint                       
-,     cp_department             string                   
+,     cp_department             varchar                   
 ,     cp_catalog_number         int                       
 ,     cp_catalog_page_number    int                       
-,     cp_description            string                  
-,     cp_type                   string
+,     cp_description            varchar                  
+,     cp_type                   varchar
 );
 
-create external table raptor.tpcds.catalog_returns
+create table raptor.tpcds.catalog_returns
 (
     cr_returned_date_sk       bigint,
     cr_returned_time_sk       bigint,
@@ -78,7 +76,7 @@ create external table raptor.tpcds.catalog_returns
     cr_net_loss               double
 );
 
-create external table raptor.tpcds.catalog_sales
+create table raptor.tpcds.catalog_sales
 (
     cs_sold_date_sk           bigint,
     cs_sold_time_sk           bigint,
@@ -116,63 +114,63 @@ create external table raptor.tpcds.catalog_sales
     cs_net_profit             double
 );
 
-create external table raptor.tpcds.customer_address
+create table raptor.tpcds.customer_address
 (
     ca_address_sk             bigint,
-    ca_address_id             string,
-    ca_street_number          string,
-    ca_street_name            string,
-    ca_street_type            string,
-    ca_suite_number           string,
-    ca_city                   string,
-    ca_county                 string,
-    ca_state                  string,
-    ca_zip                    string,
-    ca_country                string,
+    ca_address_id             varchar,
+    ca_street_number          varchar,
+    ca_street_name            varchar,
+    ca_street_type            varchar,
+    ca_suite_number           varchar,
+    ca_city                   varchar,
+    ca_county                 varchar,
+    ca_state                  varchar,
+    ca_zip                    varchar,
+    ca_country                varchar,
     ca_gmt_offset             double,
-    ca_location_type          string
+    ca_location_type          varchar
 );
 
-create external table raptor.tpcds.customer_demographics
+create table raptor.tpcds.customer_demographics
 (
     cd_demo_sk                bigint,
-    cd_gender                 string,
-    cd_marital_status         string,
-    cd_education_status       string,
+    cd_gender                 varchar,
+    cd_marital_status         varchar,
+    cd_education_status       varchar,
     cd_purchase_estimate      int,
-    cd_credit_rating          string,
+    cd_credit_rating          varchar,
     cd_dep_count              int,
     cd_dep_employed_count     int,
     cd_dep_college_count      int 
 );
 
-create external table raptor.tpcds.customer
+create table raptor.tpcds.customer
 (
     c_customer_sk             bigint,
-    c_customer_id             string,
+    c_customer_id             varchar,
     c_current_cdemo_sk        bigint,
     c_current_hdemo_sk        bigint,
     c_current_addr_sk         bigint,
     c_first_shipto_date_sk    bigint,
     c_first_sales_date_sk     bigint,
-    c_salutation              string,
-    c_first_name              string,
-    c_last_name               string,
-    c_preferred_cust_flag     string,
+    c_salutation              varchar,
+    c_first_name              varchar,
+    c_last_name               varchar,
+    c_preferred_cust_flag     varchar,
     c_birth_day               int,
     c_birth_month             int,
     c_birth_year              int,
-    c_birth_country           string,
-    c_login                   string,
-    c_email_address           string,
-    c_last_review_date        string
+    c_birth_country           varchar,
+    c_login                   varchar,
+    c_email_address           varchar,
+    c_last_review_date        varchar
 );
 
-create external table raptor.tpcds.date_dim
+create table raptor.tpcds.date_dim
 (
     d_date_sk                 bigint,
-    d_date_id                 string,
-    d_date                    string,
+    d_date_id                 varchar,
+    d_date                    varchar,
     d_month_seq               int,
     d_week_seq                int,
     d_quarter_seq             int,
@@ -184,38 +182,38 @@ create external table raptor.tpcds.date_dim
     d_fy_year                 int,
     d_fy_quarter_seq          int,
     d_fy_week_seq             int,
-    d_day_name                string,
-    d_quarter_name            string,
-    d_holiday                 string,
-    d_weekend                 string,
-    d_following_holiday       string,
+    d_day_name                varchar,
+    d_quarter_name            varchar,
+    d_holiday                 varchar,
+    d_weekend                 varchar,
+    d_following_holiday       varchar,
     d_first_dom               int,
     d_last_dom                int,
     d_same_day_ly             int,
     d_same_day_lq             int,
-    d_current_day             string,
-    d_current_week            string,
-    d_current_month           string,
-    d_current_quarter         string,
-    d_current_year            string 
+    d_current_day             varchar,
+    d_current_week            varchar,
+    d_current_month           varchar,
+    d_current_quarter         varchar,
+    d_current_year            varchar 
 );
 
-create external table raptor.tpcds.household_demographics
+create table raptor.tpcds.household_demographics
 (
     hd_demo_sk                bigint,
     hd_income_band_sk         bigint,
-    hd_buy_potential          string,
+    hd_buy_potential          varchar,
     hd_dep_count              int,
     hd_vehicle_count          int
 );
 
-create external table raptor.tpcds.income_band(
+create table raptor.tpcds.income_band(
       ib_income_band_sk         bigint               
 ,     ib_lower_bound            int                       
 ,     ib_upper_bound            int
 );
 
-create external table raptor.tpcds.inventory
+create table raptor.tpcds.inventory
 (
     inv_date_sk            bigint,
     inv_item_sk            bigint,
@@ -223,71 +221,71 @@ create external table raptor.tpcds.inventory
     inv_quantity_on_hand    int
 );
 
-create external table raptor.tpcds.item
+create table raptor.tpcds.item
 (
     i_item_sk                 bigint,
-    i_item_id                 string,
-    i_rec_start_date          string,
-    i_rec_end_date            string,
-    i_item_desc               string,
+    i_item_id                 varchar,
+    i_rec_start_date          varchar,
+    i_rec_end_date            varchar,
+    i_item_desc               varchar,
     i_current_price           double,
     i_wholesale_cost          double,
     i_brand_id                int,
-    i_brand                   string,
+    i_brand                   varchar,
     i_class_id                int,
-    i_class                   string,
+    i_class                   varchar,
     i_category_id             int,
-    i_category                string,
+    i_category                varchar,
     i_manufact_id             int,
-    i_manufact                string,
-    i_size                    string,
-    i_formulation             string,
-    i_color                   string,
-    i_units                   string,
-    i_container               string,
+    i_manufact                varchar,
+    i_size                    varchar,
+    i_formulation             varchar,
+    i_color                   varchar,
+    i_units                   varchar,
+    i_container               varchar,
     i_manager_id              int,
-    i_product_name            string
+    i_product_name            varchar
 );
 
-create external table raptor.tpcds.promotion
+create table raptor.tpcds.promotion
 (
     p_promo_sk                bigint,
-    p_promo_id                string,
+    p_promo_id                varchar,
     p_start_date_sk           bigint,
     p_end_date_sk             bigint,
     p_item_sk                 bigint,
     p_cost                    double,
     p_response_target         int,
-    p_promo_name              string,
-    p_channel_dmail           string,
-    p_channel_email           string,
-    p_channel_catalog         string,
-    p_channel_tv              string,
-    p_channel_radio           string,
-    p_channel_press           string,
-    p_channel_event           string,
-    p_channel_demo            string,
-    p_channel_details         string,
-    p_purpose                 string,
-    p_discount_active         string 
+    p_promo_name              varchar,
+    p_channel_dmail           varchar,
+    p_channel_email           varchar,
+    p_channel_catalog         varchar,
+    p_channel_tv              varchar,
+    p_channel_radio           varchar,
+    p_channel_press           varchar,
+    p_channel_event           varchar,
+    p_channel_demo            varchar,
+    p_channel_details         varchar,
+    p_purpose                 varchar,
+    p_discount_active         varchar 
 );
 
-create external table raptor.tpcds.reason(
+create table raptor.tpcds.reason(
       r_reason_sk               bigint               
-,     r_reason_id               string              
-,     r_reason_desc             string                
+,     r_reason_id               varchar              
+,     r_reason_desc             varchar                
 );
 
-create external table raptor.tpcds.ship_mode(
+create table raptor.tpcds.ship_mode(
       sm_ship_mode_sk           bigint               
-,     sm_ship_mode_id           string              
-,     sm_type                   string                      
-,     sm_code                   string                      
-,     sm_carrier                string                      
-,     sm_contract               string                      
+,     sm_ship_mode_id           varchar              
+,     sm_type                   varchar                      
+,     sm_code                   varchar                      
+,     sm_carrier                varchar                      
+,     sm_contract               varchar                      
 );
 
-create external table raptor.tpcds.store_returns
+create table raptor.tpcds.store_returns
 (
     sr_returned_date_sk       bigint,
     sr_return_time_sk         bigint,
@@ -311,7 +309,7 @@ create external table raptor.tpcds.store_returns
     sr_net_loss               double             
 );
 
-create external table raptor.tpcds.store_sales
+create table raptor.tpcds.store_sales
 (
     ss_sold_date_sk           bigint,
     ss_sold_time_sk           bigint,
@@ -338,88 +336,88 @@ create external table raptor.tpcds.store_sales
     ss_net_profit             double                  
 );
 
-create external table raptor.tpcds.store
+create table raptor.tpcds.store
 (
     s_store_sk                bigint,
-    s_store_id                string,
-    s_rec_start_date          string,
-    s_rec_end_date            string,
+    s_store_id                varchar,
+    s_rec_start_date          varchar,
+    s_rec_end_date            varchar,
     s_closed_date_sk          bigint,
-    s_store_name              string,
+    s_store_name              varchar,
     s_number_employees        int,
     s_floor_space             int,
-    s_hours                   string,
-    s_manager                 string,
+    s_hours                   varchar,
+    s_manager                 varchar,
     s_market_id               int,
-    s_geography_class         string,
-    s_market_desc             string,
-    s_market_manager          string,
+    s_geography_class         varchar,
+    s_market_desc             varchar,
+    s_market_manager          varchar,
     s_division_id             int,
-    s_division_name           string,
+    s_division_name           varchar,
     s_company_id              int,
-    s_company_name            string,
-    s_street_number           string,
-    s_street_name             string,
-    s_street_type             string,
-    s_suite_number            string,
-    s_city                    string,
-    s_county                  string,
-    s_state                   string,
-    s_zip                     string,
-    s_country                 string,
+    s_company_name            varchar,
+    s_street_number           varchar,
+    s_street_name             varchar,
+    s_street_type             varchar,
+    s_suite_number            varchar,
+    s_city                    varchar,
+    s_county                  varchar,
+    s_state                   varchar,
+    s_zip                     varchar,
+    s_country                 varchar,
     s_gmt_offset              double,
     s_tax_precentage          double                  
 );
 
-create external table raptor.tpcds.time_dim
+create table raptor.tpcds.time_dim
 (
     t_time_sk                 bigint,
-    t_time_id                 string,
+    t_time_id                 varchar,
     t_time                    int,
     t_hour                    int,
     t_minute                  int,
     t_second                  int,
-    t_am_pm                   string,
-    t_shift                   string,
-    t_sub_shift               string,
-    t_meal_time               string
+    t_am_pm                   varchar,
+    t_shift                   varchar,
+    t_sub_shift               varchar,
+    t_meal_time               varchar
 );
 
-create external table raptor.tpcds.warehouse(
+create table raptor.tpcds.warehouse(
       w_warehouse_sk            bigint               
-,     w_warehouse_id            string              
-,     w_warehouse_name          string                   
+,     w_warehouse_id            varchar              
+,     w_warehouse_name          varchar                   
 ,     w_warehouse_sq_ft         int                       
-,     w_street_number           string                      
-,     w_street_name             string                   
-,     w_street_type             string                      
-,     w_suite_number            string                      
-,     w_city                    string                   
-,     w_county                  string                   
-,     w_state                   string                       
-,     w_zip                     string                      
-,     w_country                 string                   
+,     w_street_number           varchar                      
+,     w_street_name             varchar                   
+,     w_street_type             varchar                      
+,     w_suite_number            varchar                      
+,     w_city                    varchar                   
+,     w_county                  varchar                   
+,     w_state                   varchar                       
+,     w_zip                     varchar                      
+,     w_country                 varchar                   
 ,     w_gmt_offset              double                  
 );
 
-create external table raptor.tpcds.web_page(
+create table raptor.tpcds.web_page(
       wp_web_page_sk            bigint               
-,     wp_web_page_id            string              
-,     wp_rec_start_date        string                         
-,     wp_rec_end_date          string                         
+,     wp_web_page_id            varchar              
+,     wp_rec_start_date        varchar                         
+,     wp_rec_end_date          varchar                         
 ,     wp_creation_date_sk       bigint                       
 ,     wp_access_date_sk         bigint                       
-,     wp_autogen_flag           string                       
+,     wp_autogen_flag           varchar                       
 ,     wp_customer_sk            bigint                       
-,     wp_url                    string                  
-,     wp_type                   string                      
+,     wp_url                    varchar                  
+,     wp_type                   varchar                      
 ,     wp_char_count             int                       
 ,     wp_link_count             int                       
 ,     wp_image_count            int                       
 ,     wp_max_ad_count           int
 );
 
-create external table raptor.tpcds.web_returns
+create table raptor.tpcds.web_returns
 (
     wr_returned_date_sk       bigint,
     wr_returned_time_sk       bigint,
@@ -447,7 +445,7 @@ create external table raptor.tpcds.web_returns
     wr_net_loss               double
 );
 
-create external table raptor.tpcds.web_sales
+create table raptor.tpcds.web_sales
 (
     ws_sold_date_sk           bigint,
     ws_sold_time_sk           bigint,
@@ -485,106 +483,104 @@ create external table raptor.tpcds.web_sales
     ws_net_profit             double
 );
 
-create external table raptor.tpcds.web_site
+create table raptor.tpcds.web_site
 (
     web_site_sk           bigint,
-    web_site_id           string,
-    web_rec_start_date    string,
-    web_rec_end_date      string,
-    web_name              string,
+    web_site_id           varchar,
+    web_rec_start_date    varchar,
+    web_rec_end_date      varchar,
+    web_name              varchar,
     web_open_date_sk      bigint,
     web_close_date_sk     bigint,
-    web_class             string,
-    web_manager           string,
+    web_class             varchar,
+    web_manager           varchar,
     web_mkt_id            int,
-    web_mkt_class         string,
-    web_mkt_desc          string,
-    web_market_manager    string,
+    web_mkt_class         varchar,
+    web_mkt_desc          varchar,
+    web_market_manager    varchar,
     web_company_id        int,
-    web_company_name      string,
-    web_street_number     string,
-    web_street_name       string,
-    web_street_type       string,
-    web_suite_number      string,
-    web_city              string,
-    web_county            string,
-    web_state             string,
-    web_zip               string,
-    web_country           string,
+    web_company_name      varchar,
+    web_street_number     varchar,
+    web_street_name       varchar,
+    web_street_type       varchar,
+    web_suite_number      varchar,
+    web_city              varchar,
+    web_county            varchar,
+    web_state             varchar,
+    web_zip               varchar,
+    web_country           varchar,
     web_gmt_offset        double,
     web_tax_percentage    double
 );
 
-use hive.tpcds_parquet.tpcds_parquet;
-
 insert into raptor.tpcds.call_center
-select * from call_center;
+select * from hive.tpcds_parquet.call_center;
 
 insert into raptor.tpcds.catalog_page
-select * from catalog_page;
+select * from hive.tpcds_parquet.catalog_page;
 
 insert into raptor.tpcds.catalog_returns
-select * from catalog_returns;
+select * from hive.tpcds_parquet.catalog_returns;
 
 insert into raptor.tpcds.catalog_sales
-select * from catalog_sales;
+select * from hive.tpcds_parquet.catalog_sales;
 
 insert into raptor.tpcds.customer_address
-select * from customer_address;
+select * from hive.tpcds_parquet.customer_address;
 
 insert into raptor.tpcds.customer_demographics
-select * from customer_demographics;
+select * from hive.tpcds_parquet.customer_demographics;
 
 insert into raptor.tpcds.customer
-select * from customer;
+select * from hive.tpcds_parquet.customer;
 
 insert into raptor.tpcds.date_dim
-select * from date_dim;
+select * from hive.tpcds_parquet.date_dim;
 
 insert into raptor.tpcds.household_demographics 
-select * from household_demographics;
+select * from hive.tpcds_parquet.household_demographics;
 
 insert into raptor.tpcds.income_band
-select * from income_band;
+select * from hive.tpcds_parquet.income_band;
 
 insert into raptor.tpcds.inventory
-select * from inventory;
+select * from hive.tpcds_parquet.inventory;
 
 insert into raptor.tpcds.item
-select * from item;
+select * from hive.tpcds_parquet.item;
 
 insert into raptor.tpcds.promotion
-select * from promotion;
+select * from hive.tpcds_parquet.promotion;
 
 insert into raptor.tpcds.reason
-select * from reason;
+select * from hive.tpcds_parquet.reason;
 
 insert into raptor.tpcds.ship_mode
-select * from ship_mode;
+select * from hive.tpcds_parquet.ship_mode;
 
 insert into raptor.tpcds.store_returns
-select * from store_returns;
+select * from hive.tpcds_parquet.store_returns;
 
 insert into raptor.tpcds.store_sales
-select * from store_sales;
+select * from hive.tpcds_parquet.store_sales;
 
 insert into raptor.tpcds.store
-select * from store;
+select * from hive.tpcds_parquet.store;
 
 insert into raptor.tpcds.time_dim
-select * from time_dim;
+select * from hive.tpcds_parquet.time_dim;
 
 insert into raptor.tpcds.warehouse
-select * from warehouse;
+select * from hive.tpcds_parquet.warehouse;
 
 insert into raptor.tpcds.web_page
-select * from web_page;
+select * from hive.tpcds_parquet.web_page;
 
 insert into raptor.tpcds.web_returns
-select * from web_returns;
+select * from hive.tpcds_parquet.web_returns;
 
 insert into raptor.tpcds.web_sales
-select * from web_sales;
+select * from hive.tpcds_parquet.web_sales;
 
 insert into raptor.tpcds.web_site
-select * from web_site;
+select * from hive.tpcds_parquet.web_site;
