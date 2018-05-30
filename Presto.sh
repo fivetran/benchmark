@@ -14,6 +14,20 @@
 #    limitations under the License.
 set -x -e
 
+# Configure local ssds
+# Combine both SSDs into a single, RAID-0 volume
+mdadm --create /dev/md0 \
+    --level=0 \
+    --raid-devices=2 \
+    /dev/nvme0n1 \
+    /dev/nvme0n2 
+# Format the volume
+mkfs.ext4 -F /dev/md0
+# Mount it
+mkdir -p /mnt/disks/ssd-array
+mount /dev/md0 /mnt/disks/ssd-array
+chmod a+w /mnt/disks/ssd-array
+
 # Variables for running this script
 ROLE=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoRole)
 HOSTNAME=$(hostname)
@@ -22,10 +36,10 @@ FQDN=${HOSTNAME}.${DNSNAME}
 PRESTO_MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
 PRESTO_MASTER_FQDN=${PRESTO_MASTER}.${DNSNAME}
 HIVE_FQDN=tpcds-hive-m.${DNSNAME}
-PRESTO_VERSION="0.189"
+PRESTO_VERSION="0.202"
 HTTP_PORT="8080"
-TASKS_PER_INSTANCE_PER_QUERY=16
-INSTANCE_MEMORY=60000
+TASKS_PER_INSTANCE_PER_QUERY=64
+INSTANCE_MEMORY=240000
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 PRESTO_OVERHEAD=500
 PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
@@ -40,14 +54,12 @@ apt-get install openjdk-8-jre-headless -y
 # Download and unpack Presto server
 wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz
 tar -zxvf presto-server-${PRESTO_VERSION}.tar.gz
-mkdir /var/presto
-mkdir /var/presto/data
 
 # Install cli
 if [[ "${ROLE}" == 'Master' ]]; then
 	wget https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar -O /usr/bin/presto
 	chmod a+x /usr/bin/presto
-	sudo apt-get install unzip
+	apt-get install unzip
 fi
 
 # Copy GCS connector
@@ -105,14 +117,16 @@ cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
 -Djava.rmi.server.hostname=127.0.0.1 
 EOF
 
+mkdir -p /mnt/disks/ssd-array/raptor
 if [[ "${ROLE}" == 'Master' ]]; then
 	# Configure master properties
 	cat > presto-server-${PRESTO_VERSION}/etc/config.properties <<EOF
 coordinator=true
-node-scheduler.include-coordinator=false
+node-scheduler.include-coordinator=true
 http-server.http.port=${HTTP_PORT}
 query.max-memory=999TB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
+query.max-total-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery-server.enabled=true
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
@@ -135,6 +149,14 @@ fi
 cat > presto-server-${PRESTO_VERSION}/etc/catalog/memory.properties <<EOF
 connector.name=memory
 memory.max-data-per-node=10GB
+EOF
+
+sudo mkdir -p /mnt/disks/ssd-array/raptor
+cat > presto-server-${PRESTO_VERSION}/etc/catalog/raptor.properties <<EOF
+connector.name=raptor
+metadata.db.type=h2
+metadata.db.filename=mem:raptor
+storage.data-directory=/mnt/disks/ssd-array/raptor
 EOF
 
 # Start presto

@@ -5,6 +5,7 @@ MASTER=${CLUSTER}-m
 zip -r query.zip \
       Warmup.sql \
       PrestoTiming.sql \
+      RaptorDdl.sql \
       100-BenchmarkPresto.sh \
       query
 gcloud compute scp query.zip ${MASTER}:~ \
