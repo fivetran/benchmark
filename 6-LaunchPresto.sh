@@ -2,10 +2,6 @@
 # Be sure to delete the cluster created in 1-LaunchDataproc.sh before running this
 set -e
 
-CLUSTER=tpcds-presto 
-MASTER=${CLUSTER}-m 
-WORKER_GROUP=${CLUSTER}-w
-
 # Create master instance
 gcloud compute \
       --project "digital-arbor-400" \
@@ -14,7 +10,7 @@ gcloud compute \
       --machine-type "n1-standard-64" \
       --image-project "ubuntu-os-cloud" \
       --image-family "ubuntu-1710" \
-      --metadata "PrestoRole=Master,PrestoMaster=${MASTER}" \
+      --metadata "PrestoRole=Master,PrestoMaster=tpcds-presto-m" \
       --metadata-from-file "startup-script=Presto.sh" \
       --boot-disk-size "10" \
       --local-ssd interface=nvme \

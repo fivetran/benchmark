@@ -1,14 +1,12 @@
 # Copy benchmarking files to Presto master and connect
-CLUSTER=tpcds-presto 
-MASTER=${CLUSTER}-m 
-
 zip -r query.zip \
       Warmup.sql \
       PrestoTiming.sql \
-      RaptorDdl.sql \
+      ParquetDdl.sql \
+      PopulateRaptor.sql \
       100-BenchmarkPresto.sh \
       query
-gcloud compute scp query.zip ${MASTER}:~ \
+gcloud compute scp query.zip tpcds-presto-m:~ \
       --zone "us-central1-f"
-gcloud compute ssh ${MASTER} \
+gcloud compute ssh tpcds-presto-m \
       --zone "us-central1-f"
