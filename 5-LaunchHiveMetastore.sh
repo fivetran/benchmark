@@ -5,7 +5,7 @@ gcloud dataproc clusters create tpcds-hive \
     --subnet default \
     --zone us-central1-f \
     --single-node \
-    --master-machine-type n1-standard-4 \
+    --master-machine-type n1-standard-1 \
     --master-boot-disk-size 10 \
     --project digital-arbor-400
 
