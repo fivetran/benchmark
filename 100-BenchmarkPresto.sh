@@ -3,8 +3,6 @@
 # Run this on the dataproc cluster master
 set -e 
 
-SCHEMA=tpcds_parquet
-
 # Randomize the order if $1 is present
 if [ -z $1 ]; then 
   ls query/*.sql > order$1.txt
@@ -16,5 +14,5 @@ fi
 while read f;
 do 
   echo "$f"
-  presto --catalog=hive --schema ${SCHEMA} -f $f > /dev/null
+  presto --catalog=raptor --schema tpcds -f $f > /dev/null
 done < order$1.txt

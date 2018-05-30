@@ -1,4 +1,4 @@
--- Run this script from Presto
+-- Run this script from Hive
 -- Control files size
 set hive.merge.mapfiles=true;
 set hive.merge.mapredfiles=true;
