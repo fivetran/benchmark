@@ -56,31 +56,31 @@ ulimit -n 30000
 apt-get install openjdk-8-jre-headless -y
 
 # Download and unpack Presto server
-wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz
-tar -zxvf presto-server-${PRESTO_VERSION}.tar.gz
+wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-server-0.195-e.0.5.tar.gz
+tar -zxvf presto-server-0.195-e.0.5.tar.gz
 
 # Install cli
 if [[ "${ROLE}" == 'Master' ]]; then
-	wget https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/${PRESTO_VERSION}/presto-cli-${PRESTO_VERSION}-executable.jar -O /usr/bin/presto
+	wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-cli-0.195-e.0.5-executable.jar -O /usr/bin/presto
 	chmod a+x /usr/bin/presto
 	apt-get install unzip
 fi
 
 # Copy GCS connector
-wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -O presto-server-${PRESTO_VERSION}/plugin/hive-hadoop2/gcs-connector-latest-hadoop2.jar 
+wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -O presto-server-0.195-e.0.5/plugin/hive-hadoop2/gcs-connector-latest-hadoop2.jar 
 
 # Configure Presto
-mkdir presto-server-${PRESTO_VERSION}/etc
-mkdir presto-server-${PRESTO_VERSION}/etc/catalog
+mkdir presto-server-0.195-e.0.5/etc
+mkdir presto-server-0.195-e.0.5/etc/catalog
 
-cat > presto-server-${PRESTO_VERSION}/etc/node.properties <<EOF
+cat > presto-server-0.195-e.0.5/etc/node.properties <<EOF
 node.environment=production
 node.id=$(uuidgen)
 node.data-dir=/var/presto/data
 EOF
 
 # Configure hive metastore
-cat > presto-server-${PRESTO_VERSION}/etc/catalog/hive.properties <<EOF
+cat > presto-server-0.195-e.0.5/etc/catalog/hive.properties <<EOF
 connector.name=hive-hadoop2
 hive.metastore.uri=thrift://${HIVE_FQDN}:9083
 hive.parquet-optimized-reader.enabled=true
@@ -102,7 +102,7 @@ cat > /etc/hadoop/conf/core-site.xml <<EOF
 </configuration>
 EOF
 
-cat > presto-server-${PRESTO_VERSION}/etc/jvm.config <<EOF
+cat > presto-server-0.195-e.0.5/etc/jvm.config <<EOF
 -server
 -Xmx${PRESTO_JVM_MB}m
 -Xmn512m
@@ -124,13 +124,12 @@ EOF
 mkdir -p /mnt/disks/ssd-array/raptor
 if [[ "${ROLE}" == 'Master' ]]; then
 	# Configure master properties
-	cat > presto-server-${PRESTO_VERSION}/etc/config.properties <<EOF
+	cat > presto-server-0.195-e.0.5/etc/config.properties <<EOF
 coordinator=true
 node-scheduler.include-coordinator=true
 http-server.http.port=${HTTP_PORT}
 query.max-memory=999TB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
-query.max-total-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery-server.enabled=true
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
@@ -138,7 +137,7 @@ query.max-history=1000
 task.concurrency=${TASKS_PER_INSTANCE_PER_QUERY}
 EOF
 else
-	cat > presto-server-${PRESTO_VERSION}/etc/config.properties <<EOF
+	cat > presto-server-0.195-e.0.5/etc/config.properties <<EOF
 coordinator=false
 http-server.http.port=${HTTP_PORT}
 query.max-memory=999TB
@@ -150,13 +149,13 @@ task.concurrency=${TASKS_PER_INSTANCE_PER_QUERY}
 EOF
 fi
 
-cat > presto-server-${PRESTO_VERSION}/etc/catalog/memory.properties <<EOF
+cat > presto-server-0.195-e.0.5/etc/catalog/memory.properties <<EOF
 connector.name=memory
 memory.max-data-per-node=10GB
 EOF
 
 sudo mkdir -p /mnt/disks/ssd-array/raptor
-cat > presto-server-${PRESTO_VERSION}/etc/catalog/raptor.properties <<EOF
+cat > presto-server-0.195-e.0.5/etc/catalog/raptor.properties <<EOF
 connector.name=raptor
 metadata.db.type=mysql
 metadata.db.url=jdbc:mysql://${RAPTOR_MYSQL_HOST}:3306/${RAPTOR_MYSQL_DB}?user=${RAPTOR_MYSQL_USER}&password=${RAPTOR_MYSQL_PASSWORD}
@@ -164,4 +163,4 @@ storage.data-directory=/mnt/disks/ssd-array/raptor
 EOF
 
 # Start presto
-presto-server-${PRESTO_VERSION}/bin/launcher start
+presto-server-0.195-e.0.5/bin/launcher start
