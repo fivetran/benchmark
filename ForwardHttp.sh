@@ -2,4 +2,4 @@
 gcloud compute ssh tpcds-presto-m \
     --zone "us-central1-f" \
     --ssh-flag="-4NL" \
-    --ssh-flag="8080:localhost:8080"
+    --ssh-flag="8081:localhost:8080"

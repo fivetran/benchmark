@@ -15,12 +15,14 @@
 set -x -e
 
 # Configure local ssds
-# Combine both SSDs into a single, RAID-0 volume
+# Combine all SSDs into a single, RAID-0 volume
 mdadm --create /dev/md0 \
     --level=0 \
-    --raid-devices=2 \
+    --raid-devices=4 \
     /dev/nvme0n1 \
-    /dev/nvme0n2 
+    /dev/nvme0n2 \
+    /dev/nvme0n3 \
+    /dev/nvme0n4 
 # Format the volume
 mkfs.ext4 -F /dev/md0
 # Mount it
@@ -39,15 +41,11 @@ HIVE_FQDN=tpcds-hive-m.${DNSNAME}
 PRESTO_VERSION="0.202"
 HTTP_PORT="8080"
 TASKS_PER_INSTANCE_PER_QUERY=64
-INSTANCE_MEMORY=240000
+INSTANCE_MEMORY=120000
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 PRESTO_OVERHEAD=500
 PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
 PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
-RAPTOR_MYSQL_HOST=35.232.79.11
-RAPTOR_MYSQL_DB=presto_db
-RAPTOR_MYSQL_USER=presto_user
-RAPTOR_MYSQL_PASSWORD=???
 
 # Prevents "Too many open files"
 ulimit -n 30000
@@ -152,14 +150,6 @@ fi
 cat > presto-server-0.195-e.0.5/etc/catalog/memory.properties <<EOF
 connector.name=memory
 memory.max-data-per-node=10GB
-EOF
-
-sudo mkdir -p /mnt/disks/ssd-array/raptor
-cat > presto-server-0.195-e.0.5/etc/catalog/raptor.properties <<EOF
-connector.name=raptor
-metadata.db.type=mysql
-metadata.db.url=jdbc:mysql://${RAPTOR_MYSQL_HOST}:3306/${RAPTOR_MYSQL_DB}?user=${RAPTOR_MYSQL_USER}&password=${RAPTOR_MYSQL_PASSWORD}
-storage.data-directory=/mnt/disks/ssd-array/raptor
 EOF
 
 # Start presto

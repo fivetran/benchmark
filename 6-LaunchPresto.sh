@@ -7,12 +7,14 @@ gcloud compute \
       --project "digital-arbor-400" \
       instances create "tpcds-presto-m" \
       --zone "us-central1-f" \
-      --machine-type "n1-standard-64" \
+      --machine-type "custom-64-122880" \
       --image-project "ubuntu-os-cloud" \
       --image-family "ubuntu-1710" \
       --metadata "PrestoRole=Master,PrestoMaster=tpcds-presto-m" \
       --metadata-from-file "startup-script=Presto.sh" \
       --boot-disk-size "10" \
+      --local-ssd interface=nvme \
+      --local-ssd interface=nvme \
       --local-ssd interface=nvme \
       --local-ssd interface=nvme
 
