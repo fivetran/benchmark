@@ -1,3 +1,27 @@
+drop table if exists raptor.tpcds.call_center;
+drop table if exists raptor.tpcds.catalog_page;
+drop table if exists raptor.tpcds.catalog_returns;
+drop table if exists raptor.tpcds.catalog_sales;
+drop table if exists raptor.tpcds.customer;
+drop table if exists raptor.tpcds.customer_address;
+drop table if exists raptor.tpcds.customer_demographics;
+drop table if exists raptor.tpcds.date_dim;
+drop table if exists raptor.tpcds.household_demographics;
+drop table if exists raptor.tpcds.income_band;
+drop table if exists raptor.tpcds.inventory;
+drop table if exists raptor.tpcds.item;
+drop table if exists raptor.tpcds.promotion;
+drop table if exists raptor.tpcds.reason;
+drop table if exists raptor.tpcds.ship_mode;
+drop table if exists raptor.tpcds.store;
+drop table if exists raptor.tpcds.store_returns;
+drop table if exists raptor.tpcds.store_sales;
+drop table if exists raptor.tpcds.time_dim;
+drop table if exists raptor.tpcds.warehouse;
+drop table if exists raptor.tpcds.web_page;
+drop table if exists raptor.tpcds.web_returns;
+drop table if exists raptor.tpcds.web_sales;
+drop table if exists raptor.tpcds.web_site;
 
 create table raptor.tpcds.call_center(
       cc_call_center_sk         bigint               
