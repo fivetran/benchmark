@@ -14,5 +14,5 @@ fi
 while read f;
 do 
   echo "$f"
-  presto --catalog=raptor --schema tpcds -f $f > /dev/null
+  presto --catalog=hive --schema tpcds_hdfs -f $f > /dev/null
 done < order$1.txt
