@@ -45,12 +45,14 @@ done
 # Install Java
 apt-get install openjdk-8-jre-headless -y
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/
+echo JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/ >> /etc/bash.bashrc
 
 # Install Hadoop
 wget http://mirrors.sonic.net/apache/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
 tar -zxf hadoop-2.9.1.tar.gz
 mv hadoop-2.9.1 hadoop
 export PATH=/hadoop/bin:$PATH
+echo PATH=/hadoop/bin:$PATH >> /etc/bash.bashrc
 
 # Tell Hadoop where to store data
 cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
@@ -179,6 +181,7 @@ wget http://mirrors.sonic.net/apache/hive/hive-2.3.3/apache-hive-2.3.3-bin.tar.g
 tar -zxf apache-hive-2.3.3-bin.tar.gz
 mv apache-hive-2.3.3-bin /hive
 export PATH=/hive/bin:$PATH
+echo PATH=/hive/bin:$PATH >> /etc/bash.bashrc
 hadoop fs -mkdir /tmp
 hadoop fs -mkdir -p /user/hive/warehouse
 hadoop fs -chmod g+w /tmp
