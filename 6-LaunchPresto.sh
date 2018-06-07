@@ -8,6 +8,7 @@ gcloud compute \
       instances create "tpcds-presto-m" \
       --zone "us-central1-f" \
       --machine-type "custom-64-122880" \
+      --min-cpu-platform=Intel\ Skylake \
       --image-project "ubuntu-os-cloud" \
       --image-family "ubuntu-1710" \
       --metadata "PrestoRole=Master,PrestoMaster=tpcds-presto-m" \
