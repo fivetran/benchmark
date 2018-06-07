@@ -238,7 +238,7 @@ schematool -dbType postgres -initSchema
 screen -S hive-metastore -d -m hive --service metastore
 
 # Allow Hive CLI to use lots of memory
-export HADOOP_HEAPSIZE=50000 >> /hive/bin/hive-config.sh
+echo export HADOOP_HEAPSIZE=50000 >> /hive/bin/hive-config.sh
 
 # Download and unpack Presto server
 wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-server-0.195-e.0.5.tar.gz
