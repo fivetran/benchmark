@@ -22,11 +22,11 @@ FQDN=${HOSTNAME}.${DNSNAME}
 PRESTO_MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
 PRESTO_MASTER_FQDN=${PRESTO_MASTER}.${DNSNAME}
 HTTP_PORT="8080"
-TASKS_PER_INSTANCE_PER_QUERY=64
+TASK_CONCURRENCY=32
 INSTANCE_MEMORY=120000
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 PRESTO_OVERHEAD=500
-PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
+PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 1 / 4 ))
 PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
 
 # Prevents "Too many open files"
@@ -45,14 +45,14 @@ done
 # Install Java
 apt-get install openjdk-8-jre-headless -y
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/
-echo JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/ >> /etc/bash.bashrc
+echo 'export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/' >> /etc/bash.bashrc
 
 # Install Hadoop
 wget http://mirrors.sonic.net/apache/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
 tar -zxf hadoop-2.9.1.tar.gz
 mv hadoop-2.9.1 hadoop
 export PATH=/hadoop/bin:$PATH
-echo PATH=/hadoop/bin:$PATH >> /etc/bash.bashrc
+echo 'PATH=/hadoop/bin:$PATH' >> /etc/bash.bashrc
 
 # Tell Hadoop where to store data
 cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
@@ -181,11 +181,11 @@ wget http://mirrors.sonic.net/apache/hive/hive-2.3.3/apache-hive-2.3.3-bin.tar.g
 tar -zxf apache-hive-2.3.3-bin.tar.gz
 mv apache-hive-2.3.3-bin /hive
 export PATH=/hive/bin:$PATH
-echo PATH=/hive/bin:$PATH >> /etc/bash.bashrc
+echo 'PATH=/hive/bin:$PATH' >> /etc/bash.bashrc
 hadoop fs -mkdir /tmp
 hadoop fs -mkdir -p /user/hive/warehouse
-hadoop fs -chmod g+w /tmp
-hadoop fs -chmod g+w /user/hive/warehouse
+hadoop fs -chmod a+w /tmp
+hadoop fs -chmod a+w /user/hive/warehouse
 
 # Install postgres for our metastore
 apt-get install -y postgresql
@@ -237,6 +237,9 @@ schematool -dbType postgres -initSchema
 # Start hive metastore service
 screen -S hive-metastore -d -m hive --service metastore
 
+# Allow Hive CLI to use lots of memory
+export HADOOP_HEAPSIZE=50000 >> /hive/bin/hive-config.sh
+
 # Download and unpack Presto server
 wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-server-0.195-e.0.5.tar.gz
 tar -zxf presto-server-0.195-e.0.5.tar.gz
@@ -277,10 +280,12 @@ cat > presto/etc/jvm.config <<EOF
 -Xmx${PRESTO_JVM_MB}m
 -Xmn512m
 -XX:+UseG1GC
+-XX:G1HeapRegionSize=32M
+-XX:+UseGCOverheadLimit
 -XX:+ExplicitGCInvokesConcurrent
--XX:+AggressiveOpts
 -XX:+HeapDumpOnOutOfMemoryError
--XX:OnOutOfMemoryError=kill -9 %p
+-XX:+ExitOnOutOfMemoryError
+
 -Dhive.config.resources=/hadoop/etc/hadoop/core-site.xml
 -Djava.library.path=/hadoop/lib/native/:/usr/lib/
 -Dcom.sun.management.jmxremote 
@@ -303,7 +308,7 @@ resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery-server.enabled=true
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
 query.max-history=1000
-task.concurrency=${TASKS_PER_INSTANCE_PER_QUERY}
+task.concurrency=${TASK_CONCURRENCY}
 EOF
 else
 	cat > presto/etc/config.properties <<EOF
@@ -314,14 +319,9 @@ query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
 query.max-history=1000
-task.concurrency=${TASKS_PER_INSTANCE_PER_QUERY}
+task.concurrency=${TASK_CONCURRENCY}
 EOF
 fi
-
-cat > presto/etc/catalog/memory.properties <<EOF
-connector.name=memory
-memory.max-data-per-node=10GB
-EOF
 
 # Start presto
 presto/bin/launcher start
