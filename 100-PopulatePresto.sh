@@ -739,51 +739,51 @@ EOF
 
 # Generate statistics for HDFS tables in Hive 
 hive <<EOF
-analyze hive.tpcds_hdfs.call_center compute statistics for columns;
+analyze table tpcds_hdfs.call_center compute statistics for columns;
 
-analyze hive.tpcds_hdfs.catalog_page compute statistics for columns;
+analyze table tpcds_hdfs.catalog_page compute statistics for columns;
 
-analyze hive.tpcds_hdfs.catalog_returns compute statistics for columns;
+analyze table tpcds_hdfs.catalog_returns compute statistics for columns;
 
-analyze hive.tpcds_hdfs.catalog_sales compute statistics for columns;
+analyze table tpcds_hdfs.catalog_sales compute statistics for columns;
 
-analyze hive.tpcds_hdfs.customer_address compute statistics for columns;
+analyze table tpcds_hdfs.customer_address compute statistics for columns;
 
-analyze hive.tpcds_hdfs.customer_demographics compute statistics for columns;
+analyze table tpcds_hdfs.customer_demographics compute statistics for columns;
 
-analyze hive.tpcds_hdfs.customer compute statistics for columns;
+analyze table tpcds_hdfs.customer compute statistics for columns;
 
-analyze hive.tpcds_hdfs.date_dim compute statistics for columns;
+analyze table tpcds_hdfs.date_dim compute statistics for columns;
 
-analyze hive.tpcds_hdfs.household_demographics compute statistics for columns;
+analyze table tpcds_hdfs.household_demographics compute statistics for columns;
 
-analyze hive.tpcds_hdfs.income_band compute statistics for columns;
+analyze table tpcds_hdfs.income_band compute statistics for columns;
 
-analyze hive.tpcds_hdfs.inventory compute statistics for columns;
+analyze table tpcds_hdfs.inventory compute statistics for columns;
 
-analyze hive.tpcds_hdfs.item compute statistics for columns;
+analyze table tpcds_hdfs.item compute statistics for columns;
 
-analyze hive.tpcds_hdfs.promotion compute statistics for columns;
+analyze table tpcds_hdfs.promotion compute statistics for columns;
 
-analyze hive.tpcds_hdfs.reason compute statistics for columns;
+analyze table tpcds_hdfs.reason compute statistics for columns;
 
-analyze hive.tpcds_hdfs.ship_mode compute statistics for columns;
+analyze table tpcds_hdfs.ship_mode compute statistics for columns;
 
-analyze hive.tpcds_hdfs.store_returns compute statistics for columns;
+analyze table tpcds_hdfs.store_returns compute statistics for columns;
 
-analyze hive.tpcds_hdfs.store_sales compute statistics for columns;
+analyze table tpcds_hdfs.store_sales compute statistics for columns;
 
-analyze hive.tpcds_hdfs.store compute statistics for columns;
+analyze table tpcds_hdfs.store compute statistics for columns;
 
-analyze hive.tpcds_hdfs.time_dim compute statistics for columns;
+analyze table tpcds_hdfs.time_dim compute statistics for columns;
 
-analyze hive.tpcds_hdfs.warehouse compute statistics for columns;
+analyze table tpcds_hdfs.warehouse compute statistics for columns;
 
-analyze hive.tpcds_hdfs.web_page compute statistics for columns;
+analyze table tpcds_hdfs.web_page compute statistics for columns;
 
-analyze hive.tpcds_hdfs.web_returns compute statistics for columns;
+analyze table tpcds_hdfs.web_returns compute statistics for columns;
 
-analyze hive.tpcds_hdfs.web_sales compute statistics for columns;
+analyze table tpcds_hdfs.web_sales compute statistics for columns;
 
-analyze hive.tpcds_hdfs.web_site compute statistics for columns;
+analyze table tpcds_hdfs.web_site compute statistics for columns;
 EOF
