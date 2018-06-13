@@ -16,11 +16,7 @@ set -x -e
 
 # Variables for running this script
 ROLE=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoRole)
-HOSTNAME=$(hostname)
-DNSNAME=$(dnsdomainname)
-FQDN=${HOSTNAME}.${DNSNAME}
-PRESTO_MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
-PRESTO_MASTER_FQDN=${PRESTO_MASTER}.${DNSNAME}
+MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
 HTTP_PORT="8080"
 TASK_CONCURRENCY=4
 INSTANCE_MEMORY=30000
@@ -33,10 +29,12 @@ PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 )
 ulimit -n 30000
 
 # Configure local ssd
+if [[ "${ROLE}" != 'Master' ]]; then
 mkfs.ext4 -F /dev/nvme0n1
 mkdir -p /mnt/disks/ssd1
 mount /dev/nvme0n1 /mnt/disks/ssd1
 chmod a+w /mnt/disks/ssd1
+fi
 
 # Install Java
 apt-get install openjdk-8-jre-headless -y
@@ -44,21 +42,16 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/
 echo 'export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/' >> /etc/bash.bashrc
 
 # Install Hadoop
-wget http://mirrors.sonic.net/apache/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
+wget -q http://mirrors.sonic.net/apache/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
 tar -zxf hadoop-2.9.1.tar.gz
 mv hadoop-2.9.1 hadoop
 export PATH=/hadoop/bin:$PATH
 echo 'PATH=/hadoop/bin:$PATH' >> /etc/bash.bashrc
 
 # Tell Hadoop where to store data
+if [[ "${ROLE}" == 'Master' ]]; then
 cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
-  <property>
-    <name>dfs.datanode.data.dir</name>
-    <value>/mnt/disks/ssd1</value>
-    <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
-  </property>
-
   <property>
     <name>dfs.namenode.name.dir</name>
     <value>/hadoop/dfs/name</value>
@@ -71,25 +64,128 @@ cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
   </property>
 </configuration>
 EOF
-
-cat > /hadoop/etc/hadoop/mapred-site.xml <<EOF
-<?xml version="1.0"?>
+else
+cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
   <property>
-    <name>mapreduce.framework.name</name>
-    <value>yarn</value>
+    <name>dfs.datanode.data.dir</name>
+    <value>/mnt/disks/ssd1</value>
+    <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
+  </property>
+
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
   </property>
 </configuration>
 EOF
+fi
 
 cat > /hadoop/etc/hadoop/yarn-site.xml <<EOF
 <?xml version="1.0"?>
 <configuration>  
   <property>    
     <name>yarn.resourcemanager.hostname</name>    
-    <value>${PRESTO_MASTER}</value>  
+    <value>${MASTER}</value>  
+  </property>
+  <property>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value>false</value>
+  </property>
+  <property>
+    <description>
+      The maximum allocation for every container request at the RM, in
+      terms of virtual CPU cores. Requests higher than this won't take
+      effect, and will get capped to this value.
+    </description>
+    <name>yarn.scheduler.maximum-allocation-vcores</name>
+    <value>32000</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>24576</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value>1024</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.resource.cpu-vcores</name>
+    <value>16</value>
+    <description>
+      Number of vcores that can be allocated for containers. This is used by
+      the RM scheduler when allocating resources for containers. This is not
+      used to limit the number of physical cores used by YARN containers.
+    </description>
+  </property>
+  <property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value>24576</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.recovery.enabled</name>
+    <value>true</value>
+    <description>Enable RM to recover state after starting.</description>
   </property>
 </configuration> 
+EOF
+
+cat > /hadoop/etc/hadoop/mapred-site.xml <<EOF
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>mapreduce.job.maps</name>
+    <value>285</value>
+  </property>
+  <property>
+    <name>mapreduce.map.memory.mb</name>
+    <value>1024</value>
+  </property>
+  <property>
+    <name>mapreduce.reduce.memory.mb</name>
+    <value>3072</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.command-opts</name>
+    <value>-Xmx819m</value>
+  </property>
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+    <property>
+    <name>mapreduce.reduce.java.opts</name>
+    <value>-Xmx2457m</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.resource.cpu-vcores</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>mapreduce.reduce.cpu.vcores</name>
+    <value>2</value>
+  </property>
+  <property>
+    <name>mapreduce.map.cpu.vcores</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.resource.mb</name>
+    <value>1024</value>
+  </property>
+  <property>
+    <name>mapreduce.job.reduces</name>
+    <value>31</value>
+  </property>
+  <property>
+    <name>mapreduce.map.java.opts</name>
+    <value>-Xmx819m</value>
+  </property>
+  <property>
+    <name>mapreduce.task.io.sort.mb</name>
+    <value>256</value>
+  </property>
+</configuration>
 EOF
 
 # Tell Hadoop where the hdfs name node lives
@@ -97,7 +193,7 @@ cat > /hadoop/etc/hadoop/core-site.xml <<EOF
 <configuration>
   <property>
     <name>fs.defaultFS</name>
-    <value>hdfs://${PRESTO_MASTER}/</value>
+    <value>hdfs://${MASTER}/</value>
     <description>NameNode URI</description>
   </property>
 
@@ -127,8 +223,6 @@ cat > /hadoop/etc/hadoop/core-site.xml <<EOF
     <property>
     <name>fs.gs.metadata.cache.enable</name>
     <value>false</value>
-    <final>false</final>
-    <source>Dataproc Cluster Properties</source>
   </property>
   <property>
     <name>fs.gs.implicit.dir.infer.enable</name>
@@ -168,14 +262,12 @@ cat > /hadoop/etc/hadoop/core-site.xml <<EOF
   <property>
     <name>fs.gs.block.size</name>
     <value>134217728</value>
-    <final>false</final>
-    <source>Dataproc Cluster Properties</source>
   </property>
 </configuration>
 EOF
 
 # Install google cloud storage connector
-wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -O /hadoop/share/hadoop/common/lib/gcs-connector-latest-hadoop2.jar
+wget -q https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -O /hadoop/share/hadoop/common/lib/gcs-connector-latest-hadoop2.jar
 mkdir /hadoop_gcs_connector_metadata_cache
 
 if [[ "${ROLE}" == 'Master' ]]; then
@@ -184,19 +276,18 @@ if [[ "${ROLE}" == 'Master' ]]; then
 /hadoop/bin/hdfs namenode -format
 # Start the namenode daemon
 /hadoop/sbin/hadoop-daemon.sh start namenode
-
 ## Start YARN daemons
 # Start the resourcemanager daemon
 /hadoop/sbin/yarn-daemon.sh start resourcemanager
+else
 # Start the nodemanager daemon
 /hadoop/sbin/yarn-daemon.sh start nodemanager
-fi 
-
 # Start the datanode daemon
 /hadoop/sbin/hadoop-daemon.sh start datanode
+fi 
 
 # Install Hive
-wget http://mirrors.sonic.net/apache/hive/hive-2.3.3/apache-hive-2.3.3-bin.tar.gz
+wget -q http://mirrors.sonic.net/apache/hive/hive-2.3.3/apache-hive-2.3.3-bin.tar.gz
 tar -zxf apache-hive-2.3.3-bin.tar.gz
 mv apache-hive-2.3.3-bin /hive
 export PATH=/hive/bin:$PATH
@@ -234,14 +325,14 @@ cat > /hive/conf/hive-site.xml <<EOF
 
   <property>
     <name>hive.metastore.uris</name>
-    <value>thrift://${PRESTO_MASTER}:9083</value>
+    <value>thrift://${MASTER}:9083</value>
     <description>IP address (or fully-qualified domain name) and port of the metastore host</description>
   </property>
 </configuration>
 EOF
 
 if [[ "${ROLE}" == 'Master' ]]; then
-hadoop fs -mkdir /tmp
+hadoop fs -mkdir -p /tmp
 hadoop fs -mkdir -p /user/hive/warehouse
 hadoop fs -chmod a+w /tmp
 hadoop fs -chmod a+w /user/hive/warehouse
@@ -260,24 +351,21 @@ schematool -dbType postgres -initSchema
 screen -S hive-metastore -d -m hive --service metastore
 fi
 
-# Allow Hive CLI to use lots of memory
-echo export HADOOP_HEAPSIZE=20000 >> /hive/bin/hive-config.sh
-
 # Download and unpack Presto server
-wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-server-0.195-e.0.5.tar.gz
+wget -q https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-server-0.195-e.0.5.tar.gz
 tar -zxf presto-server-0.195-e.0.5.tar.gz
 mv presto-server-0.195-e.0.5 presto
 
 # Install cli
 if [[ "${ROLE}" == 'Master' ]]; then
-wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-cli-0.195-e.0.5-executable.jar -O /usr/bin/presto
+wget -q https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-cli-0.195-e.0.5-executable.jar -O /usr/bin/presto
 chmod a+x /usr/bin/presto
 apt-get install unzip
 fi
 
 # Copy GCS connector
 # TODO fiddle with caching options in https://github.com/GoogleCloudPlatform/bigdata-interop/blob/master/gcs/src/main/java/com/google/cloud/hadoop/fs/gcs/GoogleHadoopFileSystemBase.java
-wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -O presto/plugin/hive-hadoop2/gcs-connector-latest-hadoop2.jar 
+wget -q https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -O presto/plugin/hive-hadoop2/gcs-connector-latest-hadoop2.jar 
 
 # Configure Presto
 mkdir -p presto/etc/catalog
@@ -291,7 +379,7 @@ EOF
 # Configure hive metastore
 cat > presto/etc/catalog/hive.properties <<EOF
 connector.name=hive-hadoop2
-hive.metastore.uri=thrift://${PRESTO_MASTER_FQDN}:9083
+hive.metastore.uri=thrift://${MASTER}:9083
 hive.parquet-optimized-reader.enabled=true
 hive.parquet-predicate-pushdown.enabled=true
 hive.non-managed-table-writes-enabled=true
@@ -321,26 +409,26 @@ EOF
 
 if [[ "${ROLE}" == 'Master' ]]; then
 	# Configure master properties
-	cat > presto/etc/config.properties <<EOF
+cat > presto/etc/config.properties <<EOF
 coordinator=true
-node-scheduler.include-coordinator=true
+node-scheduler.include-coordinator=false
 http-server.http.port=${HTTP_PORT}
 query.max-memory=999TB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
 discovery-server.enabled=true
-discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
+discovery.uri=http://${MASTER}:${HTTP_PORT}
 query.max-history=1000
 task.concurrency=${TASK_CONCURRENCY}
 EOF
 else
-	cat > presto/etc/config.properties <<EOF
+cat > presto/etc/config.properties <<EOF
 coordinator=false
 http-server.http.port=${HTTP_PORT}
 query.max-memory=999TB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
-discovery.uri=http://${PRESTO_MASTER_FQDN}:${HTTP_PORT}
+discovery.uri=http://${MASTER}:${HTTP_PORT}
 query.max-history=1000
 task.concurrency=${TASK_CONCURRENCY}
 EOF
