@@ -22,25 +22,21 @@ FQDN=${HOSTNAME}.${DNSNAME}
 PRESTO_MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
 PRESTO_MASTER_FQDN=${PRESTO_MASTER}.${DNSNAME}
 HTTP_PORT="8080"
-TASK_CONCURRENCY=32
-INSTANCE_MEMORY=120000
+TASK_CONCURRENCY=4
+INSTANCE_MEMORY=30000
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 PRESTO_OVERHEAD=500
-PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 1 / 4 ))
+PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
 PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
 
 # Prevents "Too many open files"
 ulimit -n 30000
 
-# Configure local ssds
-# We're going to mount each disk separately, rather than in a raid0 array, 
-# because HDFS has intrinsic parallelism that will give better performance that raid performance
-for i in {1..4}; do 
-  mkfs.ext4 -F /dev/nvme0n$i
-  mkdir -p /mnt/disks/ssd$i
-  mount /dev/nvme0n$i /mnt/disks/ssd$i
-  chmod a+w /mnt/disks/ssd$i
-done
+# Configure local ssd
+mkfs.ext4 -F /dev/nvme0n1
+mkdir -p /mnt/disks/ssd1
+mount /dev/nvme0n1 /mnt/disks/ssd1
+chmod a+w /mnt/disks/ssd1
 
 # Install Java
 apt-get install openjdk-8-jre-headless -y
@@ -57,23 +53,43 @@ echo 'PATH=/hadoop/bin:$PATH' >> /etc/bash.bashrc
 # Tell Hadoop where to store data
 cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
-    <property>
-        <name>dfs.datanode.data.dir</name>
-        <value>/mnt/disks/ssd1,/mnt/disks/ssd2,/mnt/disks/ssd3,/mnt/disks/ssd4</value>
-        <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
-    </property>
+  <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>/mnt/disks/ssd1</value>
+    <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
+  </property>
 
-    <property>
-        <name>dfs.namenode.name.dir</name>
-        <value>/hadoop/dfs/name</value>
-        <description>Path on the local filesystem where the NameNode stores the namespace and transaction logs persistently.</description>
-    </property>
+  <property>
+    <name>dfs.namenode.name.dir</name>
+    <value>/hadoop/dfs/name</value>
+    <description>Path on the local filesystem where the NameNode stores the namespace and transaction logs persistently.</description>
+  </property>
 
-    <property>
-        <name>dfs.replication</name>
-        <value>1</value>
-    </property>
+  <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+  </property>
 </configuration>
+EOF
+
+cat > /hadoop/etc/hadoop/mapred-site.xml <<EOF
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+</configuration>
+EOF
+
+cat > /hadoop/etc/hadoop/yarn-site.xml <<EOF
+<?xml version="1.0"?>
+<configuration>  
+  <property>    
+    <name>yarn.resourcemanager.hostname</name>    
+    <value>${PRESTO_MASTER}</value>  
+  </property>
+</configuration> 
 EOF
 
 # Tell Hadoop where the hdfs name node lives
@@ -162,19 +178,22 @@ EOF
 wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -O /hadoop/share/hadoop/common/lib/gcs-connector-latest-hadoop2.jar
 mkdir /hadoop_gcs_connector_metadata_cache
 
+if [[ "${ROLE}" == 'Master' ]]; then
 ## Start HDFS daemons
 # Format the namenode directory (DO THIS ONLY ONCE, THE FIRST TIME)
 /hadoop/bin/hdfs namenode -format
 # Start the namenode daemon
 /hadoop/sbin/hadoop-daemon.sh start namenode
-# Start the datanode daemon
-/hadoop/sbin/hadoop-daemon.sh start datanode
 
 ## Start YARN daemons
 # Start the resourcemanager daemon
 /hadoop/sbin/yarn-daemon.sh start resourcemanager
 # Start the nodemanager daemon
 /hadoop/sbin/yarn-daemon.sh start nodemanager
+fi 
+
+# Start the datanode daemon
+/hadoop/sbin/hadoop-daemon.sh start datanode
 
 # Install Hive
 wget http://mirrors.sonic.net/apache/hive/hive-2.3.3/apache-hive-2.3.3-bin.tar.gz
@@ -182,18 +201,6 @@ tar -zxf apache-hive-2.3.3-bin.tar.gz
 mv apache-hive-2.3.3-bin /hive
 export PATH=/hive/bin:$PATH
 echo 'PATH=/hive/bin:$PATH' >> /etc/bash.bashrc
-hadoop fs -mkdir /tmp
-hadoop fs -mkdir -p /user/hive/warehouse
-hadoop fs -chmod a+w /tmp
-hadoop fs -chmod a+w /user/hive/warehouse
-
-# Install postgres for our metastore
-apt-get install -y postgresql
-service postgresql start
-sudo -u postgres psql <<EOF
-CREATE USER hiveuser WITH PASSWORD 'mypassword';
-CREATE DATABASE metastore;
-EOF
 
 # Configure hive
 cat > /hive/conf/hive-site.xml <<EOF 
@@ -232,13 +239,29 @@ cat > /hive/conf/hive-site.xml <<EOF
   </property>
 </configuration>
 EOF
+
+if [[ "${ROLE}" == 'Master' ]]; then
+hadoop fs -mkdir /tmp
+hadoop fs -mkdir -p /user/hive/warehouse
+hadoop fs -chmod a+w /tmp
+hadoop fs -chmod a+w /user/hive/warehouse
+
+# Install postgres for our metastore
+apt-get install -y postgresql
+service postgresql start
+sudo -u postgres psql <<EOF
+CREATE USER hiveuser WITH PASSWORD 'mypassword';
+CREATE DATABASE metastore;
+EOF
+
 schematool -dbType postgres -initSchema
 
 # Start hive metastore service
 screen -S hive-metastore -d -m hive --service metastore
+fi
 
 # Allow Hive CLI to use lots of memory
-echo export HADOOP_HEAPSIZE=50000 >> /hive/bin/hive-config.sh
+echo export HADOOP_HEAPSIZE=20000 >> /hive/bin/hive-config.sh
 
 # Download and unpack Presto server
 wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-server-0.195-e.0.5.tar.gz
@@ -247,9 +270,9 @@ mv presto-server-0.195-e.0.5 presto
 
 # Install cli
 if [[ "${ROLE}" == 'Master' ]]; then
-	wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-cli-0.195-e.0.5-executable.jar -O /usr/bin/presto
-	chmod a+x /usr/bin/presto
-	apt-get install unzip
+wget https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-cli-0.195-e.0.5-executable.jar -O /usr/bin/presto
+chmod a+x /usr/bin/presto
+apt-get install unzip
 fi
 
 # Copy GCS connector
