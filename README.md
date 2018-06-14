@@ -2,7 +2,8 @@
 https://blog.fivetran.com/warehouse-benchmark-dce9f4c529c1
 
 # Design
-This is based on the TPC-DS benchmark, a standard data warehouse benchmark that includes a lot of complicated queries.
+This is based on the TPC-DS benchmark, a standard data warehouse benchmark that uses lots of joins, aggregations and subqueries.
+The TPC-DS queries have been modified somewhat to improve portability across implementations, and eliminate the use of obscure SQL features like grouping-sets.
 There are two data configurations:
 
 |  **Data size as uncompressed CSV** | **Largest fact table** |
@@ -12,7 +13,7 @@ There are two data configurations:
 
 There are two configurations for each warehouse:
 
-|   |  | **Type** | **Cost / Hour** |
+| **Data size** | **Warehouse** | **Nodes** | **Cost / Hour** |
 |  ------ | ------ | ------ | ------ |
 |  **100 GB** | **Redshift** | 8 × dc2.large | $2.00 |
 |   | **Snowflake** | X-Small | $2.00 |
@@ -24,13 +25,6 @@ There are two configurations for each warehouse:
 |   | **Presto** | ? | ? |
 |   | **Azure** | ? | ? |
 |   | **BigQuery** | - | - |
-
-* 100gb of data in uncompressed CSV form
-* 100s of millions of rows in the larger fact tables
-* Complex queries
-* A small data warehouse
-* Redshift has automatic compression on, but no sort or dist keys
-* Presto is storing data in Parquet format on GCS
 
 # Usage
 These scripts are intended to be manually copy-pasted into various terminals.
