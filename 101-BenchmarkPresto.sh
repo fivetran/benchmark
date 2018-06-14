@@ -5,7 +5,7 @@ set -e
 
 # Warmup
 echo "Warmup.sql"
-presto --catalog hive --schema tpcds_hdfs -f Warmup.sql /dev/null
+presto --catalog hive --schema tpcds_hdfs -f Warmup.sql > /dev/null
 
 # Randomize the order if $1 is present
 if [ -z $1 ]; then 
