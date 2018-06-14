@@ -3,6 +3,10 @@
 # Run this on the dataproc cluster master
 set -e 
 
+# Warmup
+echo "Warmup.sql"
+presto --catalog hive --schema tpcds_hdfs -f Warmup.sql /dev/null
+
 # Randomize the order if $1 is present
 if [ -z $1 ]; then 
   ls query/*.sql > order$1.txt
