@@ -1,7 +1,7 @@
 set -e
 
 # Create external tables in Hive pointing to GCS
-export LOCATION=gs://fivetran-benchmark/tpcds_100_dat
+export LOCATION=gs://fivetran-benchmark/tpcds_1000_dat
 
 hive <<EOF
 create database tpcds;

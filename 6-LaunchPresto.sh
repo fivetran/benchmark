@@ -37,7 +37,7 @@ gcloud compute \
       --zone "us-central1-f" \
       --base-instance-name "tpcds-presto-w" \
       --template "presto-worker" \
-      --size "3"
+      --size "31"
 
 # # Create preemptible worker instance group
 # gcloud compute instance-templates delete "presto-preemptible-worker" \
