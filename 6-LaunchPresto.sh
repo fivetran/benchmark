@@ -7,13 +7,14 @@ gcloud compute \
       --project "digital-arbor-400" \
       instances create "tpcds-presto-m" \
       --zone "us-central1-f" \
-      --machine-type "n1-standard-1" \
+      --machine-type "custom-16-30720" \
       --min-cpu-platform=Intel\ Skylake \
       --image-project "ubuntu-os-cloud" \
       --image-family "ubuntu-1710" \
       --metadata "PrestoRole=Master,PrestoMaster=tpcds-presto-m" \
       --metadata-from-file "startup-script=Presto.sh" \
-      --boot-disk-size "10" 
+      --boot-disk-size "10" \
+      --local-ssd interface=nvme
 
 # Create worker instance group
 gcloud compute instance-templates delete "presto-worker" \
@@ -36,7 +37,7 @@ gcloud compute \
       --zone "us-central1-f" \
       --base-instance-name "tpcds-presto-w" \
       --template "presto-worker" \
-      --size "4"
+      --size "3"
 
 # # Create preemptible worker instance group
 # gcloud compute instance-templates delete "presto-preemptible-worker" \

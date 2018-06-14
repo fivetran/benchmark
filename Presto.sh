@@ -29,12 +29,10 @@ PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 )
 ulimit -n 30000
 
 # Configure local ssd
-if [[ "${ROLE}" != 'Master' ]]; then
 mkfs.ext4 -F /dev/nvme0n1
 mkdir -p /mnt/disks/ssd1
 mount /dev/nvme0n1 /mnt/disks/ssd1
 chmod a+w /mnt/disks/ssd1
-fi
 
 # Install Java
 apt-get install openjdk-8-jre-headless -y
@@ -49,9 +47,14 @@ export PATH=/hadoop/bin:$PATH
 echo 'PATH=/hadoop/bin:$PATH' >> /etc/bash.bashrc
 
 # Tell Hadoop where to store data
-if [[ "${ROLE}" == 'Master' ]]; then
 cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
+  <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>/mnt/disks/ssd1</value>
+    <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
+  </property>
+
   <property>
     <name>dfs.namenode.name.dir</name>
     <value>/hadoop/dfs/name</value>
@@ -64,22 +67,6 @@ cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
   </property>
 </configuration>
 EOF
-else
-cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
-<configuration>
-  <property>
-    <name>dfs.datanode.data.dir</name>
-    <value>/mnt/disks/ssd1</value>
-    <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
-  </property>
-
-  <property>
-    <name>dfs.replication</name>
-    <value>1</value>
-  </property>
-</configuration>
-EOF
-fi
 
 cat > /hadoop/etc/hadoop/yarn-site.xml <<EOF
 <?xml version="1.0"?>
@@ -123,9 +110,8 @@ cat > /hadoop/etc/hadoop/yarn-site.xml <<EOF
     <value>24576</value>
   </property>
   <property>
-    <name>yarn.resourcemanager.recovery.enabled</name>
-    <value>true</value>
-    <description>Enable RM to recover state after starting.</description>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
   </property>
 </configuration> 
 EOF
@@ -133,10 +119,6 @@ EOF
 cat > /hadoop/etc/hadoop/mapred-site.xml <<EOF
 <?xml version="1.0"?>
 <configuration>
-  <property>
-    <name>mapreduce.job.maps</name>
-    <value>285</value>
-  </property>
   <property>
     <name>mapreduce.map.memory.mb</name>
     <value>1024</value>
@@ -146,36 +128,12 @@ cat > /hadoop/etc/hadoop/mapred-site.xml <<EOF
     <value>3072</value>
   </property>
   <property>
-    <name>yarn.app.mapreduce.am.command-opts</name>
-    <value>-Xmx819m</value>
-  </property>
-  <property>
     <name>mapreduce.framework.name</name>
     <value>yarn</value>
   </property>
     <property>
     <name>mapreduce.reduce.java.opts</name>
     <value>-Xmx2457m</value>
-  </property>
-  <property>
-    <name>yarn.app.mapreduce.am.resource.cpu-vcores</name>
-    <value>1</value>
-  </property>
-  <property>
-    <name>mapreduce.reduce.cpu.vcores</name>
-    <value>2</value>
-  </property>
-  <property>
-    <name>mapreduce.map.cpu.vcores</name>
-    <value>1</value>
-  </property>
-  <property>
-    <name>yarn.app.mapreduce.am.resource.mb</name>
-    <value>1024</value>
-  </property>
-  <property>
-    <name>mapreduce.job.reduces</name>
-    <value>31</value>
   </property>
   <property>
     <name>mapreduce.map.java.opts</name>
@@ -276,15 +234,16 @@ if [[ "${ROLE}" == 'Master' ]]; then
 /hadoop/bin/hdfs namenode -format
 # Start the namenode daemon
 /hadoop/sbin/hadoop-daemon.sh start namenode
+
 ## Start YARN daemons
 # Start the resourcemanager daemon
 /hadoop/sbin/yarn-daemon.sh start resourcemanager
-else
+fi
+
 # Start the nodemanager daemon
 /hadoop/sbin/yarn-daemon.sh start nodemanager
 # Start the datanode daemon
 /hadoop/sbin/hadoop-daemon.sh start datanode
-fi 
 
 # Install Hive
 wget -q http://mirrors.sonic.net/apache/hive/hive-2.3.3/apache-hive-2.3.3-bin.tar.gz
@@ -411,12 +370,12 @@ if [[ "${ROLE}" == 'Master' ]]; then
 	# Configure master properties
 cat > presto/etc/config.properties <<EOF
 coordinator=true
-node-scheduler.include-coordinator=false
+node-scheduler.include-coordinator=true
+discovery-server.enabled=true
 http-server.http.port=${HTTP_PORT}
 query.max-memory=999TB
 query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
 resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
-discovery-server.enabled=true
 discovery.uri=http://${MASTER}:${HTTP_PORT}
 query.max-history=1000
 task.concurrency=${TASK_CONCURRENCY}
