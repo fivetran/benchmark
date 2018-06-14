@@ -7,7 +7,7 @@ gcloud compute \
       --project "digital-arbor-400" \
       instances create "tpcds-presto-m" \
       --zone "us-central1-f" \
-      --machine-type "custom-16-30720" \
+      --machine-type "n1-standard-8" \
       --min-cpu-platform=Intel\ Skylake \
       --image-project "ubuntu-os-cloud" \
       --image-family "ubuntu-1710" \
@@ -23,7 +23,7 @@ gcloud compute instance-templates delete "presto-worker" \
 gcloud compute \
       --project "digital-arbor-400" \
       instance-templates create "presto-worker" \
-      --machine-type "custom-16-30720" \
+      --machine-type "n1-standard-8" \
       --min-cpu-platform=Intel\ Skylake \
       --image-project "ubuntu-os-cloud" \
       --image-family "ubuntu-1710" \
