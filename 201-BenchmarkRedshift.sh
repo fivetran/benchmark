@@ -26,7 +26,6 @@ do
 done
 
 echo 'RedshiftTiming.sql...'
-mkdir -p results
 psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
-  --no-align --field-separator '\t' --output results/RedshiftResults.tsv \
+  --no-align --field-separator ',' --output RedshiftResults.csv \
   --file RedshiftTiming.sql
