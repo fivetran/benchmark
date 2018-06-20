@@ -8,8 +8,8 @@ There are two data configurations:
 
 |  **Data size as uncompressed CSV** | **Largest fact table** |
 |  ------ | ------ |
-|  100 GB | 300 million rows |
-|  1 TB | 3 billion rows |
+|  100 GB | 400 million rows |
+|  1 TB | 4 billion rows |
 
 There are two configurations for each warehouse:
 
