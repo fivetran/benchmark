@@ -18,8 +18,9 @@ set -x -e
 ROLE=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoRole)
 MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
 HTTP_PORT="8080"
-TASK_CONCURRENCY=4
-INSTANCE_MEMORY=30000
+INSTANCE_VCPUS=32
+INSTANCE_MEMORY=120000
+TASK_CONCURRENCY=$(( ${INSTANCE_VCPUS} / 2 ))
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 8 / 10 ))
 PRESTO_OVERHEAD=500
 PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
@@ -29,10 +30,13 @@ PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 )
 ulimit -n 30000
 
 # Configure local ssd
-mkfs.ext4 -F /dev/nvme0n1
-mkdir -p /mnt/disks/ssd1
-mount /dev/nvme0n1 /mnt/disks/ssd1
-chmod a+w /mnt/disks/ssd1
+for i in 1 2 3 4 
+do 
+  mkfs.ext4 -F /dev/nvme0n$i
+  mkdir -p /mnt/disks/ssd$i
+  mount /dev/nvme0n$i /mnt/disks/ssd$i
+  chmod a+w /mnt/disks/ssd$i
+done
 
 # Install Java
 apt-get install openjdk-8-jre-headless -y
@@ -51,7 +55,7 @@ cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
   <property>
     <name>dfs.datanode.data.dir</name>
-    <value>/mnt/disks/ssd1</value>
+    <value>/mnt/disks/ssd1,/mnt/disks/ssd2,/mnt/disks/ssd3,/mnt/disks/ssd4</value>
     <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
   </property>
 
@@ -90,7 +94,7 @@ cat > /hadoop/etc/hadoop/yarn-site.xml <<EOF
   </property>
   <property>
     <name>yarn.nodemanager.resource.memory-mb</name>
-    <value>24576</value>
+    <value>$(( ${INSTANCE_MEMORY} * 8 / 10 ))</value>
   </property>
   <property>
     <name>yarn.scheduler.minimum-allocation-mb</name>
@@ -98,7 +102,7 @@ cat > /hadoop/etc/hadoop/yarn-site.xml <<EOF
   </property>
   <property>
     <name>yarn.nodemanager.resource.cpu-vcores</name>
-    <value>16</value>
+    <value>${INSTANCE_VCPUS}</value>
     <description>
       Number of vcores that can be allocated for containers. This is used by
       the RM scheduler when allocating resources for containers. This is not
@@ -107,7 +111,7 @@ cat > /hadoop/etc/hadoop/yarn-site.xml <<EOF
   </property>
   <property>
     <name>yarn.scheduler.maximum-allocation-mb</name>
-    <value>24576</value>
+    <value>$(( ${INSTANCE_MEMORY} * 8 / 10 ))</value>
   </property>
   <property>
     <name>yarn.nodemanager.aux-services</name>
