@@ -3,18 +3,10 @@
 # Don't forget to export PGPASSWORD=?
 set -e 
 
-HOST=tpcds.cw43lptekopo.us-east-1.redshift.amazonaws.com
-DB=tpcds
-USER=developers
-export PGPASSWORD=Charteau1
-
-echo 'Create tables...'
-while read line;
-do
-  psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
-    --echo-queries --output /dev/null \
-    --command "$line" 
-done < PopulateRedshift.sql
+HOST=tpcds.cieo8iixirvu.us-west-2.redshift.amazonaws.com
+DB=public
+USER=fivetran
+export PGPASSWORD=OaklandOffice1
 
 echo 'Warmup.sql...'
 while read line;
