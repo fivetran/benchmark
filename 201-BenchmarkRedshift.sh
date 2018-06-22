@@ -3,9 +3,9 @@
 # Don't forget to export PGPASSWORD=?
 set -e 
 
-HOST=tpcds.cieo8iixirvu.us-west-2.redshift.amazonaws.com
+HOST=tpcds.cw43lptekopo.us-east-1.redshift.amazonaws.com
 DB=public
-USER=fivetran
+USER=tpcds_user
 export PGPASSWORD=OaklandOffice1
 
 echo 'Warmup.sql...'
@@ -16,16 +16,16 @@ do
     --command "$line" 
 done < Warmup.sql
 
-for f in query/*.sql; 
+echo 'Query,Time' > RedshiftResults.csv
+for FILE in query/*.sql; 
 do
-  echo $f
-  SQL=$( cat $f | sed -e 's/Substr/Substring/g' )
-  psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
+  echo $FILE
+  sed -i -e 's/Substr/Substring/g' $FILE
+  /usr/bin/time -f "%e" psql \
+    --host ${HOST} --port 5439 --user ${USER} ${DB} \
     --output /dev/null \
-    --command "$SQL"
+    --file ${FILE} &> time.txt
+  RUNTIME=$(cat time.txt)
+  echo "Elapsed: ${RUNTIME}s"
+  echo ${FILE},${RUNTIME} >> RedshiftResults.csv
 done
-
-echo 'RedshiftTiming.sql...'
-psql --host ${HOST} --port 5439 --user ${USER} ${DB} \
-  --no-align --field-separator ',' --output RedshiftResults.csv \
-  --file RedshiftTiming.sql
