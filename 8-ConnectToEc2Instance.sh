@@ -1,6 +1,6 @@
 # Connect to an EC2 instance so we can run 11-BenchmarkRedshift.sh reliably
-HOST=ec2-35-166-93-125.us-west-2.compute.amazonaws.com
-PEM_FILE=~/.ssh/george.pem
+HOST=ec2-18-208-209-165.compute-1.amazonaws.com
+PEM_FILE=~/.ssh/george-us-east.pem
 
 # Copy benchmarking files to EC2 instance
 zip -r redshift.zip \
