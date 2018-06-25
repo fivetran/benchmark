@@ -10,15 +10,6 @@ FROM   store_sales,
        item, 
        promotion 
 WHERE  ss_sold_date_sk = d_date_sk 
-       AND ss_item_sk = i_item_sk 
-       AND ss_cdemo_sk = cd_demo_sk 
-       AND ss_promo_sk = p_promo_sk 
-       AND cd_gender = 'F' 
-       AND cd_marital_status = 'W' 
-       AND cd_education_status = '2 yr Degree' 
-       AND ( p_channel_email = 'N' 
-              OR p_channel_event = 'N' ) 
-       AND d_year = 1998 
 GROUP  BY i_item_id 
-ORDER  BY i_item_id
+
 LIMIT 100; 
