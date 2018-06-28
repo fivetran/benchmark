@@ -1,9 +1,9 @@
-# Run export SNOWSQL_PWD=<password> before running this script
+#!/bin/sh
 set -e 
 
 for qu in `find warmup/ -type f -name 'query*.sql' | sort -V` ; do
   echo "Warmup $qu..."
-  cat $qu | bash ./SnowflakeQueryRunner.sh timing "$qu"
+  bash ./SnowflakeQueryRunner.sh timing "$qu"
 done
 
 if [ -f SnowflakeResults.csv ]; then
@@ -13,7 +13,7 @@ if [ -f SnowflakeResults.csv ]; then
 fi
 
 echo 'Query,Time' > SnowflakeResults.csv
-for qu in warmup/*.sql `find query/ -type f -name 'query*.sql' | sort -V` ; do
+for qu in `find query/ -type f -name 'query*.sql' | sort -V` ; do
   echo "Running $qu..."
-  cat $qu | bash ./SnowflakeQueryRunner.sh timing "$qu" >> SnowflakeResults.csv
+  bash ./SnowflakeQueryRunner.sh timing "$qu" >> SnowflakeResults.csv
 done
