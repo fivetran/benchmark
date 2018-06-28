@@ -6,8 +6,9 @@ PEM_FILE=~/.ssh/george-us-east.pem
 zip -r redshift.zip \
       Warmup.sql \
       RedshiftTiming.sql \
-      200-PopulateRedshift.sh \
-      201-BenchmarkRedshift.sh \
+      200-PopulateRedshiftSimple.sh \
+      201-PopulateRedshiftOptimized.sh \
+      202-BenchmarkRedshift.sh \
       query
 
 scp -i ${PEM_FILE} redshift.zip ec2-user@${HOST}:~
