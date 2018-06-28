@@ -11,6 +11,13 @@ if [ ! -f ~/.snowflake_password ]; then
 fi
 export SNOWSQL_PWD=`cat ~/.snowflake_password`
 
+if [ -z "$SNOWFLAKE_WAREHOUSE" ] || \
+   [ -z "$SNOWFLAKE_DATABASE" ]; then
+  echo "missing \$SNOWFLAKE_WAREHOUSE or \$SNOWFLAKE_DATABASE" 1>&2
+  SNOWFLAKE_WAREHOUSE=tpcds
+  SNOWFLAKE_DATABASE=tpcds
+fi
+
 function runsql() {
 
   snowsql --noup \
@@ -20,7 +27,7 @@ function runsql() {
     -o header=False \
     -o friendly=False \
     -o rowset_size=10000 \
-    -w tpcds -d tpcds -s PUBLIC
+    -w "$SNOWFLAKE_WAREHOUSE" -d "$SNOWFLAKE_DATABASE" -s PUBLIC
 }
 
 function cleanup() {
@@ -34,7 +41,6 @@ function runtime() {
   trap cleanup TERM KILL
 
   touch _query_output
-  exec 5<> _outsql
 
   snowsql --noup \
     -o output_format=csv \
@@ -43,31 +49,38 @@ function runtime() {
     -o friendly=False \
     -o header=False \
     -o rowset_size=10000 \
-    -w tpcds -d tpcds -s PUBLIC \
-    -f "$1" 1>&5 &
+    -w "$SNOWFLAKE_WAREHOUSE" -d "$SNOWFLAKE_DATABASE" -s PUBLIC \
+    -f "$1" > _outsql &
   PID=$!
 
-  {
-    while read -r line <&5 ; do
-      if echo "$line" | grep -q "Time Elapsed" ; then
+  cat _outsql | {
+    while read -r line ; do
+      if [ "$multi" -eq 0 ] && echo "$line" | grep -q "Time Elapsed" ; then
         # example: 100 Row(s) produced. Time Elapsed: 31.334s
         echo "$line" | awk '{print substr($6, 1, length($6) - 1)}'
         break
+      elif [ "$verbose" = 1 ]; then
+        echo "snowsql: $line" 1>&7
       else
         echo $line >> _query_output
       fi
     done
   }
+
   head -n15 _query_output >&7
 
   wait $PID
-  exec 5>&-
   cleanup
 }
 
 if [ "$1" = "timing" ]; then
+  export multi=0
   time=`runtime "$2" 7>&2`
   printf "%s,%.5f\n" "$2" "$time"
+elif [ "$1" = "ddl" ]; then
+  export verbose=1
+  export multi=1
+  runtime "$2" 7>&2
 else
   runsql
 fi
