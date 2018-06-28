@@ -9,6 +9,8 @@ db="$3"
 export SNOWFLAKE_WAREHOUSE="$warehouse"
 export SNOWFLAKE_DATABASE="$db"
 
+echo warehouse=$SNOWFLAKE_WAREHOUSE database=$SNOWFLAKE_DATABASE
+
 cleanupFiles=""
 
 cleanup() {

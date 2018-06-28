@@ -18,7 +18,14 @@ if [ -z "$SNOWFLAKE_WAREHOUSE" ] || \
   SNOWFLAKE_DATABASE=tpcds
 fi
 
-function runsql() {
+tempdir=`mktemp -d _work_XXXXXXXXXX`
+
+cleanup() {
+  rm -rf "$tempdir" 2>/dev/null || :
+}
+trap cleanup TERM KILL
+
+runsql() {
 
   snowsql --noup \
     -o output_format=csv \
@@ -30,17 +37,11 @@ function runsql() {
     -w "$SNOWFLAKE_WAREHOUSE" -d "$SNOWFLAKE_DATABASE" -s PUBLIC
 }
 
-function cleanup() {
-  rm _outsql _query_output 2>/dev/null || :
-}
+runtime() {
 
-function runtime() {
-  cleanup
+  mkfifo $tempdir/outsql
 
-  mkfifo _outsql
-  trap cleanup TERM KILL
-
-  touch _query_output
+  touch $tempdir/output
 
   snowsql --noup \
     -o output_format=csv \
@@ -50,7 +51,7 @@ function runtime() {
     -o header=False \
     -o rowset_size=10000 \
     -w "$SNOWFLAKE_WAREHOUSE" -d "$SNOWFLAKE_DATABASE" -s PUBLIC \
-    -f "$1" > _outsql &
+    -f "$1" > $tempdir/outsql &
   PID=$!
 
   cat _outsql | {
@@ -62,12 +63,12 @@ function runtime() {
       elif [ "$verbose" = 1 ]; then
         echo "snowsql: $line" 1>&7
       else
-        echo $line >> _query_output
+        echo $line >> $tempdir/output
       fi
     done
   }
 
-  head -n15 _query_output >&7
+  head -n15 $tempdir/output >&7
 
   wait $PID
   cleanup
