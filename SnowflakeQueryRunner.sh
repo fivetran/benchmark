@@ -54,7 +54,7 @@ runtime() {
     -f "$1" > $tempdir/outsql &
   PID=$!
 
-  cat _outsql | {
+  cat $tempdir/outsql | {
     while read -r line ; do
       if [ "$multi" -eq 0 ] && echo "$line" | grep -q "Time Elapsed" ; then
         # example: 100 Row(s) produced. Time Elapsed: 31.334s

@@ -22,6 +22,7 @@ done
 mkdir -p results
 
 output=results/SnowflakeResults_${runName}.csv
+echo Saving output to $output
 if [ -f $output ]; then
   temp=`mktemp results/SnowflakeResults_XXXXXXXXX.csv`
   echo "moving previous timing run to $temp"
