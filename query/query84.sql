@@ -1,6 +1,8 @@
--- query84
+-- start query 84 in stream 0 using template query84.tpl 
 SELECT c_customer_id   AS customer_id, 
-       Concat(c_last_name, Concat(', ', c_first_name))  AS customername 
+               c_last_name 
+               || ', ' 
+               || c_first_name AS customername 
 FROM   customer, 
        customer_address, 
        customer_demographics, 

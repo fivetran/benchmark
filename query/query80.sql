@@ -1,4 +1,4 @@
--- query80
+-- start query 80 in stream 0 using template query80.tpl 
 WITH ssr AS 
 ( 
                 SELECT          s_store_id                                    AS store_id, 
@@ -15,8 +15,8 @@ WITH ssr AS
                                 item, 
                                 promotion 
                 WHERE           ss_sold_date_sk = d_date_sk 
-                AND             Cast(d_date AS DATE) BETWEEN Cast('2000-08-26' AS DATE) AND             ( 
-                                                Cast('2001-09-25' AS DATE)) 
+                AND             d_date BETWEEN Cast('2000-08-26' AS DATE) AND             ( 
+                                                Cast('2000-08-26' AS DATE) + INTERVAL '30' day) 
                 AND             ss_store_sk = s_store_sk 
                 AND             ss_item_sk = i_item_sk 
                 AND             i_current_price > 50 
@@ -38,8 +38,8 @@ WITH ssr AS
                                 item, 
                                 promotion 
                 WHERE           cs_sold_date_sk = d_date_sk 
-                AND             Cast(d_date AS DATE) BETWEEN cast('2000-08-26' AS date) AND             ( 
-                                                Cast('2001-09-25' AS DATE)) 
+                AND             d_date BETWEEN cast('2000-08-26' AS date) AND             ( 
+                                                cast('2000-08-26' AS date) + INTERVAL '30' day) 
                 AND             cs_catalog_page_sk = cp_catalog_page_sk 
                 AND             cs_item_sk = i_item_sk 
                 AND             i_current_price > 50 
@@ -61,8 +61,8 @@ WITH ssr AS
                                 item, 
                                 promotion 
                 WHERE           ws_sold_date_sk = d_date_sk 
-                AND             Cast(d_date AS DATE) BETWEEN cast('2000-08-26' AS date) AND             ( 
-                                                Cast('2001-09-25' AS DATE)) 
+                AND             d_date BETWEEN cast('2000-08-26' AS date) AND             ( 
+                                                cast('2000-08-26' AS date) + INTERVAL '30' day) 
                 AND             ws_web_site_sk = web_site_sk 
                 AND             ws_item_sk = i_item_sk 
                 AND             i_current_price > 50 
@@ -77,26 +77,29 @@ SELECT
          sum(profit)  AS profit 
 FROM     ( 
                 SELECT 'store channel' AS channel , 
-                       Concat('store', store_id) AS id , 
+                       'store' 
+                              || store_id AS id , 
                        sales , 
                        returns1 , 
                        profit 
                 FROM   ssr 
                 UNION ALL 
                 SELECT 'catalog channel' AS channel , 
-                       Concat('catalog_page', catalog_page_id) AS id , 
+                       'catalog_page' 
+                              || catalog_page_id AS id , 
                        sales , 
                        returns1 , 
                        profit 
                 FROM   csr 
                 UNION ALL 
                 SELECT 'web channel' AS channel , 
-                       Concat('web_site', web_site_id) AS id , 
+                       'web_site' 
+                              || web_site_id AS id , 
                        sales , 
                        returns1 , 
                        profit 
                 FROM   wsr ) x 
-GROUP BY channel, id
+GROUP BY rollup (channel, id) 
 ORDER BY channel , 
          id 
 LIMIT 100; 

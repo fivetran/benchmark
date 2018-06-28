@@ -1,6 +1,14 @@
--- query4
+-- start query 4 in stream 0 using template query4.tpl 
 WITH year_total 
      AS (SELECT c_customer_id                       customer_id, 
+                c_first_name                        customer_first_name, 
+                c_last_name                         customer_last_name, 
+                c_preferred_cust_flag               customer_preferred_cust_flag 
+                , 
+                c_birth_country 
+                customer_birth_country, 
+                c_login                             customer_login, 
+                c_email_address                     customer_email_address, 
                 d_year                              dyear, 
                 Sum(( ( ss_ext_list_price - ss_ext_wholesale_cost 
                         - ss_ext_discount_amt 
@@ -14,10 +22,27 @@ WITH year_total
          WHERE  c_customer_sk = ss_customer_sk 
                 AND ss_sold_date_sk = d_date_sk 
          GROUP  BY c_customer_id, 
+                   c_first_name, 
+                   c_last_name, 
+                   c_preferred_cust_flag, 
+                   c_birth_country, 
+                   c_login, 
+                   c_email_address, 
                    d_year 
          UNION ALL 
          SELECT c_customer_id                             customer_id, 
-                d_year                                    dyear, 
+                c_first_name                              customer_first_name, 
+                c_last_name                               customer_last_name, 
+                c_preferred_cust_flag 
+                customer_preferred_cust_flag, 
+                c_birth_country                           customer_birth_country 
+                , 
+                c_login 
+                customer_login, 
+                c_email_address                           customer_email_address 
+                , 
+                d_year                                    dyear 
+                , 
                 Sum(( ( ( cs_ext_list_price 
                           - cs_ext_wholesale_cost 
                           - cs_ext_discount_amt 
@@ -30,10 +55,27 @@ WITH year_total
          WHERE  c_customer_sk = cs_bill_customer_sk 
                 AND cs_sold_date_sk = d_date_sk 
          GROUP  BY c_customer_id, 
+                   c_first_name, 
+                   c_last_name, 
+                   c_preferred_cust_flag, 
+                   c_birth_country, 
+                   c_login, 
+                   c_email_address, 
                    d_year 
          UNION ALL 
          SELECT c_customer_id                             customer_id, 
-                d_year                                    dyear, 
+                c_first_name                              customer_first_name, 
+                c_last_name                               customer_last_name, 
+                c_preferred_cust_flag 
+                customer_preferred_cust_flag, 
+                c_birth_country                           customer_birth_country 
+                , 
+                c_login 
+                customer_login, 
+                c_email_address                           customer_email_address 
+                , 
+                d_year                                    dyear 
+                , 
                 Sum(( ( ( ws_ext_list_price 
                           - ws_ext_wholesale_cost 
                           - ws_ext_discount_amt 
@@ -46,24 +88,28 @@ WITH year_total
          WHERE  c_customer_sk = ws_bill_customer_sk 
                 AND ws_sold_date_sk = d_date_sk 
          GROUP  BY c_customer_id, 
+                   c_first_name, 
+                   c_last_name, 
+                   c_preferred_cust_flag, 
+                   c_birth_country, 
+                   c_login, 
+                   c_email_address, 
                    d_year) 
 SELECT t_s_secyear.customer_id, 
-               customer.c_first_name, 
-               customer.c_last_name, 
-               customer.c_preferred_cust_flag 
+               t_s_secyear.customer_first_name, 
+               t_s_secyear.customer_last_name, 
+               t_s_secyear.customer_preferred_cust_flag 
 FROM   year_total t_s_firstyear, 
        year_total t_s_secyear, 
        year_total t_c_firstyear, 
        year_total t_c_secyear, 
        year_total t_w_firstyear, 
-       year_total t_w_secyear,
-       customer
+       year_total t_w_secyear 
 WHERE  t_s_secyear.customer_id = t_s_firstyear.customer_id 
        AND t_s_firstyear.customer_id = t_c_secyear.customer_id 
        AND t_s_firstyear.customer_id = t_c_firstyear.customer_id 
        AND t_s_firstyear.customer_id = t_w_firstyear.customer_id 
        AND t_s_firstyear.customer_id = t_w_secyear.customer_id 
-       AND t_s_secyear.customer_id = customer.c_customer_id
        AND t_s_firstyear.sale_type = 's' 
        AND t_c_firstyear.sale_type = 'c' 
        AND t_w_firstyear.sale_type = 'w' 
@@ -99,5 +145,8 @@ WHERE  t_s_secyear.customer_id = t_s_firstyear.customer_id
                    t_w_firstyear.year_total 
                    ELSE NULL 
                  END 
-ORDER  BY t_s_secyear.customer_id
+ORDER  BY t_s_secyear.customer_id, 
+          t_s_secyear.customer_first_name, 
+          t_s_secyear.customer_last_name, 
+          t_s_secyear.customer_preferred_cust_flag
 LIMIT 100; 

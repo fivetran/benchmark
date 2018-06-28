@@ -1,4 +1,4 @@
--- query31
+-- start query 31 in stream 0 using template query31.tpl 
 WITH ss 
      AS (SELECT ca_county, 
                 d_qoy, 

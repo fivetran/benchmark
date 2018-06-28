@@ -1,4 +1,4 @@
--- query41
+-- start query 41 in stream 0 using template query41.tpl 
 SELECT Distinct(i_product_name) 
 FROM   item i1 
 WHERE  i_manufact_id BETWEEN 765 AND 765 + 40 

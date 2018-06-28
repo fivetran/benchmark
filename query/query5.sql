@@ -1,4 +1,4 @@
--- query5
+-- start query 5 in stream 0 using template query5.tpl 
 WITH ssr AS 
 ( 
          SELECT   s_store_id, 
@@ -11,22 +11,22 @@ WITH ssr AS
                                 ss_sold_date_sk         AS date_sk, 
                                 ss_ext_sales_price      AS sales_price, 
                                 ss_net_profit           AS profit, 
-                                0 AS return_amt, 
-                                0 AS net_loss 
+                                Cast(0 AS DECIMAL(7,2)) AS return_amt, 
+                                Cast(0 AS DECIMAL(7,2)) AS net_loss 
                          FROM   store_sales 
                          UNION ALL 
                          SELECT sr_store_sk             AS store_sk, 
                                 sr_returned_date_sk     AS date_sk, 
-                                0 AS sales_price, 
-                                0 AS profit, 
+                                Cast(0 AS DECIMAL(7,2)) AS sales_price, 
+                                Cast(0 AS DECIMAL(7,2)) AS profit, 
                                 sr_return_amt           AS return_amt, 
                                 sr_net_loss             AS net_loss 
                          FROM   store_returns ) salesreturns, 
                   date_dim, 
                   store 
          WHERE    date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN Cast('2002-08-22' AS DATE) AND      ( 
-                           Cast('2002-09-05' AS DATE)) 
+         AND      d_date BETWEEN Cast('2002-08-22' AS DATE) AND      ( 
+                           Cast('2002-08-22' AS DATE) + INTERVAL '14' day) 
          AND      store_sk = s_store_sk 
          GROUP BY s_store_id) , csr AS 
 ( 
@@ -40,22 +40,22 @@ WITH ssr AS
                                 cs_sold_date_sk         AS date_sk, 
                                 cs_ext_sales_price      AS sales_price, 
                                 cs_net_profit           AS profit, 
-                                0 AS return_amt, 
-                                0 AS net_loss 
+                                cast(0 AS decimal(7,2)) AS return_amt, 
+                                cast(0 AS decimal(7,2)) AS net_loss 
                          FROM   catalog_sales 
                          UNION ALL 
                          SELECT cr_catalog_page_sk      AS page_sk, 
                                 cr_returned_date_sk     AS date_sk, 
-                                0 AS sales_price, 
-                                0 AS profit, 
+                                cast(0 AS decimal(7,2)) AS sales_price, 
+                                cast(0 AS decimal(7,2)) AS profit, 
                                 cr_return_amount        AS return_amt, 
                                 cr_net_loss             AS net_loss 
                          FROM   catalog_returns ) salesreturns, 
                   date_dim, 
                   catalog_page 
          WHERE    date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN cast('2002-08-22' AS date) AND      ( 
-                           Cast('2002-09-05' AS DATE)) 
+         AND      d_date BETWEEN cast('2002-08-22' AS date) AND      ( 
+                           cast('2002-08-22' AS date) + INTERVAL '14' day) 
          AND      page_sk = cp_catalog_page_sk 
          GROUP BY cp_catalog_page_id) , wsr AS 
 ( 
@@ -69,14 +69,14 @@ WITH ssr AS
                                 ws_sold_date_sk         AS date_sk, 
                                 ws_ext_sales_price      AS sales_price, 
                                 ws_net_profit           AS profit, 
-                                0 AS return_amt, 
-                                0 AS net_loss 
+                                cast(0 AS decimal(7,2)) AS return_amt, 
+                                cast(0 AS decimal(7,2)) AS net_loss 
                          FROM   web_sales 
                          UNION ALL 
                          SELECT          ws_web_site_sk          AS wsr_web_site_sk, 
                                          wr_returned_date_sk     AS date_sk, 
-                                         0 AS sales_price, 
-                                         0 AS profit, 
+                                         cast(0 AS decimal(7,2)) AS sales_price, 
+                                         cast(0 AS decimal(7,2)) AS profit, 
                                          wr_return_amt           AS return_amt, 
                                          wr_net_loss             AS net_loss 
                          FROM            web_returns 
@@ -87,8 +87,8 @@ WITH ssr AS
                   date_dim, 
                   web_site 
          WHERE    date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN cast('2002-08-22' AS date) AND      ( 
-                           Cast('2002-09-05' AS DATE)) 
+         AND      d_date BETWEEN cast('2002-08-22' AS date) AND      ( 
+                           cast('2002-08-22' AS date) + INTERVAL '14' day) 
          AND      wsr_web_site_sk = web_site_sk 
          GROUP BY web_site_id) 
 SELECT 
@@ -99,26 +99,29 @@ SELECT
          sum(profit)  AS profit 
 FROM     ( 
                 SELECT 'store channel' AS channel , 
-                       Concat('store', s_store_id) AS id , 
+                       'store' 
+                              || s_store_id AS id , 
                        sales , 
                        returns1 , 
                        (profit - profit_loss) AS profit 
                 FROM   ssr 
                 UNION ALL 
                 SELECT 'catalog channel' AS channel , 
-                       Concat('catalog_page', cp_catalog_page_id) AS id , 
+                       'catalog_page' 
+                              || cp_catalog_page_id AS id , 
                        sales , 
                        returns1 , 
                        (profit - profit_loss) AS profit 
                 FROM   csr 
                 UNION ALL 
                 SELECT 'web channel' AS channel , 
-                       Concat('web_site', web_site_id) AS id , 
+                       'web_site' 
+                              || web_site_id AS id , 
                        sales , 
                        returns1 , 
                        (profit - profit_loss) AS profit 
                 FROM   wsr ) x 
-GROUP BY channel, id
+GROUP BY rollup (channel, id) 
 ORDER BY channel , 
          id 
 LIMIT 100; 

@@ -1,4 +1,4 @@
--- query54
+-- start query 54 in stream 0 using template query54.tpl 
 WITH my_customers 
      AS (SELECT DISTINCT c_customer_sk, 
                          c_current_addr_sk 
@@ -45,7 +45,7 @@ WITH my_customers
                                                 AND d_moy = 5) 
          GROUP  BY c_customer_sk), 
      segments 
-     AS (SELECT Floor(revenue / 50) AS segment 
+     AS (SELECT Cast(( revenue / 50 ) AS INT) AS segment 
          FROM   my_revenue) 
 SELECT segment, 
                Count(*)     AS num_customers, 

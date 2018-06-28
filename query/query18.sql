@@ -1,15 +1,15 @@
--- query18
+-- start query 18 in stream 0 using template query18.tpl 
 SELECT i_item_id, 
                ca_country, 
                ca_state, 
                ca_county, 
-               Avg(cs_quantity)      agg1, 
-               Avg(cs_list_price)    agg2, 
-               Avg(cs_coupon_amt)    agg3, 
-               Avg(cs_sales_price)   agg4, 
-               Avg(cs_net_profit)    agg5, 
-               Avg(c_birth_year)     agg6, 
-               Avg(cd1.cd_dep_count) agg7 
+               Avg(Cast(cs_quantity AS NUMERIC(12, 2)))      agg1, 
+               Avg(Cast(cs_list_price AS NUMERIC(12, 2)))    agg2, 
+               Avg(Cast(cs_coupon_amt AS NUMERIC(12, 2)))    agg3, 
+               Avg(Cast(cs_sales_price AS NUMERIC(12, 2)))   agg4, 
+               Avg(Cast(cs_net_profit AS NUMERIC(12, 2)))    agg5, 
+               Avg(Cast(c_birth_year AS NUMERIC(12, 2)))     agg6, 
+               Avg(Cast(cd1.cd_dep_count AS NUMERIC(12, 2))) agg7 
 FROM   catalog_sales, 
        customer_demographics cd1, 
        customer_demographics cd2, 
@@ -30,7 +30,7 @@ WHERE  cs_sold_date_sk = d_date_sk
        AND d_year = 2001 
        AND ca_state IN ( 'KS', 'IA', 'AL', 'UT', 
                          'VA', 'NC', 'TX' ) 
-GROUP  BY i_item_id, ca_country, ca_state, ca_county 
+GROUP  BY rollup ( i_item_id, ca_country, ca_state, ca_county ) 
 ORDER  BY ca_country, 
           ca_state, 
           ca_county, 

@@ -1,4 +1,4 @@
--- query34
+-- start query 34 in stream 0 using template query34.tpl 
 SELECT c_last_name, 
        c_first_name, 
        c_salutation, 

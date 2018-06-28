@@ -1,4 +1,4 @@
--- query95
+-- start query 95 in stream 0 using template query95.tpl 
 WITH ws_wh AS 
 ( 
        SELECT ws1.ws_order_number, 
@@ -9,15 +9,15 @@ WITH ws_wh AS
        WHERE  ws1.ws_order_number = ws2.ws_order_number 
        AND    ws1.ws_warehouse_sk <> ws2.ws_warehouse_sk) 
 SELECT 
-         Count(DISTINCT ws_order_number) AS order_count, 
-         Sum(ws_ext_ship_cost)           AS total_shipping_cost, 
-         Sum(ws_net_profit)              AS total_net_profit
+         Count(DISTINCT ws_order_number) AS `order count` , 
+         Sum(ws_ext_ship_cost)           AS `total shipping cost` , 
+         Sum(ws_net_profit)              AS `total net profit` 
 FROM     web_sales ws1 , 
          date_dim , 
          customer_address , 
          web_site 
-WHERE    Cast(d_date AS DATE) BETWEEN Cast('2000-4-01' AS DATE) AND      ( 
-                  Cast('2000-6-01' AS DATE)) 
+WHERE    d_date BETWEEN '2000-4-01' AND      ( 
+                  Cast('2000-4-01' AS DATE) + INTERVAL '60' day) 
 AND      ws1.ws_ship_date_sk = d_date_sk 
 AND      ws1.ws_ship_addr_sk = ca_address_sk 
 AND      ca_state = 'IN' 

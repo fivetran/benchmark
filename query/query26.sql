@@ -1,4 +1,4 @@
--- query26
+-- start query 26 in stream 0 using template query26.tpl 
 SELECT i_item_id, 
                Avg(cs_quantity)    agg1, 
                Avg(cs_list_price)  agg2, 

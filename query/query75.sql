@@ -1,4 +1,4 @@
--- query75
+-- start query 75 in stream 0 using template query75.tpl 
 WITH all_sales 
      AS (SELECT d_year, 
                 i_brand_id, 
@@ -25,7 +25,7 @@ WITH all_sales
                                ON ( cs_order_number = cr_order_number 
                                     AND cs_item_sk = cr_item_sk ) 
                  WHERE  i_category = 'Men' 
-                 UNION ALL
+                 UNION 
                  SELECT d_year, 
                         i_brand_id, 
                         i_class_id, 
@@ -44,7 +44,7 @@ WITH all_sales
                                ON ( ss_ticket_number = sr_ticket_number 
                                     AND ss_item_sk = sr_item_sk ) 
                  WHERE  i_category = 'Men' 
-                 UNION ALL
+                 UNION 
                  SELECT d_year, 
                         i_brand_id, 
                         i_class_id, 
@@ -86,7 +86,8 @@ WHERE  curr_yr.i_brand_id = prev_yr.i_brand_id
        AND curr_yr.i_manufact_id = prev_yr.i_manufact_id 
        AND curr_yr.d_year = 2002 
        AND prev_yr.d_year = 2002 - 1 
-       AND curr_yr.sales_cnt / prev_yr.sales_cnt
+       AND Cast(curr_yr.sales_cnt AS DECIMAL(17, 2)) / Cast(prev_yr.sales_cnt AS 
+                                                                DECIMAL(17, 2)) 
            < 0.9 
 ORDER  BY sales_cnt_diff
 LIMIT 100; 

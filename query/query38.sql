@@ -1,6 +1,6 @@
--- query38
-WITH g1 AS (
-        SELECT DISTINCT c_last_name, 
+-- start query 38 in stream 0 using template query38.tpl 
+SELECT Count(*) 
+FROM   (SELECT DISTINCT c_last_name, 
                         c_first_name, 
                         d_date 
         FROM   store_sales, 
@@ -9,7 +9,7 @@ WITH g1 AS (
         WHERE  store_sales.ss_sold_date_sk = date_dim.d_date_sk 
                AND store_sales.ss_customer_sk = customer.c_customer_sk 
                AND d_month_seq BETWEEN 1188 AND 1188 + 11 
-), g2 AS (
+        INTERSECT 
         SELECT DISTINCT c_last_name, 
                         c_first_name, 
                         d_date 
@@ -19,7 +19,7 @@ WITH g1 AS (
         WHERE  catalog_sales.cs_sold_date_sk = date_dim.d_date_sk 
                AND catalog_sales.cs_bill_customer_sk = customer.c_customer_sk 
                AND d_month_seq BETWEEN 1188 AND 1188 + 11 
-), g3 AS (
+        INTERSECT 
         SELECT DISTINCT c_last_name, 
                         c_first_name, 
                         d_date 
@@ -28,10 +28,5 @@ WITH g1 AS (
                customer 
         WHERE  web_sales.ws_sold_date_sk = date_dim.d_date_sk 
                AND web_sales.ws_bill_customer_sk = customer.c_customer_sk 
-               AND d_month_seq BETWEEN 1188 AND 1188 + 11
-)
-SELECT Count(*) 
-FROM   g1 
-JOIN g2 ON g1.c_last_name = g2.c_last_name AND g1.c_first_name = g2.c_first_name AND g1.d_date = g2.d_date
-JOIN g3 ON g1.c_last_name = g3.c_last_name AND g1.c_first_name = g3.c_first_name AND g1.d_date = g3.d_date
+               AND d_month_seq BETWEEN 1188 AND 1188 + 11) hot_cust
 LIMIT 100; 

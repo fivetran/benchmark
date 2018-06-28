@@ -1,4 +1,4 @@
--- query64
+-- start query 64 in stream 0 using template query64.tpl 
 WITH cs_ui 
      AS (SELECT cs_item_sk, 
                 Sum(cs_ext_list_price) AS sale, 
@@ -104,11 +104,11 @@ SELECT cs1.product_name,
        cs1.s1, 
        cs1.s2, 
        cs1.s3, 
-       cs2.s1 AS s1_, 
-       cs2.s2 AS s2_, 
-       cs2.s3 AS s3_, 
-       cs2.syear AS syear_, 
-       cs2.cnt AS cnt_ 
+       cs2.s1, 
+       cs2.s2, 
+       cs2.s3, 
+       cs2.syear, 
+       cs2.cnt 
 FROM   cross_sales cs1, 
        cross_sales cs2 
 WHERE  cs1.item_sk = cs2.item_sk 

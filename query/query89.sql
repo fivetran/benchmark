@@ -1,4 +1,4 @@
--- query89
+-- start query 89 in stream 0 using template query89.tpl 
 SELECT  * 
 FROM  (SELECT i_category, 
               i_class, 

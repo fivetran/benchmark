@@ -1,4 +1,4 @@
--- query44
+-- start query 44 in stream 0 using template query44.tpl 
 SELECT asceding.rnk, 
                i1.i_product_name best_performing, 
                i2.i_product_name worst_performing 

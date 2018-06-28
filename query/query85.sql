@@ -1,4 +1,4 @@
--- query85
+-- start query 85 in stream 0 using template query85.tpl 
 SELECT Substr(r_reason_desc, 1, 20), 
                Avg(ws_quantity), 
                Avg(wr_refunded_cash), 

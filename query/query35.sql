@@ -1,4 +1,4 @@
--- query35
+-- start query 35 in stream 0 using template query35.tpl 
 SELECT ca_state, 
                cd_gender, 
                cd_marital_status, 

@@ -1,5 +1,5 @@
 
--- query77
+-- start query 77 in stream 0 using template query77.tpl 
 WITH ss AS 
 ( 
          SELECT   s_store_sk, 
@@ -9,8 +9,8 @@ WITH ss AS
                   date_dim, 
                   store 
          WHERE    ss_sold_date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN Cast('2001-08-16' AS DATE) AND      ( 
-                           Cast('2001-09-15' AS DATE)) 
+         AND      d_date BETWEEN Cast('2001-08-16' AS DATE) AND      ( 
+                           Cast('2001-08-16' AS DATE) + INTERVAL '30' day) 
          AND      ss_store_sk = s_store_sk 
          GROUP BY s_store_sk) , sr AS 
 ( 
@@ -21,8 +21,8 @@ WITH ss AS
                   date_dim, 
                   store 
          WHERE    sr_returned_date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           Cast('2001-09-15' AS DATE)) 
+         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
          AND      sr_store_sk = s_store_sk 
          GROUP BY s_store_sk), cs AS 
 ( 
@@ -32,8 +32,8 @@ WITH ss AS
          FROM     catalog_sales, 
                   date_dim 
          WHERE    cs_sold_date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           Cast('2001-09-15' AS DATE)) 
+         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
          GROUP BY cs_call_center_sk ), cr AS 
 ( 
          SELECT   cr_call_center_sk, 
@@ -42,8 +42,8 @@ WITH ss AS
          FROM     catalog_returns, 
                   date_dim 
          WHERE    cr_returned_date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           Cast('2001-09-15' AS DATE)) 
+         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
          GROUP BY cr_call_center_sk ), ws AS 
 ( 
          SELECT   wp_web_page_sk, 
@@ -53,8 +53,8 @@ WITH ss AS
                   date_dim, 
                   web_page 
          WHERE    ws_sold_date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           Cast('2001-09-15' AS DATE)) 
+         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
          AND      ws_web_page_sk = wp_web_page_sk 
          GROUP BY wp_web_page_sk), wr AS 
 ( 
@@ -65,8 +65,8 @@ WITH ss AS
                   date_dim, 
                   web_page 
          WHERE    wr_returned_date_sk = d_date_sk 
-         AND      Cast(d_date AS DATE) BETWEEN cast('2001-08-16' AS date) AND      ( 
-                           Cast('2001-09-15' AS DATE)) 
+         AND      d_date BETWEEN cast('2001-08-16' AS date) AND      ( 
+                           cast('2001-08-16' AS date) + INTERVAL '30' day) 
          AND      wr_web_page_sk = wp_web_page_sk 
          GROUP BY wp_web_page_sk) 
 SELECT
@@ -101,7 +101,7 @@ FROM     (
                    FROM      ws 
                    LEFT JOIN wr 
                    ON        ws.wp_web_page_sk = wr.wp_web_page_sk ) x 
-GROUP BY channel, id
+GROUP BY rollup (channel, id) 
 ORDER BY channel , 
          id 
 LIMIT 100; 

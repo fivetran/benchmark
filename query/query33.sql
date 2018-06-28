@@ -1,4 +1,4 @@
--- query33
+-- start query 33 in stream 0 using template query33.tpl 
 WITH ss 
      AS (SELECT i_manufact_id, 
                 Sum(ss_ext_sales_price) total_sales 

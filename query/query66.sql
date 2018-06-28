@@ -1,4 +1,4 @@
--- query66
+-- start query 66 in stream 0 using template query66.tpl 
 SELECT w_warehouse_name, 
                w_warehouse_sq_ft, 
                w_city, 
@@ -49,7 +49,9 @@ FROM   (SELECT w_warehouse_name,
                w_county, 
                w_state, 
                w_country, 
-               'ZOUROS,ZHOU' AS ship_carriers, 
+               'ZOUROS' 
+               || ',' 
+               || 'ZHOU' AS ship_carriers, 
                d_year    AS year1, 
                Sum(CASE 
                      WHEN d_moy = 1 THEN ws_ext_sales_price * ws_quantity 
@@ -173,7 +175,9 @@ FROM   (SELECT w_warehouse_name,
                w_county, 
                w_state, 
                w_country, 
-               'ZOUROS,ZHOU' AS ship_carriers, 
+               'ZOUROS' 
+               || ',' 
+               || 'ZHOU' AS ship_carriers, 
                d_year    AS year1, 
                Sum(CASE 
                      WHEN d_moy = 1 THEN cs_ext_sales_price * cs_quantity 

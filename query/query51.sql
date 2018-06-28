@@ -1,4 +1,4 @@
--- query51
+-- start query 51 in stream 0 using template query51.tpl 
 WITH web_v1 AS 
 ( 
          SELECT   ws_item_sk item_sk, 

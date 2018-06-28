@@ -1,4 +1,4 @@
--- query50
+-- start query 50 in stream 0 using template query50.tpl 
 SELECT s_store_name, 
                s_company_id, 
                s_street_number, 
@@ -12,29 +12,29 @@ SELECT s_store_name,
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk <= 30 ) THEN 1 
                      ELSE 0 
-                   END) AS days_30, 
+                   END) AS `30 days`, 
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 30 ) 
                           AND ( sr_returned_date_sk - ss_sold_date_sk <= 60 ) 
                    THEN 1 
                      ELSE 0 
-                   END) AS days_31_60, 
+                   END) AS `31-60 days`, 
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 60 ) 
                           AND ( sr_returned_date_sk - ss_sold_date_sk <= 90 ) 
                    THEN 1 
                      ELSE 0 
-                   END) AS days_61_90, 
+                   END) AS `61-90 days`, 
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 90 ) 
                           AND ( sr_returned_date_sk - ss_sold_date_sk <= 120 ) 
                    THEN 1 
                      ELSE 0 
-                   END) AS days_91_120, 
+                   END) AS `91-120 days`, 
                Sum(CASE 
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 120 ) THEN 1 
                      ELSE 0 
-                   END) AS days_over_120 
+                   END) AS `>120 days` 
 FROM   store_sales, 
        store_returns, 
        store, 

@@ -1,4 +1,4 @@
--- query79
+-- start query 79 in stream 0 using template query79.tpl 
 SELECT c_last_name, 
                c_first_name, 
                Substr(s_city, 1, 30), 

@@ -1,4 +1,4 @@
--- query45
+-- start query 45 in stream 0 using template query45.tpl 
 SELECT ca_zip, 
                ca_state, 
                Sum(ws_sales_price) 

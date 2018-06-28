@@ -1,5 +1,5 @@
 
--- query97
+-- start query 97 in stream 0 using template query97.tpl 
 WITH ssci 
      AS (SELECT ss_customer_sk customer_sk, 
                 ss_item_sk     item_sk 

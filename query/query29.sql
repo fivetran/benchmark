@@ -1,4 +1,4 @@
--- query29
+-- start query 29 in stream 0 using template query29.tpl 
 SELECT i_item_id, 
                i_item_desc, 
                s_store_id, 

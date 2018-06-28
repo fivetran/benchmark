@@ -1,4 +1,4 @@
--- query76
+-- start query 76 in stream 0 using template query76.tpl 
 SELECT channel, 
                col_name, 
                d_year, 

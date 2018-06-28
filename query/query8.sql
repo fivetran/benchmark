@@ -1,6 +1,11 @@
--- query8
-WITH ca_zips AS (
-        SELECT Substr(ca_zip, 1, 5) AS ca_zip 
+-- start query 8 in stream 0 using template query8.tpl 
+SELECT s_store_name, 
+               Sum(ss_net_profit) 
+FROM   store_sales, 
+       date_dim, 
+       store, 
+       (SELECT ca_zip 
+        FROM   (SELECT Substr(ca_zip, 1, 5) ca_zip 
                 FROM   customer_address 
                 WHERE  Substr(ca_zip, 1, 5) IN ( '67436', '26121', '38443', 
                                                  '63157', 
@@ -201,9 +206,9 @@ WITH ca_zips AS (
                                                  '46501', '81131', '34056', 
                                                  '61991', 
                                                  '19896', '87804', '65774', 
-                                                 '92564' )
-), common_zips AS (
-        SELECT ca_zip 
+                                                 '92564' ) 
+                INTERSECT 
+                SELECT ca_zip 
                 FROM   (SELECT Substr(ca_zip, 1, 5) ca_zip, 
                                Count(*)             cnt 
                         FROM   customer_address, 
@@ -211,24 +216,12 @@ WITH ca_zips AS (
                         WHERE  ca_address_sk = c_current_addr_sk 
                                AND c_preferred_cust_flag = 'Y' 
                         GROUP  BY ca_zip 
-                        HAVING Count(*) > 10)
-),
-chosen_zips AS (
-        SELECT ca_zip
-        FROM ca_zips 
-        WHERE ca_zip IN (SELECT ca_zip FROM common_zips)
-)
-SELECT s_store_name, 
-       Sum(ss_net_profit) 
-FROM   store_sales, 
-       date_dim, 
-       store, 
-       common_zips
+                        HAVING Count(*) > 10)A1)A2) V1 
 WHERE  ss_store_sk = s_store_sk 
        AND ss_sold_date_sk = d_date_sk 
        AND d_qoy = 2 
        AND d_year = 2000 
-       AND ( Substr(s_zip, 1, 2) = Substr(ca_zip, 1, 2) ) 
+       AND ( Substr(s_zip, 1, 2) = Substr(V1.ca_zip, 1, 2) ) 
 GROUP  BY s_store_name 
 ORDER  BY s_store_name
 LIMIT 100; 

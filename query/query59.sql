@@ -1,4 +1,4 @@
--- query59
+-- start query 59 in stream 0 using template query59.tpl 
 WITH wss 
      AS (SELECT d_week_seq, 
                 ss_store_sk, 

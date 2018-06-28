@@ -1,4 +1,4 @@
--- query74
+-- start query 74 in stream 0 using template query74.tpl 
 WITH year_total 
      AS (SELECT c_customer_id    customer_id, 
                 c_first_name     customer_first_name, 

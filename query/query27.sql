@@ -1,6 +1,7 @@
--- query27
+-- start query 27 in stream 0 using template query27.tpl 
 SELECT i_item_id, 
                s_state, 
+               Grouping(s_state)   g_state, 
                Avg(ss_quantity)    agg1, 
                Avg(ss_list_price)  agg2, 
                Avg(ss_coupon_amt)  agg3, 
@@ -20,7 +21,7 @@ WHERE  ss_sold_date_sk = d_date_sk
        AND d_year = 2000 
        AND s_state IN ( 'TN', 'TN', 'TN', 'TN', 
                         'TN', 'TN' ) 
-GROUP  BY i_item_id, s_state 
+GROUP  BY rollup ( i_item_id, s_state ) 
 ORDER  BY i_item_id, 
           s_state
 LIMIT 100; 

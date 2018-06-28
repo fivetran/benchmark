@@ -1,4 +1,4 @@
--- query13
+-- start query 13 in stream 0 using template query13.tpl 
 SELECT Avg(ss_quantity), 
        Avg(ss_ext_sales_price), 
        Avg(ss_ext_wholesale_cost), 

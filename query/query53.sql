@@ -1,4 +1,4 @@
--- query53
+-- start query 53 in stream 0 using template query53.tpl 
 SELECT * 
 FROM   (SELECT i_manufact_id, 
                Sum(ss_sales_price)             sum_sales, 

@@ -1,4 +1,4 @@
--- query7
+-- start query 7 in stream 0 using template query7.tpl 
 SELECT i_item_id, 
                Avg(ss_quantity)    agg1, 
                Avg(ss_list_price)  agg2, 
