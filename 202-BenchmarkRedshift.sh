@@ -14,7 +14,7 @@ if [ -z "$OUTPUT" ]; then
   exit 1
 fi 
 
-DB=public
+DB=dev
 USER=tpcds_user
 
 echo 'Warmup.sql...'
@@ -29,7 +29,7 @@ echo 'Query,Time' > ${OUTPUT}
 for FILE in query/*.sql; 
 do
   echo $FILE
-  sed -i -e 's/Substr\(/Substring\(/g' $FILE
+  sed -i -e 's/Substr(/Substring(/g' $FILE
   /usr/bin/time -f "%e" psql \
     --host ${HOST} --port 5439 --user ${USER} ${DB} \
     --output /dev/null \

@@ -30,7 +30,7 @@ if [ -z "$SCALE" ]; then
   exit 1
 fi 
 
-export DB=public
+export DB=dev
 export USER=fivetran
 
 echo 'Create tables...'
