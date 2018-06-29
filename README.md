@@ -22,7 +22,7 @@ There are two configurations for each warehouse:
 |   | **BigQuery** | - | - |
 |  **1 TB** | **Redshift** | 4 × dc2.8xlarge | $19.20 |
 |   | **Snowflake** | Large | $16.00 |
-|   | **Presto** | ? | ? |
+|   | **Presto** | 32 x n1-standard-8 | $9.84 |
 |   | **Azure** | ? | ? |
 |   | **BigQuery** | - | - |
 
