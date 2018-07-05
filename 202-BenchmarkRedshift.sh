@@ -33,8 +33,8 @@ do
   /usr/bin/time -f "%e" psql \
     --host ${HOST} --port 5439 --user ${USER} ${DB} \
     --output /dev/null \
-    --file ${FILE} &> time.txt
-  RUNTIME=$(cat time.txt)
+    --file query-${OUTPUT}.sql &> time-${OUTPUT}.txt
+  RUNTIME=$(cat time-${OUTPUT}.txt)
   echo "Elapsed: ${RUNTIME}s"
   echo ${FILE},${RUNTIME} >> ${OUTPUT}
 done
