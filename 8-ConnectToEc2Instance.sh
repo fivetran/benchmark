@@ -5,7 +5,7 @@ PEM_FILE=~/.ssh/george-us-east-2.pem
 # Copy benchmarking files to EC2 instance
 zip -r redshift.zip \
       Warmup.sql \
-      RedshiftTiming.sql \
+      RedshiftCompileTimes.sql \
       200-PopulateRedshiftSimple.sh \
       201-PopulateRedshiftOptimized.sh \
       202-BenchmarkRedshift.sh \
