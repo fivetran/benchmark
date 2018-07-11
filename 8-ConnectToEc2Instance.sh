@@ -5,10 +5,11 @@ PEM_FILE=~/.ssh/george-us-east-2.pem
 # Copy benchmarking files to EC2 instance
 zip -r redshift.zip \
       Warmup.sql \
-      RedshiftCompileTimes.sql \
+      RedshiftCompileTimes.sh \
       200-PopulateRedshiftSimple.sh \
       201-PopulateRedshiftOptimized.sh \
       202-BenchmarkRedshift.sh \
+      203-BenchmarkRedshiftAgain.sh \
       query
 
 scp -i ${PEM_FILE} redshift.zip ec2-user@${HOST}:~
