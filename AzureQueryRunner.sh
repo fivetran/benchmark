@@ -46,6 +46,7 @@ timing() {
     while read -r line ; do
       if echo "$line" | grep -q "Clock Time" ; then
         # Example: Clock Time (ms.): total        26  avg   26.0 (38.5 xacts per sec.)
+        echo timing: $line 1>&7
         echo "$line" | awk '{print $5 / 1000}'
         break
       elif [ "$verbose" = 1 ]; then
@@ -65,6 +66,9 @@ timing() {
 if [ "$1" = "timing" ]; then
   time=`timing "$2" 7>&2`
   printf "%s,%.5f\n" "$2" "$time"
+elif [ "$1" = "ddl" ]; then
+  export verbose=1
+  timing "$2" 7>&2
 else
   runsql
 fi
