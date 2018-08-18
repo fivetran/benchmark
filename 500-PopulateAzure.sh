@@ -1,10 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e 
-
-s3Path=`echo "$1" | sed -Ee 's;/;\\\\/;g'`
-warehouse="$2"
-db="$3"
 
 export AZURE_ACCOUNT=fivetran
 export AZURE_USER=developers
@@ -33,14 +29,39 @@ echo "Running create table ddl..." 1>&2
 bash AzureQueryRunner.sh ddl AzureTableDdl.sql
 echo "Completed create table ddl..." 1>&2
 
-exit 1
+function upload() {
+  table=$1
+  shift 1
+  files=$@
+  echo $files
+  cat $files | sed 's/|$//g' > $tempdir/output
+  head -n3 $tempdir/output
+  bash ./AzureQueryRunner.sh bcp $table in $tempdir/output
+}
 
-tmpfile=`mktemp AzureCopy_XXXXXXXXXXX.sql`
-cat AzureCopy.sql | sed -Ee "s/___s3_path__/${s3Path}/g" \
-  | tee "$tmpfile"
-cleanupFiles="$tmpfile $cleanupFiles"
-
-echo "Running copy ddl..." 1>&2
-bash AzureQueryRunner.sh ddl "$tmpfile"
+upload call_center call_center/*            
+upload catalog_page catalog_page/*           
+upload catalog_returns catalog_returns/*        
+upload catalog_sales catalog_sales/*          
+upload customer customer/*               
+upload customer_address customer_address/*       
+upload customer_demographics customer_demographics/*  
+upload date_dim date_dim/*               
+upload household_demographics household_demographics/* 
+upload income_band income_band/*            
+upload inventory inventory/*              
+upload item item/*                   
+upload promotion promotion/*              
+upload reason reason/*                 
+upload ship_mode ship_mode/*              
+upload store store/*                  
+upload store_returns store_returns/*          
+upload store_sales store_sales/*            
+upload time_dim time_dim/*               
+upload warehouse warehouse/*              
+upload web_page web_page/*               
+upload web_returns web_returns/*            
+upload web_sales web_sales/*              
+upload web_site web_site/*               
 
 cleanup

@@ -26,12 +26,35 @@ cleanup() {
 trap cleanup TERM KILL
 
 runsql() {
-  sqlcmd -l 10 -N -b -m-1 -j -I -p \
+  args="-l 10 -N -m-1 -j -I -p"
+  if [ "$1" = "bare" ]; then
+    args="-N -I"
+    shift 1
+  fi
+  sqlcmd $args \
     -S ${AZURE_WAREHOUSE}.database.windows.net \
-    -U developers@tpcds \
+    -U "developers@tpcds" \
     -P "${AZURE_PWD}" \
     -d "${AZURE_DATABASE}" \
-    "$@"
+    $@
+}
+
+upload() {
+  args="-q -c -t| -e error.log"
+  if ! bcp \
+    $@ \
+    $args \
+    -S ${AZURE_WAREHOUSE}.database.windows.net \
+    -U "developers@tpcds" \
+    -P "${AZURE_PWD}" \
+    -d "${AZURE_DATABASE}"
+  then
+    echo "Failed to load with $@"
+    cat error.log
+    exit 1
+  else
+    echo "Success loading with $@"
+  fi
 }
 
 timing() {
@@ -69,6 +92,9 @@ if [ "$1" = "timing" ]; then
 elif [ "$1" = "ddl" ]; then
   export verbose=1
   timing "$2" 7>&2
+elif [ "$1" = "bcp" ]; then
+  shift 1
+  upload $@
 else
-  runsql
+  runsql bare
 fi
