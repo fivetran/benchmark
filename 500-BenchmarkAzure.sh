@@ -19,13 +19,13 @@ mkdir -p results
 output=results/AzureResults_${runName}.csv
 echo Saving output to $output
 if [ -f $output ]; then
-  temp=`mktemp results/SnowflakeResults_${runName}_XXXXXXXXX.csv`
+  temp=`mktemp results/AzureResults${runName}_XXXXXXXXX.csv`
   echo "moving previous timing run to $temp"
   mv -v $output $temp
 fi
 
 echo 'Query,Time' > $output
-for qu in `find query/ -type f -name 'query*.sql' | sort -V` ; do
+for qu in `find microsoft_sql/ -type f -name 'query*.sql' | sort -V` ; do
   echo "Running $qu..."
   {
     echo -n "$qu,"
