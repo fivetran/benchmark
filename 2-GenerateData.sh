@@ -1,15 +1,21 @@
-# Generate test data on the large cluster
-# Run this script on the cluster you created in step 1
-# gcloud compute ssh tpcds-m
-# You will need to install AWS credentials on this machine using ~/.aws/credentials so that we can copy to S3 for Redshift and Snowflake
+# Generate test data on the large server
+# You will need to have the tpcds dsdgen program built in the current directory
 
-# Hive TPC-DS benchmarking
-wget https://github.com/hortonworks/hive-testbench/archive/hive14.zip
-unzip hive14.zip
-cd hive-testbench-hive14/
+gen() {
+  CPU=$1
+  SCALE=$2
+  SEED=$3
+  seq 1 $CPU \
+    | xargs -t -P$CPU -I__ \
+        ./dsdgen \
+          -SCALE $SCALE \
+          -DELIMITER \| \
+          -PARALLEL $CPU \
+          -CHILD __ \
+          -TERMINATE N \
+          -RNGSEED $SEED \
+          -DIR ./tpcds_1000/
+}
 
-# Download TPC-DS generator
-./tpcds-build.sh
-
-# Generate 100gb of TPC-DS data
-./tpcds-setup.sh 1000
+gen 16 100 42
+gen 16 1000 42
