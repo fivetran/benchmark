@@ -1,7 +1,7 @@
 -- query79
 SELECT TOP 100 c_last_name, 
                c_first_name, 
-               Substr(s_city, 1, 30), 
+               Substring(s_city, 1, 30), 
                ss_ticket_number, 
                amt, 
                profit 
@@ -30,5 +30,5 @@ FROM   (SELECT ss_ticket_number,
 WHERE  ss_customer_sk = c_customer_sk 
 ORDER  BY c_last_name, 
           c_first_name, 
-          Substr(s_city, 1, 30), 
+          Substring(s_city, 1, 30), 
           profit

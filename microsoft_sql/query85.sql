@@ -1,5 +1,5 @@
 -- query85
-SELECT TOP 100 Substr(r_reason_desc, 1, 20), 
+SELECT TOP 100 Substring(r_reason_desc, 1, 20), 
                Avg(ws_quantity), 
                Avg(wr_refunded_cash), 
                Avg(wr_fee) 
@@ -45,7 +45,7 @@ WHERE  ws_web_page_sk = wp_web_page_sk
                    AND ca_state IN ( 'FL', 'WI', 'KS' ) 
                    AND ws_net_profit BETWEEN 50 AND 250 ) ) 
 GROUP  BY r_reason_desc 
-ORDER  BY Substr(r_reason_desc, 1, 20), 
+ORDER  BY Substring(r_reason_desc, 1, 20), 
           Avg(ws_quantity), 
           Avg(wr_refunded_cash), 
           Avg(wr_fee)

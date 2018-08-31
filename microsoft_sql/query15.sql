@@ -7,7 +7,7 @@ FROM   catalog_sales,
        date_dim 
 WHERE  cs_bill_customer_sk = c_customer_sk 
        AND c_current_addr_sk = ca_address_sk 
-       AND ( Substr(ca_zip, 1, 5) IN ( '85669', '86197', '88274', '83405', 
+       AND ( Substring(ca_zip, 1, 5) IN ( '85669', '86197', '88274', '83405', 
                                        '86475', '85392', '85460', '80348', 
                                        '81792' ) 
               OR ca_state IN ( 'CA', 'WA', 'GA' ) 

@@ -1,5 +1,5 @@
 -- query99
-SELECT TOP 100 Substr(w_warehouse_name, 1, 20), 
+SELECT TOP 100 Substring(w_warehouse_name, 1, 20), 
                sm_type, 
                cc_name, 
                Sum(CASE 
@@ -36,7 +36,7 @@ WHERE  d_month_seq BETWEEN 1200 AND 1200 + 11
        AND cs_warehouse_sk = w_warehouse_sk 
        AND cs_ship_mode_sk = sm_ship_mode_sk 
        AND cs_call_center_sk = cc_call_center_sk 
-GROUP  BY Substr(w_warehouse_name, 1, 20), 
+GROUP  BY Substring(w_warehouse_name, 1, 20), 
                sm_type, 
                cc_name
 ORDER  BY 1, 2, 3

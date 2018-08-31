@@ -24,6 +24,11 @@ if [ -f $output ]; then
   mv -v $output $temp
 fi
 
+echo "Warming up..."
+for qu in `find microsoft_sql/ -type f -name 'query*.sql' | sort -V` ; do
+  ./AzureQueryRunner.sh ddl "$qu"
+done
+
 echo 'Query,Time' > $output
 for qu in `find microsoft_sql/ -type f -name 'query*.sql' | sort -V` ; do
   echo "Running $qu..."

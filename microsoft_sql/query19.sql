@@ -18,7 +18,7 @@ WHERE  d_date_sk = ss_sold_date_sk
        AND d_year = 1998 
        AND ss_customer_sk = c_customer_sk 
        AND c_current_addr_sk = ca_address_sk 
-       AND Substr(ca_zip, 1, 5) <> Substr(s_zip, 1, 5) 
+       AND Substring(ca_zip, 1, 5) <> Substring(s_zip, 1, 5) 
        AND ss_store_sk = s_store_sk 
 GROUP  BY i_brand, 
           i_brand_id, 

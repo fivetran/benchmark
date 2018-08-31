@@ -1,8 +1,8 @@
 -- query8
 WITH ca_zips AS (
-        SELECT Substr(ca_zip, 1, 5) AS ca_zip 
+        SELECT Substring(ca_zip, 1, 5) AS ca_zip 
                 FROM   customer_address 
-                WHERE  Substr(ca_zip, 1, 5) IN ( '67436', '26121', '38443', 
+                WHERE  Substring(ca_zip, 1, 5) IN ( '67436', '26121', '38443', 
                                                  '63157', 
                                                  '68856', '19485', '86425', 
                                                  '26741', 
@@ -204,7 +204,7 @@ WITH ca_zips AS (
                                                  '92564' )
 ), common_zips AS (
         SELECT ca_zip 
-                FROM   (SELECT Substr(ca_zip, 1, 5) ca_zip, 
+                FROM   (SELECT Substring(ca_zip, 1, 5) ca_zip, 
                                Count(*)             cnt 
                         FROM   customer_address, 
                                customer 
@@ -228,6 +228,6 @@ WHERE  ss_store_sk = s_store_sk
        AND ss_sold_date_sk = d_date_sk 
        AND d_qoy = 2 
        AND d_year = 2000 
-       AND ( Substr(s_zip, 1, 2) = Substr(ca_zip, 1, 2) ) 
+       AND ( Substring(s_zip, 1, 2) = Substring(ca_zip, 1, 2) ) 
 GROUP  BY s_store_name 
 ORDER  BY s_store_name
