@@ -33,7 +33,7 @@ runsql() {
   fi
   sqlcmd $args \
     -S ${AZURE_WAREHOUSE}.database.windows.net \
-    -U "developers@tpcds" \
+    -U "developers@${AZURE_WAREHOUSE}" \
     -P "${AZURE_PWD}" \
     -d "${AZURE_DATABASE}" \
     $@
@@ -45,7 +45,7 @@ upload() {
     $@ \
     $args \
     -S ${AZURE_WAREHOUSE}.database.windows.net \
-    -U "developers@tpcds" \
+    -U "developers@${AZURE_WAREHOUSE}" \
     -P "${AZURE_PWD}" \
     -d "${AZURE_DATABASE}"
   then

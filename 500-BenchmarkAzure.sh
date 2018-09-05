@@ -25,7 +25,7 @@ if [ -f $output ]; then
 fi
 
 echo "Warming up..."
-for qu in `find microsoft_sql/ -type f -name 'query*.sql' | sort -V` ; do
+for qu in `find microsoft_sql/ -type f -name 'warmup*.sql' | sort -V` ; do
   ./AzureQueryRunner.sh ddl "$qu"
 done
 
