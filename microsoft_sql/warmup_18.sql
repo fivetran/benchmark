@@ -1,1 +1,1 @@
-select * from store order by s_store_id desc limit 100;
+select top 100 * from store order by s_store_id desc 

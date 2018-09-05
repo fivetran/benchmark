@@ -1,28 +1,3 @@
-DROP table call_center;
-DROP table catalog_page;
-DROP table catalog_returns;
-DROP table catalog_sales ;
-DROP table customer_address ;
-DROP table customer_demographics ;
-DROP table customer ;
-DROP table date_dim ;
-DROP table household_demographics ;
-DROP table income_band;
-DROP table inventory ;
-DROP table item ;
-DROP table promotion ;
-DROP table reason;
-DROP table ship_mode;
-DROP table store_returns ;
-DROP table store_sales ;
-DROP table store ;
-DROP table time_dim ;
-DROP table warehouse;
-DROP table web_page;
-DROP table web_returns ;
-DROP table web_sales ;
-DROP table web_site ;
-
 create table call_center(
       cc_call_center_sk         bigint               
 ,     cc_call_center_id         nvarchar(16)              

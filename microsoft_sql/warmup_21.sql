@@ -1,1 +1,1 @@
-select * from web_page order by wp_web_page_id desc limit 100;
+select top 100 * from web_page order by wp_web_page_id desc 

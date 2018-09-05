@@ -1,1 +1,1 @@
-select * from item order by i_item_id desc limit 100;
+select top 100 * from item order by i_item_id desc 

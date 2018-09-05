@@ -1,1 +1,1 @@
-select * from date_dim order by d_date_id desc limit 100;
+select top 100 * from date_dim order by d_date_id desc 
