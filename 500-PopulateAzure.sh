@@ -2,6 +2,10 @@
 
 set -e 
 
+base=`pwd`
+datadir=$1
+tmpfile=$2
+
 export AZURE_ACCOUNT=fivetran
 export AZURE_USER=developers
 if [ ! -f ~/.azure_password ]; then
@@ -22,46 +26,51 @@ tempdir=`mktemp -d _work_XXXXXXXXXX`
 
 cleanup() {
   rm -rf "$tempdir" 2>/dev/null || :
+  rm $tmpfile
 }
 trap cleanup TERM KILL
 
 echo "Running create table ddl..." 1>&2
+bash AzureQueryRunner.sh ddl AzureTableClear.sql || :
 bash AzureQueryRunner.sh ddl AzureTableDdl.sql
 echo "Completed create table ddl..." 1>&2
+
 
 function upload() {
   table=$1
   shift 1
   files=$@
-  echo $files
-  cat $files | sed 's/|$//g' > $tempdir/output
-  head -n3 $tempdir/output
-  bash ./AzureQueryRunner.sh bcp $table in $tempdir/output
+  echo Loading ${table}...
+  echo $@ \
+    | tr ' ' '\0' \
+    | xargs -0 -t -P4 -n1 -I__ \
+      bash $base/AzureQueryRunner.sh bcp $table in __
 }
 
-upload call_center call_center/*            
-upload catalog_page catalog_page/*           
-upload catalog_returns catalog_returns/*        
-upload catalog_sales catalog_sales/*          
-upload customer customer/*               
-upload customer_address customer_address/*       
-upload customer_demographics customer_demographics/*  
-upload date_dim date_dim/*               
-upload household_demographics household_demographics/* 
-upload income_band income_band/*            
-upload inventory inventory/*              
-upload item item/*                   
-upload promotion promotion/*              
-upload reason reason/*                 
-upload ship_mode ship_mode/*              
-upload store store/*                  
-upload store_returns store_returns/*          
-upload store_sales store_sales/*            
-upload time_dim time_dim/*               
-upload warehouse warehouse/*              
-upload web_page web_page/*               
-upload web_returns web_returns/*            
-upload web_sales web_sales/*              
-upload web_site web_site/*               
+cd $1
+upload call_center `find . -type f -regex ".*/call_center_[0-9_]+\.dat"`
+upload catalog_page `find . -type f -regex ".*/catalog_page_[0-9_]+\.dat"`
+upload catalog_returns `find . -type f -regex ".*/catalog_returns_[0-9_]+\.dat"`
+upload catalog_sales `find . -type f -regex ".*/catalog_sales_[0-9_]+\.dat"`
+upload customer `find . -type f -regex ".*/customer_[0-9_]+\.dat"`
+upload customer_address `find . -type f -regex ".*/customer_address_[0-9_]+\.dat"`
+upload customer_demographics `find . -type f -regex ".*/customer_demographics_[0-9_]+\.dat"`
+upload date_dim `find . -type f -regex ".*/date_dim_[0-9_]+\.dat"`
+upload household_demographics `find . -type f -regex ".*/household_demographics_[0-9_]+\.dat"`
+upload income_band `find . -type f -regex ".*/income_band_[0-9_]+\.dat"`
+upload inventory `find . -type f -regex ".*/inventory_[0-9_]+\.dat"`
+upload item `find . -type f -regex ".*/item_[0-9_]+\.dat"`
+upload promotion `find . -type f -regex ".*/promotion_[0-9_]+\.dat"`
+upload reason `find . -type f -regex ".*/reason_[0-9_]+\.dat"`
+upload ship_mode `find . -type f -regex ".*/ship_mode_[0-9_]+\.dat"`
+upload store `find . -type f -regex ".*/store_[0-9_]+\.dat"`
+upload store_returns `find . -type f -regex ".*/store_returns_[0-9_]+\.dat"`
+upload store_sales `find . -type f -regex ".*/store_sales_[0-9_]+\.dat"`
+upload time_dim `find . -type f -regex ".*/time_dim_[0-9_]+\.dat"`
+upload warehouse `find . -type f -regex ".*/warehouse_[0-9_]+\.dat"`
+upload web_page `find . -type f -regex ".*/web_page_[0-9_]+\.dat"`
+upload web_returns `find . -type f -regex ".*/web_returns_[0-9_]+\.dat"`
+upload web_sales `find . -type f -regex ".*/web_sales_[0-9_]+\.dat"`
+upload web_site `find . -type f -regex ".*/web_site_[0-9_]+\.dat"`
 
 cleanup
