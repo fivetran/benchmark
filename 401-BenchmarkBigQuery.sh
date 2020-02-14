@@ -1,21 +1,14 @@
 #!/bin/bash
 set -e
 
-export ACCOUNT=singular-vector-135519
-export PROJECT=tpcds
-
-
-if [ -n "$1" ] && [ -n "$2" ]; then
-  export ACCOUNT="$1"
-  export PROJECT="$2"
-fi
-echo account: $ACCOUNT project: $PROJECT >&2
+export PROJECT=singular-vector-135519
+export DATASET=tpcds_100
 
 # Warm-up
 find warmup/ -name warmup_*.sql | sort -V | {
   while read line; do 
     echo "$line"
-    cat "$line" | bq --project_id=${ACCOUNT} --dataset_id=${PROJECT} \
+    cat "$line" | bq --project_id=${PROJECT} --dataset_id=${DATASET} \
       query \
       --use_legacy_sql=false \
       --batch=false \
@@ -35,8 +28,8 @@ find query/ -name query*.sql | sort -V | {
 
     cat "$f" \
       | bq \
-        --project_id=${ACCOUNT} \
-        --dataset_id=${PROJECT} \
+        --project_id=${PROJECT} \
+        --dataset_id=${DATASET} \
         query \
         --use_legacy_sql=false \
         --batch=false \
@@ -44,7 +37,7 @@ find query/ -name query*.sql | sort -V | {
         --job_id=$ID \
         --format=none
 
-    JOB=$(bq --project_id=${ACCOUNT} --format=json show -j ${ID})
+    JOB=$(bq --project_id=${PROJECT} --format=json show -j ${ID})
 
     STARTED=$(json statistics.startTime <<< $JOB )
     ENDED=$(json statistics.endTime <<< $JOB )
