@@ -315,13 +315,13 @@ screen -S hive-metastore -d -m hive --service metastore
 fi
 
 # Download and unpack Presto server
-wget -q https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-server-0.195-e.0.5.tar.gz
-tar -zxf presto-server-0.195-e.0.5.tar.gz
-mv presto-server-0.195-e.0.5 presto
+wget -q https://repo1.maven.org/maven2/io/prestosql/presto-server/329/presto-server-329.tar.gz
+tar -zxf presto-server-329.tar.gz
+mv presto-server-329 presto
 
 # Install cli
 if [[ "${ROLE}" == 'Master' ]]; then
-wget -q https://s3.us-east-2.amazonaws.com/starburstdata/presto/starburst/195e/0.195-e.0.5/presto-cli-0.195-e.0.5-executable.jar -O /usr/bin/presto
+wget -q https://repo1.maven.org/maven2/io/prestosql/presto-cli/329/presto-cli-329-executable.jar -O /usr/bin/presto
 chmod a+x /usr/bin/presto
 apt-get install unzip
 fi
