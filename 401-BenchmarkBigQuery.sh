@@ -31,6 +31,7 @@ find query/ -name query*.sql | sort -V | {
         --project_id=${PROJECT} \
         --dataset_id=${DATASET} \
         query \
+        --use_cache=false \
         --use_legacy_sql=false \
         --batch=false \
         --maximum_billing_tier=10 \
