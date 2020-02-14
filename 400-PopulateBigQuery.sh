@@ -1,12 +1,12 @@
 #!/bin/bash
 # Load into BQ
 export PROJECT=singular-vector-135519
-export GS_BASE=fivetran-benchmark/tpcds_100_dat
-export DATASET=tpcds_100
+export GS_BASE=fivetran-benchmark/tpcds_1000_dat
+export DATASET=tpcds_1000
 
 set -e
 
-# bq --project_id=${PROJECT} mk ${DATASET}
+bq --project_id=${PROJECT} mk ${DATASET}
 
 bq --project_id=${PROJECT} load --field_delimiter '|' --null_marker '' --ignore_unknown_values ${DATASET}.call_center gs://${GS_BASE}/call_center/* \
 cc_call_center_sk:integer,\

@@ -2,7 +2,7 @@
 set -e
 
 export PROJECT=singular-vector-135519
-export DATASET=tpcds_100
+export DATASET=tpcds_1000
 
 # Warm-up
 find warmup/ -name warmup_*.sql | sort -V | {
