@@ -10,5 +10,5 @@ presto --catalog hive --schema tpcds_hdfs -f Warmup.sql > /dev/null
 ls query/*.sql | while read f;
 do 
   echo "$f"
-  presto --catalog=hive --schema tpcds_hdfs -f $f > /dev/null
+  presto --catalog hive --schema tpcds_hdfs -f $f > /dev/null
 done

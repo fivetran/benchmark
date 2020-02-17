@@ -371,7 +371,7 @@ coordinator=true
 node-scheduler.include-coordinator=true
 discovery-server.enabled=true
 http-server.http.port=${HTTP_PORT}
-query.max-memory=50GB
+query.max-memory=99TB
 query.max-total-memory-per-node=${QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB}MB
 query.max-memory-per-node=${QUERY_MAX_MEMORY_PER_NODE_MB}MB
 discovery.uri=http://${MASTER}:${HTTP_PORT}
@@ -382,7 +382,7 @@ else
 cat > /presto/etc/config.properties <<EOF
 coordinator=false
 http-server.http.port=${HTTP_PORT}
-query.max-memory=50GB
+query.max-memory=99TB
 query.max-total-memory-per-node=${QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB}MB
 query.max-memory-per-node=${QUERY_MAX_MEMORY_PER_NODE_MB}MB
 discovery.uri=http://${MASTER}:${HTTP_PORT}
