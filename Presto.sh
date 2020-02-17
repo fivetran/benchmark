@@ -18,35 +18,35 @@ set -x -e
 ROLE=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoRole)
 MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
 HTTP_PORT="8080"
-INSTANCE_VCPUS=32
-INSTANCE_MEMORY=120000
-TASK_CONCURRENCY=$(( ${INSTANCE_VCPUS} / 2 ))
+INSTANCE_VCPUS=8
+INSTANCE_MEMORY=30000
+TASK_CONCURRENCY=$(( ${INSTANCE_VCPUS} ))
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 7 / 10 ))
-PRESTO_OVERHEAD=500
-PRESTO_QUERY_NODE_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 7 / 10 ))
-PRESTO_RESERVED_SYSTEM_MB=$(( (${PRESTO_JVM_MB} - ${PRESTO_OVERHEAD}) * 3 / 10 ))
+QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB=$(( ${PRESTO_JVM_MB} * 7 / 10 ))
+QUERY_MAX_MEMORY_PER_NODE_MB=$(( ${QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB} / 2 ))
 
 # Prevents "Too many open files"
 ulimit -n 30000
 
 # Configure local ssd
-for i in 1 2 3 4 
-do 
-  mkfs.ext4 -F /dev/nvme0n$i
-  mkdir -p /mnt/disks/ssd$i
-  mount /dev/nvme0n$i /mnt/disks/ssd$i
-  chmod a+w /mnt/disks/ssd$i
-done
+mkfs.ext4 -F /dev/nvme0n1
+mkdir -p /mnt/disks/ssd1
+mount /dev/nvme0n1 /mnt/disks/ssd1
+chmod a+w /mnt/disks/ssd1
 
 # Install Java
+apt-get update
 apt-get install openjdk-8-jre-headless -y
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/
 echo 'export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64/' >> /etc/bash.bashrc
 
+# Install python, zip
+apt-get install python zip -y
+
 # Install Hadoop
-wget -q http://mirrors.sonic.net/apache/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
-tar -zxf hadoop-2.9.1.tar.gz
-mv hadoop-2.9.1 hadoop
+wget -q http://mirrors.sonic.net/apache/hadoop/common/hadoop-2.10.0/hadoop-2.10.0.tar.gz
+tar -zxf hadoop-2.10.0.tar.gz
+mv hadoop-2.10.0 hadoop
 export PATH=/hadoop/bin:$PATH
 echo 'PATH=/hadoop/bin:$PATH' >> /etc/bash.bashrc
 
@@ -55,7 +55,7 @@ cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
   <property>
     <name>dfs.datanode.data.dir</name>
-    <value>/mnt/disks/ssd1,/mnt/disks/ssd2,/mnt/disks/ssd3,/mnt/disks/ssd4</value>
+    <value>/mnt/disks/ssd1</value>
     <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
   </property>
 
@@ -250,9 +250,9 @@ fi
 /hadoop/sbin/hadoop-daemon.sh start datanode
 
 # Install Hive
-wget -q http://mirrors.sonic.net/apache/hive/hive-2.3.3/apache-hive-2.3.3-bin.tar.gz
-tar -zxf apache-hive-2.3.3-bin.tar.gz
-mv apache-hive-2.3.3-bin /hive
+wget -q http://mirrors.sonic.net/apache/hive/hive-2.3.6/apache-hive-2.3.6-bin.tar.gz
+tar -zxf apache-hive-2.3.6-bin.tar.gz
+mv apache-hive-2.3.6-bin /hive
 export PATH=/hive/bin:$PATH
 echo 'PATH=/hive/bin:$PATH' >> /etc/bash.bashrc
 
@@ -323,7 +323,6 @@ mv presto-server-329 presto
 if [[ "${ROLE}" == 'Master' ]]; then
 wget -q https://repo1.maven.org/maven2/io/prestosql/presto-cli/329/presto-cli-329-executable.jar -O /usr/bin/presto
 chmod a+x /usr/bin/presto
-apt-get install unzip
 fi
 
 # Copy GCS connector
@@ -333,64 +332,59 @@ wget -q https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoo
 # Configure Presto
 mkdir -p presto/etc/catalog
 
-cat > presto/etc/node.properties <<EOF
+cat > /presto/etc/node.properties <<EOF
 node.environment=production
 node.id=$(uuidgen)
 node.data-dir=/var/presto/data
 EOF
 
 # Configure hive metastore
-cat > presto/etc/catalog/hive.properties <<EOF
+cat > /presto/etc/catalog/hive.properties <<EOF
 connector.name=hive-hadoop2
 hive.metastore.uri=thrift://${MASTER}:9083
-hive.parquet-optimized-reader.enabled=true
-hive.parquet-predicate-pushdown.enabled=true
 hive.non-managed-table-writes-enabled=true
 EOF
 
 # Configure JVM
-cat > presto/etc/jvm.config <<EOF
+cat > /presto/etc/jvm.config <<EOF
 -server
 -Xmx${PRESTO_JVM_MB}m
--Xmn512m
+-XX:-UseBiasedLocking
 -XX:+UseG1GC
 -XX:G1HeapRegionSize=32M
--XX:+UseGCOverheadLimit
 -XX:+ExplicitGCInvokesConcurrent
--XX:+HeapDumpOnOutOfMemoryError
 -XX:+ExitOnOutOfMemoryError
+-XX:+UseGCOverheadLimit
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:ReservedCodeCacheSize=512M
+-Djdk.attach.allowAttachSelf=true
+-Djdk.nio.maxCachedBufferSize=2000000
 
 -Dhive.config.resources=/hadoop/etc/hadoop/core-site.xml
 -Djava.library.path=/hadoop/lib/native/:/usr/lib/
--Dcom.sun.management.jmxremote 
--Dcom.sun.management.jmxremote.ssl=false 
--Dcom.sun.management.jmxremote.authenticate=false 
--Dcom.sun.management.jmxremote.port=10999 
--Dcom.sun.management.jmxremote.rmi.port=10999 
--Djava.rmi.server.hostname=127.0.0.1 
 EOF
 
 if [[ "${ROLE}" == 'Master' ]]; then
 	# Configure master properties
-cat > presto/etc/config.properties <<EOF
+cat > /presto/etc/config.properties <<EOF
 coordinator=true
 node-scheduler.include-coordinator=true
 discovery-server.enabled=true
 http-server.http.port=${HTTP_PORT}
-query.max-memory=999TB
-query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
-resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
+query.max-memory=50GB
+query.max-total-memory-per-node=${QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB}MB
+query.max-memory-per-node=${QUERY_MAX_MEMORY_PER_NODE_MB}MB
 discovery.uri=http://${MASTER}:${HTTP_PORT}
 query.max-history=1000
 task.concurrency=${TASK_CONCURRENCY}
 EOF
 else
-cat > presto/etc/config.properties <<EOF
+cat > /presto/etc/config.properties <<EOF
 coordinator=false
 http-server.http.port=${HTTP_PORT}
-query.max-memory=999TB
-query.max-memory-per-node=${PRESTO_QUERY_NODE_MB}MB
-resources.reserved-system-memory=${PRESTO_RESERVED_SYSTEM_MB}MB
+query.max-memory=50GB
+query.max-total-memory-per-node=${QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB}MB
+query.max-memory-per-node=${QUERY_MAX_MEMORY_PER_NODE_MB}MB
 discovery.uri=http://${MASTER}:${HTTP_PORT}
 query.max-history=1000
 task.concurrency=${TASK_CONCURRENCY}

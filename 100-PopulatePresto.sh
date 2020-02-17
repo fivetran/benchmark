@@ -1,7 +1,7 @@
 set -e
 
 # Create external tables in Hive pointing to GCS
-export LOCATION=gs://fivetran-benchmark/tpcds_1000_dat
+export LOCATION=gs://fivetran-benchmark/tpcds_100_dat
 
 hive <<EOF
 create database tpcds;
@@ -123,10 +123,10 @@ location '${LOCATION}/web_site';
 EOF
 
 # Copy data from GS to HDFS
-presto <<EOF
-create schema hive.tpcds_hdfs;
+cat > PopulateHdfs.sql <<EOF
+create schema tpcds_hdfs;
 
-create table hive.tpcds_hdfs.call_center(
+create table tpcds_hdfs.call_center(
       cc_call_center_sk         bigint               
 ,     cc_call_center_id         varchar              
 ,     cc_rec_start_date        varchar                         
@@ -161,7 +161,7 @@ create table hive.tpcds_hdfs.call_center(
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.catalog_page(
+create table tpcds_hdfs.catalog_page(
       cp_catalog_page_sk        bigint               
 ,     cp_catalog_page_id        varchar              
 ,     cp_start_date_sk          bigint                       
@@ -174,7 +174,7 @@ create table hive.tpcds_hdfs.catalog_page(
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.catalog_returns
+create table tpcds_hdfs.catalog_returns
 (
     cr_returned_date_sk       bigint,
     cr_returned_time_sk       bigint,
@@ -206,7 +206,7 @@ create table hive.tpcds_hdfs.catalog_returns
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.catalog_sales
+create table tpcds_hdfs.catalog_sales
 (
     cs_sold_date_sk           bigint,
     cs_sold_time_sk           bigint,
@@ -245,7 +245,7 @@ create table hive.tpcds_hdfs.catalog_sales
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.customer_address
+create table tpcds_hdfs.customer_address
 (
     ca_address_sk             bigint,
     ca_address_id             varchar,
@@ -263,7 +263,7 @@ create table hive.tpcds_hdfs.customer_address
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.customer_demographics
+create table tpcds_hdfs.customer_demographics
 (
     cd_demo_sk                bigint,
     cd_gender                 varchar,
@@ -277,7 +277,7 @@ create table hive.tpcds_hdfs.customer_demographics
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.customer
+create table tpcds_hdfs.customer
 (
     c_customer_sk             bigint,
     c_customer_id             varchar,
@@ -300,7 +300,7 @@ create table hive.tpcds_hdfs.customer
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.date_dim
+create table tpcds_hdfs.date_dim
 (
     d_date_sk                 bigint,
     d_date_id                 varchar,
@@ -333,7 +333,7 @@ create table hive.tpcds_hdfs.date_dim
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.household_demographics
+create table tpcds_hdfs.household_demographics
 (
     hd_demo_sk                bigint,
     hd_income_band_sk         bigint,
@@ -343,14 +343,14 @@ create table hive.tpcds_hdfs.household_demographics
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.income_band(
+create table tpcds_hdfs.income_band(
       ib_income_band_sk         bigint               
 ,     ib_lower_bound            int                       
 ,     ib_upper_bound            int
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.inventory
+create table tpcds_hdfs.inventory
 (
     inv_date_sk            bigint,
     inv_item_sk            bigint,
@@ -359,7 +359,7 @@ create table hive.tpcds_hdfs.inventory
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.item
+create table tpcds_hdfs.item
 (
     i_item_sk                 bigint,
     i_item_id                 varchar,
@@ -386,7 +386,7 @@ create table hive.tpcds_hdfs.item
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.promotion
+create table tpcds_hdfs.promotion
 (
     p_promo_sk                bigint,
     p_promo_id                varchar,
@@ -410,14 +410,14 @@ create table hive.tpcds_hdfs.promotion
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.reason(
+create table tpcds_hdfs.reason(
       r_reason_sk               bigint               
 ,     r_reason_id               varchar              
 ,     r_reason_desc             varchar                
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.ship_mode(
+create table tpcds_hdfs.ship_mode(
       sm_ship_mode_sk           bigint               
 ,     sm_ship_mode_id           varchar              
 ,     sm_type                   varchar                      
@@ -427,7 +427,7 @@ create table hive.tpcds_hdfs.ship_mode(
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.store_returns
+create table tpcds_hdfs.store_returns
 (
     sr_returned_date_sk       bigint,
     sr_return_time_sk         bigint,
@@ -452,7 +452,7 @@ create table hive.tpcds_hdfs.store_returns
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.store_sales
+create table tpcds_hdfs.store_sales
 (
     ss_sold_date_sk           bigint,
     ss_sold_time_sk           bigint,
@@ -480,7 +480,7 @@ create table hive.tpcds_hdfs.store_sales
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.store
+create table tpcds_hdfs.store
 (
     s_store_sk                bigint,
     s_store_id                varchar,
@@ -514,7 +514,7 @@ create table hive.tpcds_hdfs.store
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.time_dim
+create table tpcds_hdfs.time_dim
 (
     t_time_sk                 bigint,
     t_time_id                 varchar,
@@ -529,7 +529,7 @@ create table hive.tpcds_hdfs.time_dim
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.warehouse(
+create table tpcds_hdfs.warehouse(
       w_warehouse_sk            bigint               
 ,     w_warehouse_id            varchar              
 ,     w_warehouse_name          varchar                   
@@ -547,7 +547,7 @@ create table hive.tpcds_hdfs.warehouse(
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.web_page(
+create table tpcds_hdfs.web_page(
       wp_web_page_sk            bigint               
 ,     wp_web_page_id            varchar              
 ,     wp_rec_start_date        varchar                         
@@ -565,7 +565,7 @@ create table hive.tpcds_hdfs.web_page(
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.web_returns
+create table tpcds_hdfs.web_returns
 (
     wr_returned_date_sk       bigint,
     wr_returned_time_sk       bigint,
@@ -594,7 +594,7 @@ create table hive.tpcds_hdfs.web_returns
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.web_sales
+create table tpcds_hdfs.web_sales
 (
     ws_sold_date_sk           bigint,
     ws_sold_time_sk           bigint,
@@ -633,7 +633,7 @@ create table hive.tpcds_hdfs.web_sales
 )
 with (format = 'ORC');
 
-create table hive.tpcds_hdfs.web_site
+create table tpcds_hdfs.web_site
 (
     web_site_sk           bigint,
     web_site_id           varchar,
@@ -664,78 +664,79 @@ create table hive.tpcds_hdfs.web_site
 )
 with (format = 'ORC');
 
-insert into hive.tpcds_hdfs.call_center
-select * from hive.tpcds.call_center;
+insert into tpcds_hdfs.call_center
+select * from tpcds.call_center;
 
-insert into hive.tpcds_hdfs.catalog_page
-select * from hive.tpcds.catalog_page;
+insert into tpcds_hdfs.catalog_page
+select * from tpcds.catalog_page;
 
-insert into hive.tpcds_hdfs.catalog_returns
-select * from hive.tpcds.catalog_returns;
+insert into tpcds_hdfs.catalog_returns
+select * from tpcds.catalog_returns;
 
-insert into hive.tpcds_hdfs.catalog_sales
-select * from hive.tpcds.catalog_sales;
+insert into tpcds_hdfs.catalog_sales
+select * from tpcds.catalog_sales;
 
-insert into hive.tpcds_hdfs.customer_address
-select * from hive.tpcds.customer_address;
+insert into tpcds_hdfs.customer_address
+select * from tpcds.customer_address;
 
-insert into hive.tpcds_hdfs.customer_demographics
-select * from hive.tpcds.customer_demographics;
+insert into tpcds_hdfs.customer_demographics
+select * from tpcds.customer_demographics;
 
-insert into hive.tpcds_hdfs.customer
-select * from hive.tpcds.customer;
+insert into tpcds_hdfs.customer
+select * from tpcds.customer;
 
-insert into hive.tpcds_hdfs.date_dim
-select * from hive.tpcds.date_dim;
+insert into tpcds_hdfs.date_dim
+select * from tpcds.date_dim;
 
-insert into hive.tpcds_hdfs.household_demographics
-select * from hive.tpcds.household_demographics;
+insert into tpcds_hdfs.household_demographics
+select * from tpcds.household_demographics;
 
-insert into hive.tpcds_hdfs.income_band
-select * from hive.tpcds.income_band;
+insert into tpcds_hdfs.income_band
+select * from tpcds.income_band;
 
-insert into hive.tpcds_hdfs.inventory
-select * from hive.tpcds.inventory;
+insert into tpcds_hdfs.inventory
+select * from tpcds.inventory;
 
-insert into hive.tpcds_hdfs.item
-select * from hive.tpcds.item;
+insert into tpcds_hdfs.item
+select * from tpcds.item;
 
-insert into hive.tpcds_hdfs.promotion
-select * from hive.tpcds.promotion;
+insert into tpcds_hdfs.promotion
+select * from tpcds.promotion;
 
-insert into hive.tpcds_hdfs.reason
-select * from hive.tpcds.reason;
+insert into tpcds_hdfs.reason
+select * from tpcds.reason;
 
-insert into hive.tpcds_hdfs.ship_mode
-select * from hive.tpcds.ship_mode;
+insert into tpcds_hdfs.ship_mode
+select * from tpcds.ship_mode;
 
-insert into hive.tpcds_hdfs.store_returns
-select * from hive.tpcds.store_returns;
+insert into tpcds_hdfs.store_returns
+select * from tpcds.store_returns;
 
-insert into hive.tpcds_hdfs.store_sales
-select * from hive.tpcds.store_sales;
+insert into tpcds_hdfs.store_sales
+select * from tpcds.store_sales;
 
-insert into hive.tpcds_hdfs.store
-select * from hive.tpcds.store;
+insert into tpcds_hdfs.store
+select * from tpcds.store;
 
-insert into hive.tpcds_hdfs.time_dim
-select * from hive.tpcds.time_dim;
+insert into tpcds_hdfs.time_dim
+select * from tpcds.time_dim;
 
-insert into hive.tpcds_hdfs.warehouse
-select * from hive.tpcds.warehouse;
+insert into tpcds_hdfs.warehouse
+select * from tpcds.warehouse;
 
-insert into hive.tpcds_hdfs.web_page
-select * from hive.tpcds.web_page;
+insert into tpcds_hdfs.web_page
+select * from tpcds.web_page;
 
-insert into hive.tpcds_hdfs.web_returns
-select * from hive.tpcds.web_returns;
+insert into tpcds_hdfs.web_returns
+select * from tpcds.web_returns;
 
-insert into hive.tpcds_hdfs.web_sales
-select * from hive.tpcds.web_sales;
+insert into tpcds_hdfs.web_sales
+select * from tpcds.web_sales;
 
-insert into hive.tpcds_hdfs.web_site
-select * from hive.tpcds.web_site;
+insert into tpcds_hdfs.web_site
+select * from tpcds.web_site;
 EOF
+presto --catalog hive --progress --file PopulateHdfs.sql
 
 # Generate statistics for HDFS tables in Hive 
 hive <<EOF

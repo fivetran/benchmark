@@ -4,8 +4,7 @@ zip -r presto.zip \
       PrestoTiming.sql \
       100-PopulatePresto.sh \
       101-BenchmarkPresto.sh \
+      102-PrestoTiming.sql \
       query
-gcloud compute scp presto.zip tpcds-presto-m:~ \
-      --zone "us-central1-f"
-gcloud compute ssh tpcds-presto-m \
-      --zone "us-central1-f"
+gcloud compute scp presto.zip tpcds-presto-m:~ 
+gcloud compute ssh tpcds-presto-m 
