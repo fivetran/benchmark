@@ -7,7 +7,7 @@ gcloud compute \
       --project "digital-arbor-400" \
       instances create "tpcds-presto-m" \
       --zone "us-central1-f" \
-      --machine-type "n1-standard-8" \
+      --machine-type "n2-standard-8" \
       --image-project "ubuntu-os-cloud" \
       --image "ubuntu-1804-bionic-v20200129a" \
       --metadata "PrestoRole=Master,PrestoMaster=tpcds-presto-m" \
@@ -22,7 +22,7 @@ gcloud compute instance-templates delete "presto-worker" \
 gcloud compute \
       --project "digital-arbor-400" \
       instance-templates create "presto-worker" \
-      --machine-type "n1-standard-8" \
+      --machine-type "n2-standard-8" \
       --image-project "ubuntu-os-cloud" \
       --image "ubuntu-1804-bionic-v20200129a" \
       --metadata "PrestoRole=Worker,PrestoMaster=tpcds-presto-m" \
