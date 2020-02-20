@@ -1,6 +1,6 @@
 set -e
 
-export LOCATION=gcs://fivetran-benchmark/tpcds_100_dat
+export LOCATION=gcs://fivetran-benchmark/tpcds_1000_dat
 
 cat <<EOF
 drop database if exists tpcds;
