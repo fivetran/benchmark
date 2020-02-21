@@ -6,15 +6,13 @@ export PGPASSWORD=NumeroFoo0
 export USER=tpcds_user
 
 psql -A -F ";" --host ${HOST} --port 5439 --user ${USER} ${DB} > RedshiftResults.csv <<EOF
-with compile_times as (select query, sum(endtime-starttime) as compile_time from svl_compile group by 1)
-select
-    stl_query.xid,
-    max(substring(text,1,60)) as query_text,
-    sum(compile_time) as compile_time,
-    sum(endtime-starttime) as run_time
-from stl_query, stl_querytext, compile_times
-where stl_query.query = stl_querytext.query
-and stl_query.query = compile_times.query
-group by stl_query.xid
-order by max(stl_query.starttime);
+with compile_segments as (select xid, query, starttime, endtime from svl_compile),
+exec_segments as (select xid, query, starttime, endtime from stl_query),
+all_segments as (select * from compile_segments union all select * from exec_segments),
+query_text as (select distinct xid, last_value(querytxt) over (partition by xid order by query rows between unbounded preceding and unbounded following) as text from stl_query)
+select all_segments.xid, max(substring(query_text.text, 1, 60)) as text, max(endtime)-min(starttime)
+from all_segments, query_text 
+where all_segments.xid = query_text.xid
+group by all_segments.xid 
+order by all_segments.xid;
 EOF

@@ -16,22 +16,11 @@
 # Set KMS encryption to ON.
 set -e
 
-# Set HOST, PGPASSWORD, SCALE=100/1000 manually
-if [ -z "$HOST" ]; then 
-  echo "You must set HOST"
-  exit 1
-fi 
-if [ -z "$PGPASSWORD" ]; then 
-  echo "You must set PGPASSWORD"
-  exit 1
-fi 
-if [ -z "$SCALE" ]; then 
-  echo "You must set SCALE"
-  exit 1
-fi 
-
+export HOST=tpcds-benchmark.cw43lptekopo.us-east-1.redshift.amazonaws.com
 export DB=dev
-export USER=fivetran
+export USER=awsuser
+export PGPASSWORD=NumeroFoo0
+export S3=s3://fivetran-tpcds/tpcds_1000_dat
 
 echo 'Create tables...'
 while read line;
@@ -66,30 +55,30 @@ create table public.web_page( wp_web_page_sk bigint, wp_web_page_id varchar(16),
 create table public.web_returns ( wr_returned_date_sk bigint, wr_returned_time_sk bigint, wr_item_sk bigint, wr_refunded_customer_sk bigint, wr_refunded_cdemo_sk bigint, wr_refunded_hdemo_sk bigint, wr_refunded_addr_sk bigint, wr_returning_customer_sk bigint, wr_returning_cdemo_sk bigint, wr_returning_hdemo_sk bigint, wr_returning_addr_sk bigint, wr_web_page_sk bigint, wr_reason_sk bigint, wr_order_number bigint, wr_return_quantity int, wr_return_amt double precision, wr_return_tax double precision, wr_return_amt_inc_tax double precision, wr_fee double precision, wr_return_ship_cost double precision, wr_refunded_cash double precision, wr_reversed_charge double precision, wr_account_credit double precision, wr_net_loss double precision ); 
 create table public.web_sales ( ws_sold_date_sk bigint, ws_sold_time_sk bigint, ws_ship_date_sk bigint, ws_item_sk bigint, ws_bill_customer_sk bigint, ws_bill_cdemo_sk bigint, ws_bill_hdemo_sk bigint, ws_bill_addr_sk bigint, ws_ship_customer_sk bigint, ws_ship_cdemo_sk bigint, ws_ship_hdemo_sk bigint, ws_ship_addr_sk bigint, ws_web_page_sk bigint, ws_web_site_sk bigint, ws_ship_mode_sk bigint, ws_warehouse_sk bigint, ws_promo_sk bigint, ws_order_number bigint, ws_quantity int, ws_wholesale_cost double precision, ws_list_price double precision, ws_sales_price double precision, ws_ext_discount_amt double precision, ws_ext_sales_price double precision, ws_ext_wholesale_cost double precision, ws_ext_list_price double precision, ws_ext_tax double precision, ws_coupon_amt double precision, ws_ext_ship_cost double precision, ws_net_paid double precision, ws_net_paid_inc_tax double precision, ws_net_paid_inc_ship double precision, ws_net_paid_inc_ship_tax double precision, ws_net_profit double precision ); 
 create table public.web_site ( web_site_sk bigint, web_site_id varchar(16), web_rec_start_date varchar(10), web_rec_end_date varchar(10), web_name varchar(50), web_open_date_sk bigint, web_close_date_sk bigint, web_class varchar(50), web_manager varchar(40), web_mkt_id int, web_mkt_class varchar(50), web_mkt_desc varchar(100), web_market_manager varchar(40), web_company_id int, web_company_name varchar(50), web_street_number varchar(10), web_street_name varchar(60), web_street_type varchar(15), web_suite_number varchar(10), web_city varchar(60), web_county varchar(30), web_state varchar(2), web_zip varchar(10), web_country varchar(20), web_gmt_offset double precision, web_tax_percentage double precision );
-copy public.call_center from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/call_center/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.catalog_page from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/catalog_page/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.catalog_returns from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/catalog_returns/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.catalog_sales from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/catalog_sales/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.customer_address from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/customer_address/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.customer_demographics from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/customer_demographics/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.customer from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/customer/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.date_dim from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/date_dim/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.household_demographics from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/household_demographics/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.income_band from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/income_band/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.inventory from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/inventory/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.item from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/item/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.promotion from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/promotion/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.reason from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/reason/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.ship_mode from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/ship_mode/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.store_returns from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/store_returns/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.store_sales from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/store_sales/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.store from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/store/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.time_dim from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/time_dim/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.warehouse from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/warehouse/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.web_page from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/web_page/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.web_returns from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/web_returns/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.web_sales from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/web_sales/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
-copy public.web_site from 's3://fivetran-benchmark/tpcds_${SCALE}_dat/web_site/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.call_center from '${S3}/call_center/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.catalog_page from '${S3}/catalog_page/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.catalog_returns from '${S3}/catalog_returns/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.catalog_sales from '${S3}/catalog_sales/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.customer_address from '${S3}/customer_address/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.customer_demographics from '${S3}/customer_demographics/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.customer from '${S3}/customer/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.date_dim from '${S3}/date_dim/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.household_demographics from '${S3}/household_demographics/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.income_band from '${S3}/income_band/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.inventory from '${S3}/inventory/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.item from '${S3}/item/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.promotion from '${S3}/promotion/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.reason from '${S3}/reason/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.ship_mode from '${S3}/ship_mode/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.store_returns from '${S3}/store_returns/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.store_sales from '${S3}/store_sales/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.store from '${S3}/store/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.time_dim from '${S3}/time_dim/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.warehouse from '${S3}/warehouse/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.web_page from '${S3}/web_page/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.web_returns from '${S3}/web_returns/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.web_sales from '${S3}/web_sales/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
+copy public.web_site from '${S3}/web_site/' region 'us-east-1' format delimiter '|' acceptinvchars compupdate on iam_role 'arn:aws:iam::254359228911:role/RedshiftReadS3';
 EOF
 
 echo 'Creating tpcds_user...'
@@ -99,7 +88,7 @@ do
     --echo-queries --output /dev/null \
     --command "$line" 
 done <<EOF
-create user tpcds_user password 'OaklandOffice1';
+create user tpcds_user password 'NumeroFoo0';
 grant usage on schema public to tpcds_user;
 grant all privileges on all tables in schema public to tpcds_user;
 EOF
