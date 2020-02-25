@@ -497,6 +497,10 @@ tables['web_site'] = {
   'web_tax_percentage': 'double',
 }
 
+console.log(`-- Configure a Databricks cluster with:
+--   4 i3.8xlarge workers
+--   1 i3.xlarge driver
+--   Spark config: 'spark.sql.crossJoin.enable true'`)
 console.log(
   `drop database if exists benchmark cascade;
 create database benchmark;

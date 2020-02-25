@@ -1,3 +1,7 @@
+-- Configure a Databricks cluster with:
+--   4 i3.8xlarge workers
+--   1 i3.xlarge driver
+--   Spark config: 'spark.sql.crossJoin.enable true'
 drop database if exists benchmark cascade;
 create database benchmark;
 use benchmark;
