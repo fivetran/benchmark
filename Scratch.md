@@ -85,4 +85,23 @@ from all_segments, query_text
 where all_segments.xid = query_text.xid
 group by all_segments.xid 
 order by all_segments.xid;
+
+select xid, query, substring(querytxt, 1, 60), starttime, endtime from stl_query
+union all select xid, null, substring(text, 1, 60), starttime, endtime from stl_ddltext
+union all select xid, null, substring(text, 1, 60), starttime, endtime from stl_utilitytext
+order by xid desc limit 100;
+
+with check_superuser as (select * from stl_analyze limit 1),
+recent as (
+  select * from svl_qlog 
+  where userid > 1 and starttime > current_timestamp - interval '1 day'),
+counter as (
+  select starttime as t, 1 as n from recent 
+  union all select endtime as t, -1 as n from recent),
+concurrency as (
+  select t, sum(n) over (order by t rows unbounded preceding) as n, extract(second from lead(t, 1) over (order by t) - t) as duration 
+  from counter)
+select 100 - round(sum(case when n > 0 then duration else 0 end) / sum(duration) * 100, 1) as idle_pct 
+from concurrency;
+
 ```
