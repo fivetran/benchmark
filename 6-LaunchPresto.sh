@@ -13,7 +13,8 @@ gcloud compute \
       --metadata "PrestoRole=Master,PrestoMaster=tpcds-presto-m" \
       --metadata-from-file "startup-script=Presto.sh" \
       --boot-disk-size "10" \
-      --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME
+      --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME \
+      --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME 
 
 # Create worker instance group
 gcloud compute \
@@ -30,7 +31,8 @@ gcloud compute \
       --metadata "PrestoRole=Worker,PrestoMaster=tpcds-presto-m" \
       --metadata-from-file "startup-script=Presto.sh" \
       --boot-disk-size "10" \
-      --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME
+      --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME \
+      --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME --local-ssd interface=NVME 
 gcloud compute \
       --project "digital-arbor-400" \
       instance-groups managed create "tpcds-presto-w" \

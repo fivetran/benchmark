@@ -29,7 +29,7 @@ QUERY_MAX_MEMORY_PER_NODE_MB=$(( ${QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB} / 2 ))
 ulimit -n 30000
 
 # Configure local ssd
-for i in 1 2 3 4 
+for i in 1 2 3 4 5 6 7 8
 do 
   mkfs.ext4 -F /dev/nvme0n$i
   mkdir -p /mnt/disks/ssd$i
@@ -58,7 +58,7 @@ cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
   <property>
     <name>dfs.datanode.data.dir</name>
-    <value>/mnt/disks/ssd1,/mnt/disks/ssd2,/mnt/disks/ssd3,/mnt/disks/ssd4</value>
+    <value>/mnt/disks/ssd1,/mnt/disks/ssd2,/mnt/disks/ssd3,/mnt/disks/ssd4,/mnt/disks/ssd5,/mnt/disks/ssd6,/mnt/disks/ssd7,/mnt/disks/ssd8</value>
     <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
   </property>
 
