@@ -18,8 +18,8 @@ set -x -e
 ROLE=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoRole)
 MASTER=$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/PrestoMaster)
 HTTP_PORT="8080"
-INSTANCE_VCPUS=8
-INSTANCE_MEMORY=30000
+INSTANCE_VCPUS=32
+INSTANCE_MEMORY=256000
 TASK_CONCURRENCY=$(( ${INSTANCE_VCPUS} ))
 PRESTO_JVM_MB=$(( ${INSTANCE_MEMORY} * 7 / 10 ))
 QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB=$(( ${PRESTO_JVM_MB} * 7 / 10 ))
@@ -29,10 +29,13 @@ QUERY_MAX_MEMORY_PER_NODE_MB=$(( ${QUERY_MAX_TOTAL_MEMORY_PER_NODE_MB} / 2 ))
 ulimit -n 30000
 
 # Configure local ssd
-mkfs.ext4 -F /dev/nvme0n1
-mkdir -p /mnt/disks/ssd1
-mount /dev/nvme0n1 /mnt/disks/ssd1
-chmod a+w /mnt/disks/ssd1
+for i in 1 2 3 4 
+do 
+  mkfs.ext4 -F /dev/nvme0n$i
+  mkdir -p /mnt/disks/ssd$i
+  mount /dev/nvme0n$i /mnt/disks/ssd$i
+  chmod a+w /mnt/disks/ssd$i
+done
 
 # Install Java
 apt-get update
@@ -55,7 +58,7 @@ cat > /hadoop/etc/hadoop/hdfs-site.xml <<EOF
 <configuration>
   <property>
     <name>dfs.datanode.data.dir</name>
-    <value>/mnt/disks/ssd1</value>
+    <value>/mnt/disks/ssd1,/mnt/disks/ssd2,/mnt/disks/ssd3,/mnt/disks/ssd4</value>
     <description>Comma separated list of paths on the local filesystem of a DataNode where it should store its blocks.</description>
   </property>
 
