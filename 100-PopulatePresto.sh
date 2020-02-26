@@ -739,76 +739,30 @@ EOF
 presto --catalog hive --progress --file PopulateHdfs.sql
 
 # Generate statistics for HDFS tables in Hive 
-hive <<EOF
-analyze table tpcds_hdfs.call_center compute statistics;
-analyze table tpcds_hdfs.call_center compute statistics for columns;
-
-analyze table tpcds_hdfs.catalog_page compute statistics;
-analyze table tpcds_hdfs.catalog_page compute statistics for columns;
-
-analyze table tpcds_hdfs.catalog_returns compute statistics;
-analyze table tpcds_hdfs.catalog_returns compute statistics for columns;
-
-analyze table tpcds_hdfs.catalog_sales compute statistics;
-analyze table tpcds_hdfs.catalog_sales compute statistics for columns;
-
-analyze table tpcds_hdfs.customer_address compute statistics;
-analyze table tpcds_hdfs.customer_address compute statistics for columns;
-
-analyze table tpcds_hdfs.customer_demographics compute statistics;
-analyze table tpcds_hdfs.customer_demographics compute statistics for columns;
-
-analyze table tpcds_hdfs.customer compute statistics;
-analyze table tpcds_hdfs.customer compute statistics for columns;
-
-analyze table tpcds_hdfs.date_dim compute statistics;
-analyze table tpcds_hdfs.date_dim compute statistics for columns;
-
-analyze table tpcds_hdfs.household_demographics compute statistics;
-analyze table tpcds_hdfs.household_demographics compute statistics for columns;
-
-analyze table tpcds_hdfs.income_band compute statistics;
-analyze table tpcds_hdfs.income_band compute statistics for columns;
-
-analyze table tpcds_hdfs.inventory compute statistics;
-analyze table tpcds_hdfs.inventory compute statistics for columns;
-
-analyze table tpcds_hdfs.item compute statistics;
-analyze table tpcds_hdfs.item compute statistics for columns;
-
-analyze table tpcds_hdfs.promotion compute statistics;
-analyze table tpcds_hdfs.promotion compute statistics for columns;
-
-analyze table tpcds_hdfs.reason compute statistics;
-analyze table tpcds_hdfs.reason compute statistics for columns;
-
-analyze table tpcds_hdfs.ship_mode compute statistics;
-analyze table tpcds_hdfs.ship_mode compute statistics for columns;
-
-analyze table tpcds_hdfs.store_returns compute statistics;
-analyze table tpcds_hdfs.store_returns compute statistics for columns;
-
-analyze table tpcds_hdfs.store_sales compute statistics;
-analyze table tpcds_hdfs.store_sales compute statistics for columns;
-
-analyze table tpcds_hdfs.store compute statistics;
-analyze table tpcds_hdfs.store compute statistics for columns;
-
-analyze table tpcds_hdfs.time_dim compute statistics;
-analyze table tpcds_hdfs.time_dim compute statistics for columns;
-
-analyze table tpcds_hdfs.warehouse compute statistics;
-analyze table tpcds_hdfs.warehouse compute statistics for columns;
-
-analyze table tpcds_hdfs.web_page compute statistics;
-analyze table tpcds_hdfs.web_page compute statistics for columns;
-
-analyze table tpcds_hdfs.web_returns compute statistics;
-analyze table tpcds_hdfs.web_returns compute statistics for columns;
-
-analyze table tpcds_hdfs.web_sales compute statistics;
-analyze table tpcds_hdfs.web_sales compute statistics for columns;
-
-analyze table tpcds_hdfs.web_site compute statistics;
-analyze table tpcds_hdfs.web_site compute statistics for columns;
+cat > ComputeStatistics.sql <<EOF
+analyze tpcds_hdfs.call_center;
+analyze tpcds_hdfs.catalog_page;
+analyze tpcds_hdfs.catalog_returns;
+analyze tpcds_hdfs.catalog_sales;
+analyze tpcds_hdfs.customer_address;
+analyze tpcds_hdfs.customer_demographics;
+analyze tpcds_hdfs.customer;
+analyze tpcds_hdfs.date_dim;
+analyze tpcds_hdfs.household_demographics;
+analyze tpcds_hdfs.income_band;
+analyze tpcds_hdfs.inventory;
+analyze tpcds_hdfs.item;
+analyze tpcds_hdfs.promotion;
+analyze tpcds_hdfs.reason;
+analyze tpcds_hdfs.ship_mode;
+analyze tpcds_hdfs.store_returns;
+analyze tpcds_hdfs.store_sales;
+analyze tpcds_hdfs.store;
+analyze tpcds_hdfs.time_dim;
+analyze tpcds_hdfs.warehouse;
+analyze tpcds_hdfs.web_page;
+analyze tpcds_hdfs.web_returns;
+analyze tpcds_hdfs.web_sales;
+analyze tpcds_hdfs.web_site;
 EOF
+presto --catalog hive --progress --file ComputeStatistics.sql
