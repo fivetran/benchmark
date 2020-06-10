@@ -1,3 +1,28 @@
+-- drop table call_center;
+-- drop table catalog_page;
+-- drop table catalog_returns;
+-- drop table catalog_sales ;
+-- drop table customer_address ;
+-- drop table customer_demographics ;
+-- drop table customer ;
+-- drop table date_dim ;
+-- drop table household_demographics ;
+-- drop table income_band;
+-- drop table inventory ;
+-- drop table item ;
+-- drop table promotion ;
+-- drop table reason;
+-- drop table ship_mode;
+-- drop table store_returns ;
+-- drop table store_sales ;
+-- drop table store ;
+-- drop table time_dim ;
+-- drop table warehouse;
+-- drop table web_page;
+-- drop table web_returns ;
+-- drop table web_sales ;
+-- drop table web_site ;
+
 create table call_center(
       cc_call_center_sk         bigint               
 ,     cc_call_center_id         nvarchar(16)              
@@ -495,3 +520,99 @@ create table web_site (
     web_tax_percentage    float
 );
 
+
+copy into call_center
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/call_center/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into catalog_page
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/catalog_page/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into catalog_returns
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/catalog_returns/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into catalog_sales
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/catalog_sales/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into customer
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/customer/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into customer_address
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/customer_address/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into customer_demographics
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/customer_demographics/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into date_dim
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/date_dim/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into household_demographics
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/household_demographics/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into income_band
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/income_band/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into inventory
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/inventory/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into item
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/item/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into promotion
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/promotion/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into reason
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/reason/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into ship_mode
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/ship_mode/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into store
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/store/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into store_returns
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/store_returns/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into store_sales
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/store_sales/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into time_dim
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/time_dim/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into warehouse
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/warehouse/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into web_page
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/web_page/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into web_returns
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/web_returns/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into web_sales
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/web_sales/'
+with (file_type = 'CSV', fieldterminator = '|');
+
+copy into web_site
+from 'https://fivetranbenchmark.blob.core.windows.net/tpcds/tpcds_1000_dat/web_site/'
+with (file_type = 'CSV', fieldterminator = '|');

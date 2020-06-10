@@ -1,5 +1,11 @@
 #!/bin/bash
 
+rclone copy -v google:fivetran-benchmark/tpcds_1000_dat azure:tpcds/tpcds_1000_dat
+
+fivetran-benchmark.database.windows.net
+fivetran
+SweatshirtTV1
+
 set -e 
 
 tempdir=`mktemp -d _work_XXXXXXXXXX`
