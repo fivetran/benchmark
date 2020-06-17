@@ -1,22 +1,4 @@
-# Set up your redshift cluster with WLM configuration:
-#
-# [ {
-#   "query_concurrency" : 5,
-#   "memory_percent_to_use" : 100,
-#   "query_group" : [ ],
-#   "query_group_wild_card" : 0,
-#   "user_group" : [ ],
-#   "user_group_wild_card" : 0
-# }, {
-#   "short_query_queue" : false
-# } ]
-#
-# This should be the same as the default configuration, but set it explicitly just to be safe.
-# 
-# Set KMS encryption to ON.
-set -e
-
-export HOST=tpcds-benchmark.cw43lptekopo.us-east-1.redshift.amazonaws.com
+export HOST=redshift-cluster-2.cw43lptekopo.us-east-1.redshift.amazonaws.com
 export DB=dev
 export USER=awsuser
 export PGPASSWORD=NumeroFoo0
