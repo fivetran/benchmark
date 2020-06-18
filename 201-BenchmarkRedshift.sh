@@ -1,6 +1,6 @@
 set -e 
 
-export HOST=redshift-cluster-2.cw43lptekopo.us-east-1.redshift.amazonaws.com
+export HOST=ra3-benchmark.cw43lptekopo.us-east-1.redshift.amazonaws.com
 export DB=dev
 export PGPASSWORD=NumeroFoo0
 export USER=tpcds_user
