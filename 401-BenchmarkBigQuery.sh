@@ -1,32 +1,31 @@
 #!/bin/bash
 set -e
 
-export PROJECT=singular-vector-135519
+export PROJECT=fivetran-bq-reserved
 export DATASET=tpcds_1000
 
 # Warm-up
-find warmup/ -name warmup_*.sql | sort -V | {
-  while read line; do 
+echo 'Warmup.sql...'
+while read line;
+do
     echo "$line"
-    cat "$line" | bq --project_id=${PROJECT} --dataset_id=${DATASET} \
+    echo "$line" | bq --project_id=${PROJECT} --dataset_id=${DATASET} \
       query \
       --use_legacy_sql=false \
       --batch=false \
       --format=none
-  done
-}
+done < Warmup.sql
 
 # Test
-mkdir -p results
-echo "Query,Started,Ended,Billing Tier,Bytes" > results/BigQueryResults.csv
+echo "Query,Started,Ended,Billing Tier,Bytes" > BigQueryResults.csv
 
-find query/ -name query*.sql | sort -V | {
-  while read -r f; do
-    echo $f
-    QUERY=`basename $f | head -c -5`
+for FILE in query/*.sql; 
+do
+    echo ${FILE}
+    QUERY=`basename ${FILE} | head -c 7`
     ID=${QUERY}_$(date +%s)
 
-    cat "$f" \
+    cat "${FILE}" \
       | bq \
         --project_id=${PROJECT} \
         --dataset_id=${DATASET} \
@@ -46,6 +45,5 @@ find query/ -name query*.sql | sort -V | {
     BILLING_TIER=$(json statistics.query.billingTier <<< $JOB )
     BYTES=$(json statistics.query.totalBytesBilled <<< $JOB )
 
-    echo "$f,$STARTED,$ENDED,$BILLING_TIER,$BYTES" >> results/BigQueryResults.csv
-  done
-}
+    echo "${FILE},$STARTED,$ENDED,$BILLING_TIER,$BYTES" >> results/BigQueryResults.csv
+done

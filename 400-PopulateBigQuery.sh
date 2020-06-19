@@ -1,6 +1,6 @@
 #!/bin/bash
 # Load into BQ
-export PROJECT=singular-vector-135519
+export PROJECT=fivetran-bq-reserved
 export GS_BASE=fivetran-benchmark/tpcds_1000_dat
 export DATASET=tpcds_1000
 
