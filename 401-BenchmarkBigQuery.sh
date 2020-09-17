@@ -17,7 +17,7 @@ do
 done < Warmup.sql
 
 # Test
-echo "Query,Started,Ended,Billing Tier,Bytes" > BigQueryResults.csv
+echo "Query,Started,Ended,Billing Tier,Bytes" > results/BigQueryResults.csv
 
 for FILE in query/*.sql; 
 do
