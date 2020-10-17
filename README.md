@@ -1,5 +1,5 @@
 # Results
-https://blog.fivetran.com/warehouse-benchmark-dce9f4c529c1
+https://fivetran.com/blog/warehouse-benchmark
 
 # Design
 This is based on the TPC-DS benchmark, a standard data warehouse benchmark that uses lots of joins, aggregations and subqueries.
