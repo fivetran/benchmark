@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# NOTE: you will need to install https://www.npmjs.com/package/json to run this script
 set -e
 
 export PROJECT=fivetran-bq-reserved
