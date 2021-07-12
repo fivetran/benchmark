@@ -13,7 +13,7 @@ WITH ssr AS
                                 ss_net_profit           AS profit, 
                                 0 AS return_amt, 
                                 0 AS net_loss 
-                         FROM   store_sales 
+                         FROM   {{source('src__tpc_ds', 'store_sales')}} 
                          UNION ALL 
                          SELECT sr_store_sk             AS store_sk, 
                                 sr_returned_date_sk     AS date_sk, 
@@ -21,9 +21,9 @@ WITH ssr AS
                                 0 AS profit, 
                                 sr_return_amt           AS return_amt, 
                                 sr_net_loss             AS net_loss 
-                         FROM   store_returns ) salesreturns, 
-                  date_dim, 
-                  store 
+                         FROM   {{source('src__tpc_ds', 'store_returns')}} ) salesreturns, 
+                  {{source('src__tpc_ds', 'date_dim')}}, 
+                  {{source('src__tpc_ds', 'store')}} 
          WHERE    date_sk = d_date_sk 
          AND      Cast(d_date AS DATE) BETWEEN Cast('2002-08-22' AS DATE) AND      ( 
                            Cast('2002-09-05' AS DATE)) 
@@ -42,7 +42,7 @@ WITH ssr AS
                                 cs_net_profit           AS profit, 
                                 0 AS return_amt, 
                                 0 AS net_loss 
-                         FROM   catalog_sales 
+                         FROM   {{source('src__tpc_ds', 'catalog_sales')}} 
                          UNION ALL 
                          SELECT cr_catalog_page_sk      AS page_sk, 
                                 cr_returned_date_sk     AS date_sk, 
@@ -50,9 +50,9 @@ WITH ssr AS
                                 0 AS profit, 
                                 cr_return_amount        AS return_amt, 
                                 cr_net_loss             AS net_loss 
-                         FROM   catalog_returns ) salesreturns, 
-                  date_dim, 
-                  catalog_page 
+                         FROM   {{source('src__tpc_ds', 'catalog_returns')}} ) salesreturns, 
+                  {{source('src__tpc_ds', 'date_dim')}}, 
+                  {{source('src__tpc_ds', 'catalog_page')}} 
          WHERE    date_sk = d_date_sk 
          AND      Cast(d_date AS DATE) BETWEEN cast('2002-08-22' AS date) AND      ( 
                            Cast('2002-09-05' AS DATE)) 
@@ -71,7 +71,7 @@ WITH ssr AS
                                 ws_net_profit           AS profit, 
                                 0 AS return_amt, 
                                 0 AS net_loss 
-                         FROM   web_sales 
+                         FROM   {{source('src__tpc_ds', 'web_sales')}} 
                          UNION ALL 
                          SELECT          ws_web_site_sk          AS wsr_web_site_sk, 
                                          wr_returned_date_sk     AS date_sk, 
@@ -79,13 +79,13 @@ WITH ssr AS
                                          0 AS profit, 
                                          wr_return_amt           AS return_amt, 
                                          wr_net_loss             AS net_loss 
-                         FROM            web_returns 
-                         LEFT OUTER JOIN web_sales 
+                         FROM            {{source('src__tpc_ds', 'web_returns')}} 
+                         LEFT OUTER JOIN {{source('src__tpc_ds', 'web_sales')}} 
                          ON              ( 
                                                          wr_item_sk = ws_item_sk 
                                          AND             wr_order_number = ws_order_number) ) salesreturns,
-                  date_dim, 
-                  web_site 
+                  {{source('src__tpc_ds', 'date_dim')}}, 
+                  {{source('src__tpc_ds', 'web_site')}} 
          WHERE    date_sk = d_date_sk 
          AND      Cast(d_date AS DATE) BETWEEN cast('2002-08-22' AS date) AND      ( 
                            Cast('2002-09-05' AS DATE)) 
@@ -98,7 +98,7 @@ SELECT
          sum(returns1) AS returns1 , 
          sum(profit)  AS profit 
 FROM     ( 
-                SELECT 'store channel' AS channel , 
+                SELECT '{{source('src__tpc_ds', 'store')}} channel' AS channel , 
                        Concat('store', s_store_id) AS id , 
                        sales , 
                        returns1 , 

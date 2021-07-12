@@ -1,7 +1,7 @@
 -- query8
 WITH ca_zips AS (
         SELECT Substr(ca_zip, 1, 5) AS ca_zip 
-                FROM   customer_address 
+                FROM   {{source('src__tpc_ds', 'customer_address')}}
                 WHERE  Substr(ca_zip, 1, 5) IN ( '67436', '26121', '38443', 
                                                  '63157', 
                                                  '68856', '19485', '86425', 
@@ -206,8 +206,8 @@ WITH ca_zips AS (
         SELECT ca_zip 
                 FROM   (SELECT Substr(ca_zip, 1, 5) ca_zip, 
                                Count(*)             cnt 
-                        FROM   customer_address, 
-                               customer 
+                        FROM   {{source('src__tpc_ds', 'customer_address')}},
+                               {{source('src__tpc_ds', 'customer')}}
                         WHERE  ca_address_sk = c_current_addr_sk 
                                AND c_preferred_cust_flag = 'Y' 
                         GROUP  BY ca_zip 
@@ -220,9 +220,9 @@ chosen_zips AS (
 )
 SELECT s_store_name, 
        Sum(ss_net_profit) 
-FROM   store_sales, 
-       date_dim, 
-       store, 
+FROM   {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'date_dim')}},
+       {{source('src__tpc_ds', 'store')}},
        common_zips
 WHERE  ss_store_sk = s_store_sk 
        AND ss_sold_date_sk = d_date_sk 
