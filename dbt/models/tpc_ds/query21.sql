@@ -16,10 +16,10 @@ FROM    (
                                                       Cast(d_date AS DATE) >= Cast ('2000-05-13' AS DATE)) THEN inv_quantity_on_hand 
                                     ELSE 0 
                            END) AS inv_after 
-                  FROM     inventory , 
-                           warehouse , 
-                           item , 
-                           date_dim 
+                  FROM     {{source('src__tpc_ds', 'inventory')}} ,
+                           {{source('src__tpc_ds', 'warehouse')}} ,
+                           {{source('src__tpc_ds', 'item')}} ,
+                           {{source('src__tpc_ds', 'date_dim')}}
                   WHERE    i_current_price BETWEEN 0.99 AND      1.49 
                   AND      i_item_sk = inv_item_sk 
                   AND      inv_warehouse_sk = w_warehouse_sk 
