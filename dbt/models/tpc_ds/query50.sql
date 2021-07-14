@@ -35,11 +35,11 @@ SELECT s_store_name,
                      WHEN ( sr_returned_date_sk - ss_sold_date_sk > 120 ) THEN 1 
                      ELSE 0 
                    END) AS days_over_120 
-FROM   store_sales, 
-       store_returns, 
-       store, 
-       date_dim d1, 
-       date_dim d2 
+FROM   {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'store_returns')}},
+       {{source('src__tpc_ds', 'store')}},
+       {{source('src__tpc_ds', 'date_dim')}} d1,
+       {{source('src__tpc_ds', 'date_dim')}} d2
 WHERE  d2.d_year = 2002 
        AND d2.d_moy = 9 
        AND ss_ticket_number = sr_ticket_number 
