@@ -4,8 +4,8 @@ WITH web_v1 AS
          SELECT   ws_item_sk item_sk, 
                   d_date, 
                   sum(Sum(ws_sales_price)) OVER (partition BY ws_item_sk ORDER BY d_date rows BETWEEN UNBOUNDED PRECEDING AND      CURRENT row) cume_sales
-         FROM     web_sales , 
-                  date_dim 
+         FROM     {{source('src__tpc_ds', 'web_sales')}} ,
+                  {{source('src__tpc_ds', 'date_dim')}}
          WHERE    ws_sold_date_sk=d_date_sk 
          AND      d_month_seq BETWEEN 1192 AND      1192+11 
          AND      ws_item_sk IS NOT NULL 
@@ -15,8 +15,8 @@ WITH web_v1 AS
          SELECT   ss_item_sk item_sk, 
                   d_date, 
                   sum(sum(ss_sales_price)) OVER (partition BY ss_item_sk ORDER BY d_date rows BETWEEN UNBOUNDED PRECEDING AND      CURRENT row) cume_sales
-         FROM     store_sales , 
-                  date_dim 
+         FROM     {{source('src__tpc_ds', 'store_sales')}} ,
+                  {{source('src__tpc_ds', 'date_dim')}}
          WHERE    ss_sold_date_sk=d_date_sk 
          AND      d_month_seq BETWEEN 1192 AND      1192+11 
          AND      ss_item_sk IS NOT NULL 
@@ -42,9 +42,11 @@ FROM     (
                                                                            ELSE store.d_date 
                                                            END              d_date , 
                                                            web.cume_sales   web_sales , 
+
                                                            store.cume_sales store_sales 
+
                                            FROM            web_v1 web 
-                                           FULL OUTER JOIN store_v1 store 
+                                           FULL OUTER JOIN store_v1 {{source('src__tpc_ds', 'store')}}
                                            ON              ( 
                                                                            web.item_sk = store.item_sk
                                                            AND             web.d_date = store.d_date) )x )y
