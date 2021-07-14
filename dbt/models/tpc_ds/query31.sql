@@ -3,10 +3,10 @@ WITH ss
      AS (SELECT ca_county, 
                 d_qoy, 
                 d_year, 
-                Sum(ss_ext_sales_price) AS store_sales 
-         FROM   store_sales, 
-                date_dim, 
-                customer_address 
+                Sum(ss_ext_sales_price) AS {{source('src__tpc_ds', 'store_sales')}}
+         FROM   {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}},
+                {{source('src__tpc_ds', 'customer_address')}}
          WHERE  ss_sold_date_sk = d_date_sk 
                 AND ss_addr_sk = ca_address_sk 
          GROUP  BY ca_county, 
@@ -16,10 +16,10 @@ WITH ss
      AS (SELECT ca_county, 
                 d_qoy, 
                 d_year, 
-                Sum(ws_ext_sales_price) AS web_sales 
-         FROM   web_sales, 
-                date_dim, 
-                customer_address 
+                Sum(ws_ext_sales_price) AS {{source('src__tpc_ds', 'web_sales')}}
+         FROM   {{source('src__tpc_ds', 'web_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}},
+                {{source('src__tpc_ds', 'customer_address')}}
          WHERE  ws_sold_date_sk = d_date_sk 
                 AND ws_bill_addr_sk = ca_address_sk 
          GROUP  BY ca_county, 
@@ -59,7 +59,9 @@ WHERE  ss1.d_qoy = 1
              ELSE NULL 
            END > CASE 
                    WHEN ss1.store_sales > 0 THEN 
+
                    ss2.store_sales / ss1.store_sales 
+
                    ELSE NULL 
                  END 
        AND CASE 
