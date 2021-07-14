@@ -8,10 +8,10 @@ SELECT Sum(ss_net_profit) / Sum(ss_ext_sales_price)                 AS
                    PARTITION BY i_category, i_class 
                    ORDER BY Sum(ss_net_profit)/Sum(ss_ext_sales_price) ASC) AS 
                rank_within_parent 
-FROM   store_sales, 
-       date_dim d1, 
-       item, 
-       store 
+FROM   {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'date_dim')}} d1,
+       {{source('src__tpc_ds', 'item')}},
+       {{source('src__tpc_ds', 'store')}}
 WHERE  d1.d_year = 2000 
        AND d1.d_date_sk = ss_sold_date_sk 
        AND i_item_sk = ss_item_sk 

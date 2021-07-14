@@ -16,10 +16,10 @@ WITH inv
                        d_moy, 
                        Stddev_samp(inv_quantity_on_hand) stdev, 
                        Avg(inv_quantity_on_hand)         mean 
-                FROM   inventory, 
-                       item, 
-                       warehouse, 
-                       date_dim 
+                FROM   {{source('src__tpc_ds', 'inventory')}},
+                       {{source('src__tpc_ds', 'item')}},
+                       {{source('src__tpc_ds', 'warehouse')}},
+                       {{source('src__tpc_ds', 'date_dim')}}
                 WHERE  inv_item_sk = i_item_sk 
                        AND inv_warehouse_sk = w_warehouse_sk 
                        AND inv_date_sk = d_date_sk 
