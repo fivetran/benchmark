@@ -4,9 +4,9 @@ WITH frequent_ss_items
                 i_item_sk                  item_sk, 
                 d_date                     solddate, 
                 Count(*)                   cnt 
-         FROM   store_sales, 
-                date_dim, 
-                item 
+         FROM   {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}},
+                {{source('src__tpc_ds', 'item')}}
          WHERE  ss_sold_date_sk = d_date_sk 
                 AND ss_item_sk = i_item_sk 
                 AND d_year IN ( 1998, 1998 + 1, 1998 + 2, 1998 + 3 ) 
@@ -14,22 +14,23 @@ WITH frequent_ss_items
                    i_item_sk, 
                    d_date 
          HAVING Count(*) > 4), 
-     max_store_sales 
+
+max_store_sales 
      AS (SELECT Max(csales) tpcds_cmax 
          FROM   (SELECT c_customer_sk, 
                         Sum(ss_quantity * ss_sales_price) csales 
-                 FROM   store_sales, 
-                        customer, 
-                        date_dim 
+                 FROM   {{source('src__tpc_ds', 'store_sales')}},
+                        {{source('src__tpc_ds', 'customer')}},
+                        {{source('src__tpc_ds', 'date_dim')}}
                  WHERE  ss_customer_sk = c_customer_sk 
                         AND ss_sold_date_sk = d_date_sk 
                         AND d_year IN ( 1998, 1998 + 1, 1998 + 2, 1998 + 3 ) 
                  GROUP  BY c_customer_sk)), 
-     best_ss_customer 
+best_ss_customer 
      AS (SELECT c_customer_sk, 
                 Sum(ss_quantity * ss_sales_price) ssales 
-         FROM   store_sales, 
-                customer 
+         FROM   {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'customer')}}
          WHERE  ss_customer_sk = c_customer_sk 
          GROUP  BY c_customer_sk 
          HAVING Sum(ss_quantity * ss_sales_price) > 
@@ -37,8 +38,8 @@ WITH frequent_ss_items
                                   FROM   max_store_sales)) 
 SELECT Sum(sales) 
 FROM   (SELECT cs_quantity * cs_list_price sales 
-        FROM   catalog_sales, 
-               date_dim 
+        FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+               {{source('src__tpc_ds', 'date_dim')}}
         WHERE  d_year = 1998 
                AND d_moy = 6 
                AND cs_sold_date_sk = d_date_sk 
@@ -48,8 +49,8 @@ FROM   (SELECT cs_quantity * cs_list_price sales
                                            FROM   best_ss_customer) 
         UNION ALL 
         SELECT ws_quantity * ws_list_price sales 
-        FROM   web_sales, 
-               date_dim 
+        FROM   {{source('src__tpc_ds', 'web_sales')}},
+               {{source('src__tpc_ds', 'date_dim')}}
         WHERE  d_year = 1998 
                AND d_moy = 6 
                AND ws_sold_date_sk = d_date_sk 
