@@ -1,6 +1,6 @@
 -- query49
 SELECT 'web' AS channel, 
-               web.item, 
+               web.item,
                web.return_ratio, 
                web.return_rank, 
                web.currency_rank 
@@ -19,11 +19,11 @@ FROM   (SELECT item,
                        return_ratio, 
                        ( Sum(COALESCE(wr.wr_return_amt, 0)) / 
                          Sum(COALESCE(ws.ws_net_paid, 0)) ) AS currency_ratio 
-                FROM   web_sales ws 
-                       LEFT OUTER JOIN web_returns wr 
+                FROM   {{source('src__tpc_ds', 'web_sales')}} ws
+                       LEFT OUTER JOIN {{source('src__tpc_ds', 'web_returns')}} wr
                                     ON ( ws.ws_order_number = wr.wr_order_number 
                                          AND ws.ws_item_sk = wr.wr_item_sk ), 
-                       date_dim 
+                       {{source('src__tpc_ds', 'date_dim')}}
                 WHERE  wr.wr_return_amt > 10000 
                        AND ws.ws_net_profit > 1 
                        AND ws.ws_net_paid > 0 
@@ -57,11 +57,11 @@ FROM   (SELECT item,
                        ( Sum(COALESCE(cr.cr_return_amount, 0)) / 
                          Sum(COALESCE(cs.cs_net_paid, 0)) ) AS 
                        currency_ratio 
-                FROM   catalog_sales cs 
-                       LEFT OUTER JOIN catalog_returns cr 
+                FROM   {{source('src__tpc_ds', 'catalog_sales')}} cs
+                       LEFT OUTER JOIN {{source('src__tpc_ds', 'catalog_returns')}} cr
                                     ON ( cs.cs_order_number = cr.cr_order_number 
                                          AND cs.cs_item_sk = cr.cr_item_sk ), 
-                       date_dim 
+                       {{source('src__tpc_ds', 'date_dim')}}
                 WHERE  cr.cr_return_amount > 10000 
                        AND cs.cs_net_profit > 1 
                        AND cs.cs_net_paid > 0 
@@ -95,12 +95,12 @@ FROM   (SELECT item,
                        ( Sum(COALESCE(sr.sr_return_amt, 0)) 
                          / Sum(COALESCE(sts.ss_net_paid, 0)) ) AS 
                        currency_ratio 
-                FROM   store_sales sts 
-                       LEFT OUTER JOIN store_returns sr 
+                FROM   {{source('src__tpc_ds', 'store_sales')}} sts
+                       LEFT OUTER JOIN {{source('src__tpc_ds', 'store_returns')}} sr
                                     ON ( sts.ss_ticket_number = 
                                          sr.sr_ticket_number 
                                          AND sts.ss_item_sk = sr.sr_item_sk ), 
-                       date_dim 
+                       {{source('src__tpc_ds', 'date_dim')}}
                 WHERE  sr.sr_return_amt > 10000 
                        AND sts.ss_net_profit > 1 
                        AND sts.ss_net_paid > 0 
