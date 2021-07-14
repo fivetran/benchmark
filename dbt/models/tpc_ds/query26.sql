@@ -4,11 +4,11 @@ SELECT i_item_id,
                Avg(cs_list_price)  agg2, 
                Avg(cs_coupon_amt)  agg3, 
                Avg(cs_sales_price) agg4 
-FROM   catalog_sales, 
-       customer_demographics, 
-       date_dim, 
-       item, 
-       promotion 
+FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+       {{source('src__tpc_ds', 'customer_demographics')}},
+       {{source('src__tpc_ds', 'date_dim')}},
+       {{source('src__tpc_ds', 'item')}},
+       {{source('src__tpc_ds', 'promotion')}}
 WHERE  cs_sold_date_sk = d_date_sk 
        AND cs_item_sk = i_item_sk 
        AND cs_bill_cdemo_sk = cd_demo_sk 

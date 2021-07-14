@@ -3,7 +3,7 @@ SELECT *
 FROM   (SELECT Avg(ss_list_price)            B1_LP, 
                Count(ss_list_price)          B1_CNT, 
                Count(DISTINCT ss_list_price) B1_CNTD 
-        FROM   store_sales 
+        FROM   {{source('src__tpc_ds', 'store_sales')}}
         WHERE  ss_quantity BETWEEN 0 AND 5 
                AND ( ss_list_price BETWEEN 18 AND 18 + 10 
                       OR ss_coupon_amt BETWEEN 1939 AND 1939 + 1000 
@@ -11,7 +11,7 @@ FROM   (SELECT Avg(ss_list_price)            B1_LP,
        (SELECT Avg(ss_list_price)            B2_LP, 
                Count(ss_list_price)          B2_CNT, 
                Count(DISTINCT ss_list_price) B2_CNTD 
-        FROM   store_sales 
+        FROM   {{source('src__tpc_ds', 'store_sales')}}
         WHERE  ss_quantity BETWEEN 6 AND 10 
                AND ( ss_list_price BETWEEN 1 AND 1 + 10 
                       OR ss_coupon_amt BETWEEN 35 AND 35 + 1000 
@@ -19,7 +19,7 @@ FROM   (SELECT Avg(ss_list_price)            B1_LP,
        (SELECT Avg(ss_list_price)            B3_LP, 
                Count(ss_list_price)          B3_CNT, 
                Count(DISTINCT ss_list_price) B3_CNTD 
-        FROM   store_sales 
+        FROM   {{source('src__tpc_ds', 'store_sales')}}
         WHERE  ss_quantity BETWEEN 11 AND 15 
                AND ( ss_list_price BETWEEN 91 AND 91 + 10 
                       OR ss_coupon_amt BETWEEN 1412 AND 1412 + 1000 
@@ -27,7 +27,7 @@ FROM   (SELECT Avg(ss_list_price)            B1_LP,
        (SELECT Avg(ss_list_price)            B4_LP, 
                Count(ss_list_price)          B4_CNT, 
                Count(DISTINCT ss_list_price) B4_CNTD 
-        FROM   store_sales 
+        FROM   {{source('src__tpc_ds', 'store_sales')}}
         WHERE  ss_quantity BETWEEN 16 AND 20 
                AND ( ss_list_price BETWEEN 9 AND 9 + 10 
                       OR ss_coupon_amt BETWEEN 5270 AND 5270 + 1000 
@@ -35,7 +35,7 @@ FROM   (SELECT Avg(ss_list_price)            B1_LP,
        (SELECT Avg(ss_list_price)            B5_LP, 
                Count(ss_list_price)          B5_CNT, 
                Count(DISTINCT ss_list_price) B5_CNTD 
-        FROM   store_sales 
+        FROM   {{source('src__tpc_ds', 'store_sales')}}
         WHERE  ss_quantity BETWEEN 21 AND 25 
                AND ( ss_list_price BETWEEN 45 AND 45 + 10 
                       OR ss_coupon_amt BETWEEN 826 AND 826 + 1000 
@@ -43,7 +43,7 @@ FROM   (SELECT Avg(ss_list_price)            B1_LP,
        (SELECT Avg(ss_list_price)            B6_LP, 
                Count(ss_list_price)          B6_CNT, 
                Count(DISTINCT ss_list_price) B6_CNTD 
-        FROM   store_sales 
+        FROM   {{source('src__tpc_ds', 'store_sales')}}
         WHERE  ss_quantity BETWEEN 26 AND 30 
                AND ( ss_list_price BETWEEN 174 AND 174 + 10 
                       OR ss_coupon_amt BETWEEN 5548 AND 5548 + 1000 

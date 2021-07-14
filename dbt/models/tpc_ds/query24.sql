@@ -11,12 +11,12 @@ WITH ssales
                 i_units, 
                 i_size, 
                 Sum(ss_net_profit) netpaid 
-         FROM   store_sales, 
-                store_returns, 
-                store, 
-                item, 
-                customer, 
-                customer_address 
+         FROM   {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'store_returns')}},
+                {{source('src__tpc_ds', 'store')}},
+                {{source('src__tpc_ds', 'item')}},
+                {{source('src__tpc_ds', 'customer')}},
+                {{source('src__tpc_ds', 'customer_address')}}
          WHERE  ss_ticket_number = sr_ticket_number 
                 AND ss_item_sk = sr_item_sk 
                 AND ss_customer_sk = c_customer_sk 

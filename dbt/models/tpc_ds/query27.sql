@@ -5,11 +5,11 @@ SELECT i_item_id,
                Avg(ss_list_price)  agg2, 
                Avg(ss_coupon_amt)  agg3, 
                Avg(ss_sales_price) agg4 
-FROM   store_sales, 
-       customer_demographics, 
-       date_dim, 
-       store, 
-       item 
+FROM   {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'customer_demographics')}},
+       {{source('src__tpc_ds', 'date_dim')}},
+       {{source('src__tpc_ds', 'store')}},
+       {{source('src__tpc_ds', 'item')}}
 WHERE  ss_sold_date_sk = d_date_sk 
        AND ss_item_sk = i_item_sk 
        AND ss_store_sk = s_store_sk 

@@ -6,14 +6,14 @@ SELECT i_item_id,
                Avg(ss_quantity)        AS store_sales_quantity, 
                Avg(sr_return_quantity) AS store_returns_quantity, 
                Avg(cs_quantity)        AS catalog_sales_quantity 
-FROM   store_sales, 
-       store_returns, 
-       catalog_sales, 
-       date_dim d1, 
-       date_dim d2, 
-       date_dim d3, 
-       store, 
-       item 
+FROM   {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'store_returns')}},
+       {{source('src__tpc_ds', 'catalog_sales')}},
+       {{source('src__tpc_ds', 'date_dim')}} d1,
+       {{source('src__tpc_ds', 'date_dim')}} d2,
+       {{source('src__tpc_ds', 'date_dim')}} d3,
+       {{source('src__tpc_ds', 'store')}},
+       {{source('src__tpc_ds', 'item')}}
 WHERE  d1.d_moy = 4 
        AND d1.d_year = 1998 
        AND d1.d_date_sk = ss_sold_date_sk 
