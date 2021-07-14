@@ -26,14 +26,14 @@ SELECT i_item_id,
                catalog_sales_quantitystdev, 
                Stddev_samp(cs_quantity) / Avg(cs_quantity)               AS 
                catalog_sales_quantitycov 
-FROM   store_sales, 
-       store_returns, 
-       catalog_sales, 
-       date_dim d1, 
-       date_dim d2, 
-       date_dim d3, 
-       store, 
-       item 
+FROM   {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'store_returns')}},
+       {{source('src__tpc_ds', 'catalog_sales')}},
+       {{source('src__tpc_ds', 'date_dim')}} d1,
+       {{source('src__tpc_ds', 'date_dim')}} d2,
+       {{source('src__tpc_ds', 'date_dim')}} d3,
+       {{source('src__tpc_ds', 'store')}},
+       {{source('src__tpc_ds', 'item')}}
 WHERE  d1.d_quarter_name = '1999Q1' 
        AND d1.d_date_sk = ss_sold_date_sk 
        AND i_item_sk = ss_item_sk 

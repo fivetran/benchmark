@@ -16,9 +16,9 @@ WITH year_total
                 d_year                                       dyear, 
                 Sum(ss_ext_list_price - ss_ext_discount_amt) year_total, 
                 's'                                          sale_type 
-         FROM   customer, 
-                store_sales, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'customer')}},
+                {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  c_customer_sk = ss_customer_sk 
                 AND ss_sold_date_sk = d_date_sk 
          GROUP  BY c_customer_id, 
@@ -46,9 +46,9 @@ WITH year_total
                 d_year                                       dyear, 
                 Sum(ws_ext_list_price - ws_ext_discount_amt) year_total, 
                 'w'                                          sale_type 
-         FROM   customer, 
-                web_sales, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'customer')}},
+                {{source('src__tpc_ds', 'web_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  c_customer_sk = ws_bill_customer_sk 
                 AND ws_sold_date_sk = d_date_sk 
          GROUP  BY c_customer_id, 

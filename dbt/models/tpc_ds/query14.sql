@@ -4,9 +4,9 @@ WITH item_ss AS (
         iss.i_brand_id, 
         iss.i_class_id, 
         iss.i_category_id 
-    FROM   store_sales, 
-        item iss, 
-        date_dim d1 
+    FROM   {{source('src__tpc_ds', 'store_sales')}},
+        {{source('src__tpc_ds', 'item')}} iss,
+        {{source('src__tpc_ds', 'date_dim')}} d1
     WHERE  ss_item_sk = iss.i_item_sk 
         AND ss_sold_date_sk = d1.d_date_sk 
         AND d1.d_year BETWEEN 1999 AND 1999 + 2 
@@ -15,9 +15,9 @@ WITH item_ss AS (
         ics.i_brand_id, 
         ics.i_class_id, 
         ics.i_category_id 
-    FROM   catalog_sales, 
-        item ics, 
-        date_dim d2 
+    FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+        {{source('src__tpc_ds', 'item')}} ics,
+        {{source('src__tpc_ds', 'date_dim')}} d2
     WHERE  cs_item_sk = ics.i_item_sk 
         AND cs_sold_date_sk = d2.d_date_sk 
         AND d2.d_year BETWEEN 1999 AND 1999 + 2 
@@ -26,9 +26,9 @@ WITH item_ss AS (
         iws.i_brand_id, 
         iws.i_class_id, 
         iws.i_category_id 
-    FROM   web_sales, 
-        item iws, 
-        date_dim d3 
+    FROM   {{source('src__tpc_ds', 'web_sales')}},
+        {{source('src__tpc_ds', 'item')}} iws,
+        {{source('src__tpc_ds', 'date_dim')}} d3
     WHERE  ws_item_sk = iws.i_item_sk 
         AND ws_sold_date_sk = d3.d_date_sk 
         AND d3.d_year BETWEEN 1999 AND 1999 + 2
@@ -46,7 +46,7 @@ WITH item_ss AS (
         AND item_ss.i_category_id = item_cs.i_category_id 
 ), cross_items AS (
          SELECT i_item_sk ss_item_sk 
-         FROM   item, 
+         FROM   {{source('src__tpc_ds', 'item')}},
                 item_intersect
          WHERE  i_brand_id = brand_id 
                 AND i_class_id = class_id 
@@ -55,22 +55,22 @@ WITH item_ss AS (
      AS (SELECT Avg(quantity * list_price) average_sales 
          FROM   (SELECT ss_quantity   quantity, 
                         ss_list_price list_price 
-                 FROM   store_sales, 
-                        date_dim 
+                 FROM   {{source('src__tpc_ds', 'store_sales')}},
+                        {{source('src__tpc_ds', 'date_dim')}}
                  WHERE  ss_sold_date_sk = d_date_sk 
                         AND d_year BETWEEN 1999 AND 1999 + 2 
                  UNION ALL 
                  SELECT cs_quantity   quantity, 
                         cs_list_price list_price 
-                 FROM   catalog_sales, 
-                        date_dim 
+                 FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+                        {{source('src__tpc_ds', 'date_dim')}}
                  WHERE  cs_sold_date_sk = d_date_sk 
                         AND d_year BETWEEN 1999 AND 1999 + 2 
                  UNION ALL 
                  SELECT ws_quantity   quantity, 
                         ws_list_price list_price 
-                 FROM   web_sales, 
-                        date_dim 
+                 FROM   {{source('src__tpc_ds', 'web_sales')}},
+                        {{source('src__tpc_ds', 'date_dim')}}
                  WHERE  ws_sold_date_sk = d_date_sk 
                         AND d_year BETWEEN 1999 AND 1999 + 2) x) 
 SELECT channel, 
@@ -85,9 +85,9 @@ FROM  (SELECT 'store'                          channel,
               i_category_id, 
               Sum(ss_quantity * ss_list_price) sales, 
               Count(*)                         number_sales 
-       FROM   store_sales, 
-              item, 
-              date_dim 
+       FROM   {{source('src__tpc_ds', 'store_sales')}},
+              {{source('src__tpc_ds', 'item')}},
+              {{source('src__tpc_ds', 'date_dim')}}
        WHERE  ss_item_sk IN (SELECT ss_item_sk 
                              FROM   cross_items) 
               AND ss_item_sk = i_item_sk 
@@ -106,9 +106,9 @@ FROM  (SELECT 'store'                          channel,
               i_category_id, 
               Sum(cs_quantity * cs_list_price) sales, 
               Count(*)                         number_sales 
-       FROM   catalog_sales, 
-              item, 
-              date_dim 
+       FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+              {{source('src__tpc_ds', 'item')}},
+              {{source('src__tpc_ds', 'date_dim')}}
        WHERE  cs_item_sk IN (SELECT ss_item_sk 
                              FROM   cross_items) 
               AND cs_item_sk = i_item_sk 
@@ -127,9 +127,9 @@ FROM  (SELECT 'store'                          channel,
               i_category_id, 
               Sum(ws_quantity * ws_list_price) sales, 
               Count(*)                         number_sales 
-       FROM   web_sales, 
-              item, 
-              date_dim 
+       FROM   {{source('src__tpc_ds', 'web_sales')}},
+              {{source('src__tpc_ds', 'item')}},
+              {{source('src__tpc_ds', 'date_dim')}}
        WHERE  ws_item_sk IN (SELECT ss_item_sk 
                              FROM   cross_items) 
               AND ws_item_sk = i_item_sk 

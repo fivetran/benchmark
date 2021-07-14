@@ -7,9 +7,9 @@ SELECT
          i_current_price , 
          Sum(ws_ext_sales_price)                                                              AS itemrevenue ,
          Sum(ws_ext_sales_price)*100/Sum(Sum(ws_ext_sales_price)) OVER (partition BY i_class) AS revenueratio
-FROM     web_sales , 
-         item , 
-         date_dim 
+FROM     {{source('src__tpc_ds', 'web_sales')}} ,
+         {{source('src__tpc_ds', 'item')}} ,
+         {{source('src__tpc_ds', 'date_dim')}}
 WHERE    ws_item_sk = i_item_sk 
 AND      i_category IN ('Home', 
                         'Men', 
