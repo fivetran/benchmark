@@ -29,9 +29,9 @@ SELECT s_store_name,
                      WHEN ( d_day_name = 'Saturday' ) THEN ss_sales_price 
                      ELSE NULL 
                    END) sat_sales 
-FROM   date_dim, 
-       store_sales, 
-       store 
+FROM   {{source('src__tpc_ds', 'date_dim')}},
+       {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'store')}}
 WHERE  d_date_sk = ss_sold_date_sk 
        AND s_store_sk = ss_store_sk 
        AND s_gmt_offset = -5 

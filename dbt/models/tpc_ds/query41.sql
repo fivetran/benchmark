@@ -1,9 +1,9 @@
 -- query41
 SELECT Distinct(i_product_name) 
-FROM   item i1 
+FROM   {{source('src__tpc_ds', 'item')}} i1
 WHERE  i_manufact_id BETWEEN 765 AND 765 + 40 
        AND (SELECT Count(*) AS item_cnt 
-            FROM   item 
+            FROM   {{source('src__tpc_ds', 'item')}}
             WHERE  ( i_manufact = i1.i_manufact 
                      AND ( ( i_category = 'Women' 
                              AND ( i_color = 'dim' 
