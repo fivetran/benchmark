@@ -1,0 +1,31 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'tpc_ds_benchmark'
+version: '0.0.0'
+config-version: 2
+
+profile: 'benchmark'
+
+source-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+data-paths: ["data"]
+macro-paths: ["macros"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+    - "target"
+    - "dbt_modules"
+
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  tpc_ds_benchmark:
+      # Applies to all files under models/example/
+      tpc_ds_queries:
+          materialized: view
+      tpc_ds_results:
+          materialized: table
+
