@@ -25,7 +25,7 @@ models:
   tpc_ds_benchmark:
       # Applies to all files under models/example/
       tpc_ds_queries:
-          materialized: view
+          +materialized: view
       tpc_ds_results:
-          materialized: table
+          +materialized: table
 
