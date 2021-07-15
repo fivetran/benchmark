@@ -3,14 +3,14 @@ SELECT Substr(r_reason_desc, 1, 20),
                Avg(ws_quantity), 
                Avg(wr_refunded_cash), 
                Avg(wr_fee) 
-FROM   web_sales, 
-       web_returns, 
-       web_page, 
-       customer_demographics cd1, 
-       customer_demographics cd2, 
-       customer_address, 
-       date_dim, 
-       reason 
+FROM   {{source('src__tpc_ds', 'web_sales')}},
+       {{source('src__tpc_ds', 'web_returns')}},
+       {{source('src__tpc_ds', 'web_page')}},
+       {{source('src__tpc_ds', 'customer_demographics')}} cd1,
+       {{source('src__tpc_ds', 'customer_demographics')}} cd2,
+       {{source('src__tpc_ds', 'customer_address')}},
+       {{source('src__tpc_ds', 'date_dim')}},
+       {{source('src__tpc_ds', 'reason')}}
 WHERE  ws_web_page_sk = wp_web_page_sk 
        AND ws_item_sk = wr_item_sk 
        AND ws_order_number = wr_order_number 

@@ -1,12 +1,12 @@
 -- query84
 SELECT c_customer_id   AS customer_id, 
        Concat(c_last_name, Concat(', ', c_first_name))  AS customername 
-FROM   customer, 
-       customer_address, 
-       customer_demographics, 
-       household_demographics, 
-       income_band, 
-       store_returns 
+FROM   {{source('src__tpc_ds', 'customer')}},
+       {{source('src__tpc_ds', 'customer_address')}},
+       {{source('src__tpc_ds', 'customer_demographics')}},
+       {{source('src__tpc_ds', 'household_demographics')}},
+       {{source('src__tpc_ds', 'income_band')}},
+       {{source('src__tpc_ds', 'store_returns')}}
 WHERE  ca_city = 'Green Acres' 
        AND c_current_addr_sk = ca_address_sk 
        AND ib_lower_bound >= 54986 

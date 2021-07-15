@@ -4,9 +4,9 @@ WITH customer_total_return
      AS (SELECT cr_returning_customer_sk   AS ctr_customer_sk, 
                 ca_state                   AS ctr_state, 
                 Sum(cr_return_amt_inc_tax) AS ctr_total_return 
-         FROM   catalog_returns, 
-                date_dim, 
-                customer_address 
+         FROM   {{source('src__tpc_ds', 'catalog_returns')}},
+                {{source('src__tpc_ds', 'date_dim')}},
+                {{source('src__tpc_ds', 'customer_address')}}
          WHERE  cr_returned_date_sk = d_date_sk 
                 AND d_year = 1999 
                 AND cr_returning_addr_sk = ca_address_sk 
@@ -35,7 +35,7 @@ SELECT c_customer_id,
                ctr_total_return 
 FROM   customer_total_return, 
        high_return,
-       customer_address, 
+       {{source('src__tpc_ds', 'customer_address')}},
        customer
 WHERE  ctr_state = hr_state 
        AND ctr_customer_sk = c_customer_sk 

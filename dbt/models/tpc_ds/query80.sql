@@ -5,15 +5,15 @@ WITH ssr AS
                                 Sum(ss_ext_sales_price)                       AS sales, 
                                 Sum(COALESCE(sr_return_amt, 0))               AS returns1, 
                                 Sum(ss_net_profit - COALESCE(sr_net_loss, 0)) AS profit 
-                FROM            store_sales 
-                LEFT OUTER JOIN store_returns 
+                FROM            {{source('src__tpc_ds', 'store_sales')}}
+                LEFT OUTER JOIN {{source('src__tpc_ds', 'store_returns')}}
                 ON              ( 
                                                 ss_item_sk = sr_item_sk 
                                 AND             ss_ticket_number = sr_ticket_number), 
-                                date_dim, 
-                                store, 
-                                item, 
-                                promotion 
+                                {{source('src__tpc_ds', 'date_dim')}},
+                                {{source('src__tpc_ds', 'store')}},
+                                {{source('src__tpc_ds', 'item')}},
+                                {{source('src__tpc_ds', 'promotion')}}
                 WHERE           ss_sold_date_sk = d_date_sk 
                 AND             Cast(d_date AS DATE) BETWEEN Cast('2000-08-26' AS DATE) AND             ( 
                                                 Cast('2001-09-25' AS DATE)) 
@@ -28,15 +28,15 @@ WITH ssr AS
                                 sum(cs_ext_sales_price)                       AS sales, 
                                 sum(COALESCE(cr_return_amount, 0))            AS returns1, 
                                 sum(cs_net_profit - COALESCE(cr_net_loss, 0)) AS profit 
-                FROM            catalog_sales 
-                LEFT OUTER JOIN catalog_returns 
+                FROM            {{source('src__tpc_ds', 'catalog_sales')}}
+                LEFT OUTER JOIN {{source('src__tpc_ds', 'catalog_returns')}}
                 ON              ( 
                                                 cs_item_sk = cr_item_sk 
                                 AND             cs_order_number = cr_order_number), 
-                                date_dim, 
-                                catalog_page, 
-                                item, 
-                                promotion 
+                                {{source('src__tpc_ds', 'date_dim')}},
+                                {{source('src__tpc_ds', 'catalog_page')}},
+                                {{source('src__tpc_ds', 'item')}},
+                                {{source('src__tpc_ds', 'promotion')}}
                 WHERE           cs_sold_date_sk = d_date_sk 
                 AND             Cast(d_date AS DATE) BETWEEN cast('2000-08-26' AS date) AND             ( 
                                                 Cast('2001-09-25' AS DATE)) 
@@ -51,15 +51,15 @@ WITH ssr AS
                                 sum(ws_ext_sales_price)                       AS sales, 
                                 sum(COALESCE(wr_return_amt, 0))               AS returns1, 
                                 sum(ws_net_profit - COALESCE(wr_net_loss, 0)) AS profit 
-                FROM            web_sales 
-                LEFT OUTER JOIN web_returns 
+                FROM            {{source('src__tpc_ds', 'web_sales')}}
+                LEFT OUTER JOIN {{source('src__tpc_ds', 'web_returns')}}
                 ON              ( 
                                                 ws_item_sk = wr_item_sk 
                                 AND             ws_order_number = wr_order_number), 
-                                date_dim, 
-                                web_site, 
-                                item, 
-                                promotion 
+                                {{source('src__tpc_ds', 'date_dim')}},
+                                {{source('src__tpc_ds', 'web_site')}},
+                                {{source('src__tpc_ds', 'item')}},
+                                {{source('src__tpc_ds', 'promotion')}}
                 WHERE           ws_sold_date_sk = d_date_sk 
                 AND             Cast(d_date AS DATE) BETWEEN cast('2000-08-26' AS date) AND             ( 
                                                 Cast('2001-09-25' AS DATE)) 
@@ -76,7 +76,7 @@ SELECT
          sum(returns1) AS returns1 , 
          sum(profit)  AS profit 
 FROM     ( 
-                SELECT 'store channel' AS channel , 
+                SELECT '{{source('src__tpc_ds', 'store')}} channel' AS channel ,
                        Concat('store', store_id) AS id , 
                        sales , 
                        returns1 , 

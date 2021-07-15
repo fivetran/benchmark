@@ -2,14 +2,14 @@
 WITH sr_items 
      AS (SELECT i_item_id               item_id, 
                 Sum(sr_return_quantity) sr_item_qty 
-         FROM   store_returns, 
-                item, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'store_returns')}},
+                {{source('src__tpc_ds', 'item')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  sr_item_sk = i_item_sk 
                 AND d_date IN (SELECT d_date 
-                               FROM   date_dim 
+                               FROM   {{source('src__tpc_ds', 'date_dim')}}
                                WHERE  d_week_seq IN (SELECT d_week_seq 
-                                                     FROM   date_dim 
+                                                     FROM   {{source('src__tpc_ds', 'date_dim')}}
                                                      WHERE 
                                       d_date IN ( '1999-06-30', 
                                                   '1999-08-28', 
@@ -20,14 +20,14 @@ WITH sr_items
      cr_items 
      AS (SELECT i_item_id               item_id, 
                 Sum(cr_return_quantity) cr_item_qty 
-         FROM   catalog_returns, 
-                item, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'catalog_returns')}},
+                {{source('src__tpc_ds', 'item')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  cr_item_sk = i_item_sk 
                 AND d_date IN (SELECT d_date 
-                               FROM   date_dim 
+                               FROM   {{source('src__tpc_ds', 'date_dim')}}
                                WHERE  d_week_seq IN (SELECT d_week_seq 
-                                                     FROM   date_dim 
+                                                     FROM   {{source('src__tpc_ds', 'date_dim')}}
                                                      WHERE 
                                       d_date IN ( '1999-06-30', 
                                                   '1999-08-28', 
@@ -38,14 +38,14 @@ WITH sr_items
      wr_items 
      AS (SELECT i_item_id               item_id, 
                 Sum(wr_return_quantity) wr_item_qty 
-         FROM   web_returns, 
-                item, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'web_returns')}},
+                {{source('src__tpc_ds', 'item')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  wr_item_sk = i_item_sk 
                 AND d_date IN (SELECT d_date 
-                               FROM   date_dim 
+                               FROM   {{source('src__tpc_ds', 'date_dim')}}
                                WHERE  d_week_seq IN (SELECT d_week_seq 
-                                                     FROM   date_dim 
+                                                     FROM   {{source('src__tpc_ds', 'date_dim')}}
                                                      WHERE 
                                       d_date IN ( '1999-06-30', 
                                                   '1999-08-28', 
