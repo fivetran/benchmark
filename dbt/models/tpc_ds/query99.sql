@@ -28,11 +28,11 @@ SELECT Substr(w_warehouse_name, 1, 20),
                      WHEN ( cs_ship_date_sk - cs_sold_date_sk > 120 ) THEN 1 
                      ELSE 0 
                    END) AS days_over_120 
-FROM   catalog_sales, 
-       warehouse, 
-       ship_mode, 
-       call_center, 
-       date_dim 
+FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+       {{source('src__tpc_ds', 'warehouse')}},
+       {{source('src__tpc_ds', 'ship_mode')}},
+       {{source('src__tpc_ds', 'call_center')}},
+       {{source('src__tpc_ds', 'date_dim')}}
 WHERE  d_month_seq BETWEEN 1200 AND 1200 + 11 
        AND cs_ship_date_sk = d_date_sk 
        AND cs_warehouse_sk = w_warehouse_sk 

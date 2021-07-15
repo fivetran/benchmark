@@ -1,9 +1,9 @@
 -- query96
 SELECT Count(*) 
-FROM   store_sales, 
-       household_demographics, 
-       time_dim, 
-       store 
+FROM   {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'household_demographics')}},
+       {{source('src__tpc_ds', 'time_dim')}},
+       {{source('src__tpc_ds', 'store')}}
 WHERE  ss_sold_time_sk = time_dim.t_time_sk 
        AND ss_hdemo_sk = household_demographics.hd_demo_sk 
        AND ss_store_sk = s_store_sk 

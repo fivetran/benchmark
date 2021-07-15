@@ -3,13 +3,13 @@ SELECT cc_call_center_id Call_Center,
        cc_name           Call_Center_Name, 
        cc_manager        Manager, 
        Sum(cr_net_loss)  Returns_Loss 
-FROM   call_center, 
-       catalog_returns, 
-       date_dim, 
-       customer, 
-       customer_address, 
-       customer_demographics, 
-       household_demographics 
+FROM   {{source('src__tpc_ds', 'call_center')}},
+       {{source('src__tpc_ds', 'catalog_returns')}},
+       {{source('src__tpc_ds', 'date_dim')}},
+       {{source('src__tpc_ds', 'customer')}},
+       {{source('src__tpc_ds', 'customer_address')}},
+       {{source('src__tpc_ds', 'customer_demographics')}},
+       {{source('src__tpc_ds', 'household_demographics')}}
 WHERE  cr_call_center_sk = cc_call_center_sk 
        AND cr_returned_date_sk = d_date_sk 
        AND cr_returning_customer_sk = c_customer_sk 
