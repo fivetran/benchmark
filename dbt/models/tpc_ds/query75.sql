@@ -16,12 +16,12 @@ WITH all_sales
                         sales_cnt, 
                         cs_ext_sales_price - COALESCE(cr_return_amount, 0.0) AS 
                         sales_amt 
-                 FROM   catalog_sales 
-                        JOIN item 
+                 FROM   {{source('src__tpc_ds', 'catalog_sales')}}
+                        JOIN {{source('src__tpc_ds', 'item')}}
                           ON i_item_sk = cs_item_sk 
-                        JOIN date_dim 
+                        JOIN {{source('src__tpc_ds', 'date_dim')}}
                           ON d_date_sk = cs_sold_date_sk 
-                        LEFT JOIN catalog_returns 
+                        LEFT JOIN {{source('src__tpc_ds', 'catalog_returns')}}
                                ON ( cs_order_number = cr_order_number 
                                     AND cs_item_sk = cr_item_sk ) 
                  WHERE  i_category = 'Men' 
@@ -35,12 +35,12 @@ WITH all_sales
                         sales_cnt, 
                         ss_ext_sales_price - COALESCE(sr_return_amt, 0.0) AS 
                         sales_amt 
-                 FROM   store_sales 
-                        JOIN item 
+                 FROM   {{source('src__tpc_ds', 'store_sales')}}
+                        JOIN {{source('src__tpc_ds', 'item')}}
                           ON i_item_sk = ss_item_sk 
-                        JOIN date_dim 
+                        JOIN {{source('src__tpc_ds', 'date_dim')}}
                           ON d_date_sk = ss_sold_date_sk 
-                        LEFT JOIN store_returns 
+                        LEFT JOIN {{source('src__tpc_ds', 'store_returns')}}
                                ON ( ss_ticket_number = sr_ticket_number 
                                     AND ss_item_sk = sr_item_sk ) 
                  WHERE  i_category = 'Men' 
@@ -54,12 +54,12 @@ WITH all_sales
                         sales_cnt, 
                         ws_ext_sales_price - COALESCE(wr_return_amt, 0.0) AS 
                         sales_amt 
-                 FROM   web_sales 
-                        JOIN item 
+                 FROM   {{source('src__tpc_ds', 'web_sales')}}
+                        JOIN {{source('src__tpc_ds', 'item')}}
                           ON i_item_sk = ws_item_sk 
-                        JOIN date_dim 
+                        JOIN {{source('src__tpc_ds', 'date_dim')}}
                           ON d_date_sk = ws_sold_date_sk 
-                        LEFT JOIN web_returns 
+                        LEFT JOIN {{source('src__tpc_ds', 'web_returns')}}
                                ON ( ws_order_number = wr_order_number 
                                     AND ws_item_sk = wr_item_sk ) 
                  WHERE  i_category = 'Men') sales_detail 

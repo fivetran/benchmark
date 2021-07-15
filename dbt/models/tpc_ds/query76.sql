@@ -12,9 +12,9 @@ FROM   (SELECT 'store'            AS channel,
                d_qoy, 
                i_category, 
                ss_ext_sales_price ext_sales_price 
-        FROM   store_sales, 
-               item, 
-               date_dim 
+        FROM   {{source('src__tpc_ds', 'store_sales')}},
+               {{source('src__tpc_ds', 'item')}},
+               {{source('src__tpc_ds', 'date_dim')}}
         WHERE  ss_hdemo_sk IS NULL 
                AND ss_sold_date_sk = d_date_sk 
                AND ss_item_sk = i_item_sk 
@@ -25,9 +25,9 @@ FROM   (SELECT 'store'            AS channel,
                d_qoy, 
                i_category, 
                ws_ext_sales_price ext_sales_price 
-        FROM   web_sales, 
-               item, 
-               date_dim 
+        FROM   {{source('src__tpc_ds', 'web_sales')}},
+               {{source('src__tpc_ds', 'item')}},
+               {{source('src__tpc_ds', 'date_dim')}}
         WHERE  ws_ship_hdemo_sk IS NULL 
                AND ws_sold_date_sk = d_date_sk 
                AND ws_item_sk = i_item_sk 
@@ -38,9 +38,9 @@ FROM   (SELECT 'store'            AS channel,
                d_qoy, 
                i_category, 
                cs_ext_sales_price ext_sales_price 
-        FROM   catalog_sales, 
-               item, 
-               date_dim 
+        FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+               {{source('src__tpc_ds', 'item')}},
+               {{source('src__tpc_ds', 'date_dim')}}
         WHERE  cs_warehouse_sk IS NULL 
                AND cs_sold_date_sk = d_date_sk 
                AND cs_item_sk = i_item_sk) foo 

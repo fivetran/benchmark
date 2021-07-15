@@ -6,9 +6,9 @@ SELECT Sum(ss_net_profit)                     AS total_sum,
                  OVER ( 
                    PARTITION BY s_state, s_county
                    ORDER BY Sum(ss_net_profit) DESC)  AS rank_within_parent 
-FROM   store_sales, 
-       date_dim d1, 
-       store 
+FROM   {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'date_dim')}} d1,
+       {{source('src__tpc_ds', 'store')}}
 WHERE  d1.d_month_seq BETWEEN 1200 AND 1200 + 11 
        AND d1.d_date_sk = ss_sold_date_sk 
        AND s_store_sk = ss_store_sk 
@@ -20,9 +20,9 @@ WHERE  d1.d_month_seq BETWEEN 1200 AND 1200 + 11
                                           partition BY s_state 
                                           ORDER BY Sum(ss_net_profit) DESC) AS 
                                       ranking 
-                               FROM   store_sales, 
-                                      store, 
-                                      date_dim 
+                               FROM   {{source('src__tpc_ds', 'store_sales')}},
+                                      {{source('src__tpc_ds', 'store')}},
+                                      {{source('src__tpc_ds', 'date_dim')}}
                                WHERE  d_month_seq BETWEEN 1200 AND 1200 + 11 
                                       AND d_date_sk = ss_sold_date_sk 
                                       AND s_store_sk = ss_store_sk 

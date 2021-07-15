@@ -10,10 +10,10 @@ FROM   (SELECT ss_ticket_number,
                store.s_city, 
                Sum(ss_coupon_amt) amt, 
                Sum(ss_net_profit) profit 
-        FROM   store_sales, 
-               date_dim, 
-               store, 
-               household_demographics 
+        FROM   {{source('src__tpc_ds', 'store_sales')}},
+               {{source('src__tpc_ds', 'date_dim')}},
+               {{source('src__tpc_ds', 'store')}},
+               {{source('src__tpc_ds', 'household_demographics')}}
         WHERE  store_sales.ss_sold_date_sk = date_dim.d_date_sk 
                AND store_sales.ss_store_sk = store.s_store_sk 
                AND store_sales.ss_hdemo_sk = household_demographics.hd_demo_sk 
@@ -26,7 +26,7 @@ FROM   (SELECT ss_ticket_number,
                   ss_customer_sk, 
                   ss_addr_sk, 
                   store.s_city) ms, 
-       customer 
+       {{source('src__tpc_ds', 'customer')}}
 WHERE  ss_customer_sk = c_customer_sk 
 ORDER  BY c_last_name, 
           c_first_name, 
