@@ -30,8 +30,8 @@ WITH wss
                       WHEN ( d_day_name = 'Saturday' ) THEN ss_sales_price 
                       ELSE NULL 
                     END) sat_sales 
-         FROM   store_sales, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  d_date_sk = ss_sold_date_sk 
          GROUP  BY d_week_seq, 
                    ss_store_sk) 
@@ -56,8 +56,8 @@ FROM   (SELECT s_store_name   s_store_name1,
                fri_sales      fri_sales1, 
                sat_sales      sat_sales1 
         FROM   wss, 
-               store, 
-               date_dim d 
+               {{source('src__tpc_ds', 'store')}},
+               {{source('src__tpc_ds', 'date_dim')}} d
         WHERE  d.d_week_seq = wss.d_week_seq 
                AND ss_store_sk = s_store_sk 
                AND d_month_seq BETWEEN 1196 AND 1196 + 11) y, 
@@ -72,8 +72,8 @@ FROM   (SELECT s_store_name   s_store_name1,
                fri_sales      fri_sales2, 
                sat_sales      sat_sales2 
         FROM   wss, 
-               store, 
-               date_dim d 
+               {{source('src__tpc_ds', 'store')}},
+               {{source('src__tpc_ds', 'date_dim')}} d
         WHERE  d.d_week_seq = wss.d_week_seq 
                AND ss_store_sk = s_store_sk 
                AND d_month_seq BETWEEN 1196 + 12 AND 1196 + 23) x 

@@ -3,9 +3,9 @@ SELECT dt.d_year,
                item.i_brand_id         brand_id, 
                item.i_brand            brand, 
                Sum(ss_ext_sales_price) ext_price 
-FROM   date_dim dt, 
-       store_sales, 
-       item 
+FROM   {{source('src__tpc_ds', 'date_dim')}} dt,
+       {{source('src__tpc_ds', 'store_sales')}},
+       {{source('src__tpc_ds', 'item')}}
 WHERE  dt.d_date_sk = store_sales.ss_sold_date_sk 
        AND store_sales.ss_item_sk = item.i_item_sk 
        AND item.i_manager_id = 1 

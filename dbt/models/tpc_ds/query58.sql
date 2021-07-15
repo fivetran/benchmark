@@ -2,14 +2,14 @@
 WITH ss_items 
      AS (SELECT i_item_id               item_id, 
                 Sum(ss_ext_sales_price) ss_item_rev 
-         FROM   store_sales, 
-                item, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'item')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  ss_item_sk = i_item_sk 
                 AND d_date IN (SELECT d_date 
-                               FROM   date_dim 
+                               FROM   {{source('src__tpc_ds', 'date_dim')}}
                                WHERE  d_week_seq = (SELECT d_week_seq 
-                                                    FROM   date_dim 
+                                                    FROM   {{source('src__tpc_ds', 'date_dim')}}
                                                     WHERE  d_date = '2002-02-25' 
                                                    )) 
                 AND ss_sold_date_sk = d_date_sk 
@@ -17,14 +17,14 @@ WITH ss_items
      cs_items 
      AS (SELECT i_item_id               item_id, 
                 Sum(cs_ext_sales_price) cs_item_rev 
-         FROM   catalog_sales, 
-                item, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+                {{source('src__tpc_ds', 'item')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  cs_item_sk = i_item_sk 
                 AND d_date IN (SELECT d_date 
-                               FROM   date_dim 
+                               FROM   {{source('src__tpc_ds', 'date_dim')}}
                                WHERE  d_week_seq = (SELECT d_week_seq 
-                                                    FROM   date_dim 
+                                                    FROM   {{source('src__tpc_ds', 'date_dim')}}
                                                     WHERE  d_date = '2002-02-25' 
                                                    )) 
                 AND cs_sold_date_sk = d_date_sk 
@@ -32,14 +32,14 @@ WITH ss_items
      ws_items 
      AS (SELECT i_item_id               item_id, 
                 Sum(ws_ext_sales_price) ws_item_rev 
-         FROM   web_sales, 
-                item, 
-                date_dim 
+         FROM   {{source('src__tpc_ds', 'web_sales')}},
+                {{source('src__tpc_ds', 'item')}},
+                {{source('src__tpc_ds', 'date_dim')}}
          WHERE  ws_item_sk = i_item_sk 
                 AND d_date IN (SELECT d_date 
-                               FROM   date_dim 
+                               FROM   {{source('src__tpc_ds', 'date_dim')}}
                                WHERE  d_week_seq = (SELECT d_week_seq 
-                                                    FROM   date_dim 
+                                                    FROM   {{source('src__tpc_ds', 'date_dim')}}
                                                     WHERE  d_date = '2002-02-25' 
                                                    )) 
                 AND ws_sold_date_sk = d_date_sk 

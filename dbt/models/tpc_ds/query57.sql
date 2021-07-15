@@ -16,10 +16,10 @@ WITH v1
                   OVER ( 
                     partition BY i_category, i_brand, cc_name 
                     ORDER BY d_year, d_moy)                            rn 
-         FROM   item, 
-                catalog_sales, 
-                date_dim, 
-                call_center 
+         FROM   {{source('src__tpc_ds', 'item')}},
+                {{source('src__tpc_ds', 'catalog_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}},
+                {{source('src__tpc_ds', 'call_center')}}
          WHERE  cs_item_sk = i_item_sk 
                 AND cs_sold_date_sk = d_date_sk 
                 AND cc_call_center_sk = cs_call_center_sk 
