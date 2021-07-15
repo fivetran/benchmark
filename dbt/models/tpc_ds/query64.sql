@@ -4,8 +4,8 @@ WITH cs_ui
                 Sum(cs_ext_list_price) AS sale, 
                 Sum(cr_refunded_cash + cr_reversed_charge 
                     + cr_store_credit) AS refund 
-         FROM   catalog_sales, 
-                catalog_returns 
+         FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+                {{source('src__tpc_ds', 'catalog_returns')}}
          WHERE  cs_item_sk = cr_item_sk 
                 AND cs_order_number = cr_order_number 
          GROUP  BY cs_item_sk 
@@ -32,24 +32,24 @@ WITH cs_ui
                 Sum(ss_wholesale_cost) s1, 
                 Sum(ss_list_price)     s2, 
                 Sum(ss_coupon_amt)     s3 
-         FROM   store_sales, 
-                store_returns, 
+         FROM   {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'store_returns')}},
                 cs_ui, 
-                date_dim d1, 
-                date_dim d2, 
-                date_dim d3, 
-                store, 
-                customer, 
-                customer_demographics cd1, 
-                customer_demographics cd2, 
-                promotion, 
-                household_demographics hd1, 
-                household_demographics hd2, 
-                customer_address ad1, 
-                customer_address ad2, 
-                income_band ib1, 
-                income_band ib2, 
-                item 
+                {{source('src__tpc_ds', 'date_dim')}} d1,
+                {{source('src__tpc_ds', 'date_dim')}} d2,
+                {{source('src__tpc_ds', 'date_dim')}} d3,
+                {{source('src__tpc_ds', 'store')}},
+                {{source('src__tpc_ds', 'customer')}},
+                {{source('src__tpc_ds', 'customer_demographics')}} cd1,
+                {{source('src__tpc_ds', 'customer_demographics')}} cd2,
+                {{source('src__tpc_ds', 'promotion')}},
+                {{source('src__tpc_ds', 'household_demographics')}} hd1,
+                {{source('src__tpc_ds', 'household_demographics')}} hd2,
+                {{source('src__tpc_ds', 'customer_address')}} ad1,
+                {{source('src__tpc_ds', 'customer_address')}} ad2,
+                {{source('src__tpc_ds', 'income_band')}} ib1,
+                {{source('src__tpc_ds', 'income_band')}} ib2,
+                {{source('src__tpc_ds', 'item')}}
          WHERE  ss_store_sk = s_store_sk 
                 AND ss_sold_date_sk = d1.d_date_sk 
                 AND ss_customer_sk = c_customer_sk 

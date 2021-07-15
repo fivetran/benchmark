@@ -5,15 +5,15 @@ SELECT s_store_name,
                i_current_price, 
                i_wholesale_cost, 
                i_brand 
-FROM   store, 
-       item, 
+FROM   {{source('src__tpc_ds', 'store')}},
+       {{source('src__tpc_ds', 'item')}},
        (SELECT ss_store_sk, 
                Avg(revenue) AS ave 
         FROM   (SELECT ss_store_sk, 
                        ss_item_sk, 
                        Sum(ss_sales_price) AS revenue 
-                FROM   store_sales, 
-                       date_dim 
+                FROM   {{source('src__tpc_ds', 'store_sales')}},
+                       {{source('src__tpc_ds', 'date_dim')}}
                 WHERE  ss_sold_date_sk = d_date_sk 
                        AND d_month_seq BETWEEN 1199 AND 1199 + 11 
                 GROUP  BY ss_store_sk, 
@@ -22,8 +22,8 @@ FROM   store,
        (SELECT ss_store_sk, 
                ss_item_sk, 
                Sum(ss_sales_price) AS revenue 
-        FROM   store_sales, 
-               date_dim 
+        FROM   {{source('src__tpc_ds', 'store_sales')}},
+               {{source('src__tpc_ds', 'date_dim')}}
         WHERE  ss_sold_date_sk = d_date_sk 
                AND d_month_seq BETWEEN 1199 AND 1199 + 11 
         GROUP  BY ss_store_sk, 

@@ -147,11 +147,11 @@ FROM   (SELECT w_warehouse_name,
                      WHEN d_moy = 12 THEN ws_net_paid_inc_ship * ws_quantity 
                      ELSE 0 
                    END)  AS dec_net 
-        FROM   web_sales, 
-               warehouse, 
-               date_dim, 
-               time_dim, 
-               ship_mode 
+        FROM   {{source('src__tpc_ds', 'web_sales')}},
+               {{source('src__tpc_ds', 'warehouse')}},
+               {{source('src__tpc_ds', 'date_dim')}},
+               {{source('src__tpc_ds', 'time_dim')}},
+               {{source('src__tpc_ds', 'ship_mode')}}
         WHERE  ws_warehouse_sk = w_warehouse_sk 
                AND ws_sold_date_sk = d_date_sk 
                AND ws_sold_time_sk = t_time_sk 
@@ -271,11 +271,11 @@ FROM   (SELECT w_warehouse_name,
                      WHEN d_moy = 12 THEN cs_net_paid * cs_quantity 
                      ELSE 0 
                    END)  AS dec_net 
-        FROM   catalog_sales, 
-               warehouse, 
-               date_dim, 
-               time_dim, 
-               ship_mode 
+        FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+               {{source('src__tpc_ds', 'warehouse')}},
+               {{source('src__tpc_ds', 'date_dim')}},
+               {{source('src__tpc_ds', 'time_dim')}},
+               {{source('src__tpc_ds', 'ship_mode')}}
         WHERE  cs_warehouse_sk = w_warehouse_sk 
                AND cs_sold_date_sk = d_date_sk 
                AND cs_sold_time_sk = t_time_sk 

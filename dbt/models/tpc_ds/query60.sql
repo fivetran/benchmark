@@ -2,12 +2,12 @@
 WITH ss 
      AS (SELECT i_item_id, 
                 Sum(ss_ext_sales_price) total_sales 
-         FROM   store_sales, 
-                date_dim, 
-                customer_address, 
-                item 
+         FROM   {{source('src__tpc_ds', 'store_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}},
+                {{source('src__tpc_ds', 'customer_address')}},
+                {{source('src__tpc_ds', 'item')}}
          WHERE  i_item_id IN (SELECT i_item_id 
-                              FROM   item 
+                              FROM   {{source('src__tpc_ds', 'item')}}
                               WHERE  i_category IN ( 'Jewelry' )) 
                 AND ss_item_sk = i_item_sk 
                 AND ss_sold_date_sk = d_date_sk 
@@ -19,12 +19,12 @@ WITH ss
      cs 
      AS (SELECT i_item_id, 
                 Sum(cs_ext_sales_price) total_sales 
-         FROM   catalog_sales, 
-                date_dim, 
-                customer_address, 
-                item 
+         FROM   {{source('src__tpc_ds', 'catalog_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}},
+                {{source('src__tpc_ds', 'customer_address')}},
+                {{source('src__tpc_ds', 'item')}}
          WHERE  i_item_id IN (SELECT i_item_id 
-                              FROM   item 
+                              FROM   {{source('src__tpc_ds', 'item')}}
                               WHERE  i_category IN ( 'Jewelry' )) 
                 AND cs_item_sk = i_item_sk 
                 AND cs_sold_date_sk = d_date_sk 
@@ -36,12 +36,12 @@ WITH ss
      ws 
      AS (SELECT i_item_id, 
                 Sum(ws_ext_sales_price) total_sales 
-         FROM   web_sales, 
-                date_dim, 
-                customer_address, 
-                item 
+         FROM   {{source('src__tpc_ds', 'web_sales')}},
+                {{source('src__tpc_ds', 'date_dim')}},
+                {{source('src__tpc_ds', 'customer_address')}},
+                {{source('src__tpc_ds', 'item')}}
          WHERE  i_item_id IN (SELECT i_item_id 
-                              FROM   item 
+                              FROM   {{source('src__tpc_ds', 'item')}}
                               WHERE  i_category IN ( 'Jewelry' )) 
                 AND ws_item_sk = i_item_sk 
                 AND ws_sold_date_sk = d_date_sk 
