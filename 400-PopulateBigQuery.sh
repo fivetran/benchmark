@@ -1,8 +1,8 @@
 #!/bin/bash
 # Load into BQ
-export PROJECT=fivetran-bq-reserved
+export PROJECT=billing-333723
 export GS_BASE=fivetran-benchmark/tpcds_1000_dat
-export DATASET=tpcds_1000
+export DATASET=tpcds
 
 set -e
 
