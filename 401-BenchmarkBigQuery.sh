@@ -3,8 +3,8 @@
 # NOTE: you will need to install https://www.npmjs.com/package/json to run this script
 set -e
 
-export PROJECT=fivetran-bq-reserved
-export DATASET=tpcds_1000
+export PROJECT=billing-333723
+export DATASET=tpcds
 
 # Warm-up
 echo 'Warmup.sql...'

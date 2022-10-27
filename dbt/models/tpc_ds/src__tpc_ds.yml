@@ -1,0 +1,32 @@
+version: 2
+
+sources:
+  - name: src__tpc_ds
+    database: "{{ var('dataset_database', target.database) }}" # Default location is the target's database, can be overridden with dataset_database variable
+    schema: "{{ var('dataset_schema', target.schema) }}" # Default location is the target's schema, can be overridden with dataset_schema variable
+    tables:
+      - name: call_center
+      - name: catalog_page
+      - name: catalog_returns
+      - name: catalog_sales
+      - name: customer
+      - name: customer_address
+      - name: customer_demographics
+      - name: date_dim
+      - name: household_demographics
+      - name: income_band
+      - name: inventory
+      - name: item
+      - name: payments
+      - name: promotion
+      - name: reason
+      - name: ship_mode
+      - name: store
+      - name: store_returns
+      - name: store_sales
+      - name: time_dim
+      - name: warehouse
+      - name: web_page
+      - name: web_returns
+      - name: web_sales
+      - name: web_site
