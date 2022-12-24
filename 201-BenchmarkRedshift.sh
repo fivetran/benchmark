@@ -1,8 +1,8 @@
 set -e 
 
-export HOST=ra3-benchmark.cw43lptekopo.us-east-1.redshift.amazonaws.com
+export HOST=benchmark-05x.cnr9x5mk2fpk.us-east-2.redshift.amazonaws.com
 export DB=dev
-export PGPASSWORD=NumeroFoo0
+export PGPASSWORD=AtAtDocks1
 export USER=tpcds_user
 
 echo 'Warmup.sql...'

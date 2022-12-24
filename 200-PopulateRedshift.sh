@@ -1,8 +1,8 @@
-export HOST=ra3-benchmark.cw43lptekopo.us-east-1.redshift.amazonaws.com
+export HOST=benchmark-05x.cnr9x5mk2fpk.us-east-2.redshift.amazonaws.com
 export DB=dev
 export USER=awsuser
-export PGPASSWORD=NumeroFoo0
-export S3=s3://fivetran-tpcds/tpcds_1000_dat
+export PGPASSWORD=AtAtDocks1
+export S3=s3://fivetran-benchmark/tpcds_1000_dat
 
 echo 'Create tables...'
 while read line;
@@ -70,7 +70,7 @@ do
     --echo-queries --output /dev/null \
     --command "$line" 
 done <<EOF
-create user tpcds_user password 'NumeroFoo0';
+create user tpcds_user password 'AtAtDocks1';
 grant usage on schema public to tpcds_user;
 grant all privileges on all tables in schema public to tpcds_user;
 EOF

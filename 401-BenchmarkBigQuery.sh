@@ -3,7 +3,7 @@
 # NOTE: you will need to install https://www.npmjs.com/package/json to run this script
 set -e
 
-export PROJECT=fivetran-wild-west
+export PROJECT=billing-333723
 export DATASET=tpcds_1000
 
 # Warm-up

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Load into BQ
-export PROJECT=fivetran-wild-west
+export PROJECT=billing-333723
 export GS_BASE=fivetran-benchmark/tpcds_1000_dat
 export DATASET=tpcds_1000
 

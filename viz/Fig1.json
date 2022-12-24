@@ -1,0 +1,80 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Edit using https://vega.github.io/editor",
+    "data": {
+      "values": [
+        {"warehouse": "Snowflake", "scale": "0.5x", "time": 13.59, "cost": 3.02},
+        {"warehouse": "Snowflake", "scale": "1x", "time": 6.61, "cost": 2.94},
+        {"warehouse": "Snowflake", "scale": "2x", "time": 4.9, "cost": 4.36},
+        {"warehouse": "Databricks", "scale": "0.5x", "time": 16.96, "cost": 3.4},
+        {"warehouse": "Databricks", "scale": "1x", "time": 9.61, "cost": 3.86},
+        {"warehouse": "Databricks", "scale": "2x", "time": 5.95, "cost": 3.98},
+        {"warehouse": "Synapse", "scale": "0.5x", "time": 20.14, "cost": 3.36},
+        {"warehouse": "Synapse", "scale": "1x", "time": 10.18, "cost": 3.39},
+        {"warehouse": "Synapse", "scale": "2x", "time": 9.15, "cost": 6.1},
+        {"warehouse": "Redshift", "scale": "0.5x", "time": 13.79, "cost": 3.75},
+        {"warehouse": "Redshift", "scale": "1x", "time": 9.7, "cost": 4.39},
+        {"warehouse": "Redshift", "scale": "2x", "time": 4.2, "cost": 3.8},
+        {"warehouse": "BigQuery", "scale": "0.5x", "time": 11.66, "cost": 2.66},
+        {"warehouse": "BigQuery", "scale": "1x", "time": 7.35, "cost": 3.36},
+        {"warehouse": "BigQuery", "scale": "2x", "time": 6.11, "cost": 5.58}
+      ]
+    },
+    "layer": [
+      {"mark": {"type": "point", "size": 200, "filled": true}},
+      {"mark": {"type": "line", "interpolate": "natural", "strokeDash": [1, 2]}},
+      {"mark": {"type": "text", "dx": 15, "dy": -15, "fontSize": 14}}
+    ],
+    "encoding": {
+      "x": {
+        "field": "cost",
+        "type": "quantitative",
+        "sort": "descending",
+        "scale": {"domain": [2.1, 6.5]},
+        "title": "- COST (cents)"
+      },
+      "y": {
+        "field": "time",
+        "type": "quantitative",
+        "sort": "descending",
+        "scale": {"domain": [2.5, 22]},
+        "title": "- TIME (s)"
+      },
+      "text": {"field": "scale"},
+      "color": {"field": "warehouse", "title": "Warehouse"},
+      "order": {"field": "scale"}
+    },
+    "width": 600,
+    "height": 600,
+      "config": {
+        "font": "Verdana",
+        "axis": {
+          "titleFontSize": 14,
+          "titleFontWeight": "lighter",
+          "titleColor": "#2F6BE8",
+          "labelFontWeight": "lighter",
+          "labelFontSize": 12,
+          "labelOpacity": 0.75,
+          "domainOpacity": 0.25,
+          "tickOpacity": 0.5,
+          "titlePadding": 50,
+            "gridColor": "#8EB2FF",
+            "gridDash": [1, 3]
+        },
+        "axisLeft": {
+          "tickMinStep": 4
+        },
+        "axisBottom": {
+            "tickMinStep": 1
+        },
+        "legend": {
+          "titleFontSize": 12,
+          "titleFontWeight": "lighter",
+          "labelFontSize": 12,
+          "labelFontWeight": "lighter",
+          "rowPadding": 10,
+          "titlePadding": 10
+        },
+        "style": {"cell": {"stroke": "transparent"}}
+      }
+  }
